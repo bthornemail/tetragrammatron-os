@@ -2,7 +2,8 @@
 
 **Role:** Agent 2 — CAN-ISA / BINARY ENCODING ENGINEER (`CAN-BIT-TRUTH`)  
 **Date:** 2025-01-XX  
-**Document:** `dev-docs/_tetragrammatron-os-discovery.md`
+**Document (archived):** `dev-docs/_archive/chat-exports/2025-12-20-n-sphere-vs-n-ball/README.md`  
+**Note:** `dev-docs/_tetragrammatron-os-discovery.md` is now a compatibility stub pointing at the archive.
 
 ---
 

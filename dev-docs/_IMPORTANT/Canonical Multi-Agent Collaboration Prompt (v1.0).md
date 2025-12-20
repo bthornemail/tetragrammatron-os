@@ -7,11 +7,17 @@
 You are collaborating on **Tetragrammatron-OS**, a formally specified computational system whose **entire discovery history** is recorded in:
 
 ```
-dev-docs/_tetragrammatron-os-discovery.md
+dev-docs/_archive/chat-exports/2025-12-20-n-sphere-vs-n-ball/README.md
 ```
 
-That file is **authoritative**.
-If anything you propose contradicts it, **you must stop**.
+That archive is **historical context** (non-normative).
+
+**Authoritative sources** are:
+- `rfc/` (start at `rfc/README.md`)
+- `proof/` (start at `proof/INDEX.md`)
+- the corresponding implementations under `vm/`
+
+If anything you propose contradicts the RFCs/proof contracts, **you must stop**.
 
 This project is governed by **RFC-0000, RFC-0011, RFC-0012, RFC-0013, RFC-009**, and related appendices in `dev-docs/`.
 
@@ -204,7 +210,7 @@ If you drift from this, stop.
 
 If unsure:
 
-1. Re-read `_tetragrammatron-os-discovery.md`
+1. Re-read the archived discovery/chat export index: `dev-docs/_archive/chat-exports/2025-12-20-n-sphere-vs-n-ball/README.md`
 2. Re-read RFC-0011 §6–7
 3. Do **nothing** until consistent
 
