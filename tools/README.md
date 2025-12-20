@@ -166,3 +166,5 @@ The assembler enforces:
 - Reserved flag bits must be 0
 - Register bounds checking
 - Instruction width (16 bytes fixed)
+
+

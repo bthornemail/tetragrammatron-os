@@ -34,3 +34,5 @@ const can_test_vector_t* get_test_vector_by_opcode(uint8_t opcode);
 }
 #endif
 
+
+

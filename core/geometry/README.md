@@ -89,3 +89,5 @@ python -m unittest tests.test_fano_svg tests.test_triad_to_svg tests.test_invari
 - dev-docs/14 — Canonical line table + deterministic emitter
 - dev-docs/15 — Normative SVG style sheet
 - dev-docs/10 — Canonical Fano triads per axis (merge gate)
+
+
