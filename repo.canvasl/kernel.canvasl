@@ -1,0 +1,82 @@
+$schema: "canvasl://repo/kernel/v1"
+kind: "repo.kernel"
+id: "repo.kernel.v1"
+name: "universal-life-protocol"
+kernel_version: "1.0"
+fingerprint: "REPO-LATTICE-TIME"
+branches:
+  main: "main"
+  current: "current"
+  feature_pattern: "feature/{axis}/{register}"
+axes:
+  - state
+  - alphabet
+  - left
+  - right
+  - delta
+  - start
+  - accept
+  - reject
+axis_index:
+  state: 0
+  alphabet: 1
+  left: 2
+  right: 3
+  delta: 4
+  start: 5
+  accept: 6
+  reject: 7
+fano_lines:
+  - [state, alphabet, delta]
+  - [state, left, start]
+  - [state, right, accept]
+  - [alphabet, left, accept]
+  - [alphabet, right, start]
+  - [delta, left, right]
+  - [delta, start, accept]
+merge_policy:
+  main:
+    accepts_from: ["current"]
+    rule: "MUST satisfy fano_lines for any introduced triads"
+  current:
+    accepts_from: ["feature/*"]
+    rule: "MUST satisfy fano_lines for any introduced triads"
+  feature:
+    accepts_from: []
+    rule: "feature/{axis}/{register} branches touch one register address"
+register_layout:
+  root: "repo.canvasl"
+  path_template: "repo.canvasl/{a}/{b}/{c}/reg.canvasl"
+  address_formula: "(idx(a)<<6) | (idx(b)<<3) | idx(c)"
+  register_count: 512
+  axis_register_bits: 3
+policy:
+  register_files_root: "repo.canvasl"
+  register_append_only: true
+  allow_merge_targets:
+    feature_to_current: true
+    feature_to_main: false
+    current_to_main: true
+    main_to_current: true
+fano_gate:
+  required: true
+  invariants:
+    - canonical_encoding
+    - normalization_idempotence
+    - deterministic_replay
+    - meet_join_closure
+    - fano_triad_preservation
+  failure_codes:
+    - NON_CANONICAL
+    - IDEMPOTENCE_FAIL
+    - NON_DETERMINISTIC
+    - CLOSURE_FAIL
+    - FANO_VIOLATION
+    - PROOF_MISSING
+    - ANALOG_CONSTRAINT_FAIL
+analog_constraint:
+  enabled: true
+  source: "clock/timing_crystal"
+  rule: "timestamped events must be monotone and bounded jitter"
+notes:
+  - "This kernel is a knowledge-graph friendly topology: axes/registers are stable embedding keys."

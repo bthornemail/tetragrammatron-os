@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://canvasl.org/schema/canb-v1.json",
+  "title": "CanvasL Binary Format v1 (CANB)",
+  "description": "Normative binary container format for CanvasL Origami Fold VM",
+  "type": "object",
+  "required": ["header", "sections"],
+  "properties": {
+    "header": {
+      "$ref": "#/$defs/Header"
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Section"
+      }
+    }
+  },
+  "$defs": {
+    "Header": {
+      "type": "object",
+      "required": ["magic", "version", "flags", "header_len", "byte_len", "crc32"],
+      "properties": {
+        "magic": {
+          "type": "string",
+          "pattern": "^CANB$",
+          "description": "ASCII magic bytes"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1,
+          "description": "CANB format version"
+        },
+        "flags": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 7,
+          "description": "Bitmask flags: bit0=STRTAB, bit1=POLYTAB, bit2=AVD"
+        },
+        "header_len": {
+          "type": "integer",
+          "const": 16,
+          "description": "Fixed header length in bytes"
+        },
+        "byte_len": {
+          "type": "integer",
+          "minimum": 16,
+          "description": "Total file length in bytes"
+        },
+        "crc32": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "CRC32 of file bytes (0 if not present)"
+        }
+      }
+    },
+    "Section": {
+      "type": "object",
+      "required": ["section_type", "section_flags", "section_len", "payload"],
+      "properties": {
+        "section_type": {
+          "type": "integer",
+          "enum": [1, 2, 3, 4],
+          "description": "Section type: 1=STRTAB, 2=POLYTAB, 3=PROG, 4=AVD"
+        },
+        "section_flags": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Section-specific flags"
+        },
+        "section_len": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Payload length in bytes"
+        },
+        "payload": {
+          "oneOf": [
+            { "$ref": "#/$defs/StringTable" },
+            { "$ref": "#/$defs/PolyTable" },
+            { "$ref": "#/$defs/Program" },
+            { "$ref": "#/$defs/AvdMetadata" }
+          ]
+        }
+      }
+    },
+    "StringTable": {
+      "type": "object",
+      "required": ["entries"],
+      "properties": {
+        "entries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["str_id", "value"],
+            "properties": {
+              "str_id": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "String identifier"
+              },
+              "value": {
+                "type": "string",
+                "description": "UTF-8 NFC normalized string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "PolyTable": {
+      "type": "object", 
+      "required": ["entries"],
+      "properties": {
+        "entries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["poly_id", "clbc_blob"],
+            "properties": {
+              "poly_id": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Polynomial identifier"
+              },
+              "clbc_blob": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9+/=]*$",
+                "description": "Base64-encoded CLBC-POLY blob"
+              }
+            }
+          }
+        }
+      }
+    },
+    "Program": {
+      "type": "object",
+      "required": ["instructions"],
+      "properties": {
+        "instructions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Instruction"
+          }
+        }
+      }
+    },
+    "Instruction": {
+      "type": "object",
+      "required": ["opcode", "ra", "rb", "imm16"],
+      "properties": {
+        "opcode": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "8-bit opcode"
+        },
+        "ra": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 7,
+          "description": "4-bit register A field"
+        },
+        "rb": {
+          "type": "integer", 
+          "minimum": 0,
+          "maximum": 7,
+          "description": "4-bit register B field"
+        },
+        "imm16": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "16-bit immediate value"
+        }
+      }
+    },
+    "AvdMetadata": {
+      "type": "object",
+      "description": "Optional audio/video multiplex metadata",
+      "properties": {
+        "streams": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["stream_id", "type", "metadata"],
+            "properties": {
+              "stream_id": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "type": {
+                "type": "string",
+                "enum": ["audio", "video", "svg_frames", "glb_frames"]
+              },
+              "metadata": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -115,6 +115,8 @@ opcode=0111  rd ra rb imm3
 
 ## 6.5 PROJ_FANO Semantics (Exact Predicate)
 
+**Invariant references:** This section enforces INV-12 (Fano Structural Validity) and INV-13 (Fano-Triad Closure) from `TETRAGRAMMATRON_OS_FORMAL_INVARIANTS.md`.
+
 Let `A,B,C` be the polynomials referenced by `(ra, rb, rd)`.
 
 Define helper operations (implemented via MEET/JOIN internally, but PROJ_FANO may shortcut):
@@ -248,3 +250,106 @@ A repo merge gate MUST compile the merge intent into a triad list and insert:
 - optionally `FANO.W` barriers (feature → current)
 
 If any barrier traps, the merge MUST be rejected.
+
+---
+
+## 6.10 Dual Invariant Requirements (Normative)
+
+**Status:** Normative  
+**Invariant Level:** Kernel (Non-negotiable)  
+**Applies to:** PROJ_FANO, CANON, MEET, JOIN operations
+
+### 6.10.1 Purpose
+
+The Fano plane (PG(2,2)) is **closed under duality** (RFC-0000 §4). This section specifies the dual invariant requirements that MUST be preserved by all projection and merge operations.
+
+### 6.10.2 Dual Invariant Definition
+
+**Dual invariance** means that operations on the Fano plane MUST preserve symmetry under the duality transformation that exchanges:
+- Points ↔ Lines
+- Primal representation ↔ Dual representation
+- Vertex-based projections ↔ Edge-based projections
+
+### 6.10.3 Requirements for PROJ_FANO
+
+The `PROJ_FANO` instruction (RFC-0011 §6.5) MUST preserve dual invariance:
+
+#### 6.10.3.1 Primal-Dual Symmetry
+
+For any triad `(A, B, C)` that passes STRICT_FANO validation:
+- The dual triad `(A', B', C')` (where `'` denotes dual transformation) MUST also pass STRICT_FANO validation
+- The projection result MUST be invariant under duality: `Proj_Fano(A,B,C) = Dual(Proj_Fano(Dual(A),Dual(B),Dual(C)))`
+
+#### 6.10.3.2 Vertex-Edge Duality (V↔E)
+
+In geometric projections:
+- Vertex-based representations MUST have equivalent edge-based dual representations
+- Any operation that modifies vertex structure MUST preserve equivalent edge structure
+- The canonical form MUST be independent of whether representation is vertex-first or edge-first
+
+**Note:** This requirement applies when geometry projection layer (Agent 5) is integrated. VM implementations MUST provide hooks for dual invariant checking.
+
+### 6.10.4 Requirements for CANON
+
+The `CANON` instruction (RFC-0011 §6.9.2) MUST preserve dual invariance:
+
+#### 6.10.4.1 Dual-Normalization Equivalence
+
+For any polynomial state `P`:
+- `CANON(P)` and `CANON(Dual(P))` MUST produce results that are dual-equivalent
+- The canonical form MUST be chosen such that dual states normalize to dual canonical forms
+
+**Operational requirement:**
+- VM implementations MUST ensure canonicalization does not break dual symmetry
+- If a polynomial has a dual representation, canonicalization MUST preserve the duality relationship
+
+### 6.10.5 Requirements for MEET and JOIN
+
+The `MEET` (GCD) and `JOIN` (LCM) operations MUST preserve dual invariance:
+
+#### 6.10.5.1 Dual Operation Commutativity
+
+For any polynomials `A` and `B`:
+- `Dual(MEET(A,B)) = JOIN(Dual(A), Dual(B))`
+- `Dual(JOIN(A,B)) = MEET(Dual(A), Dual(B))`
+
+This is the **lattice duality law** for F₂[x] polynomials.
+
+**Operational requirement:**
+- VM implementations MUST ensure MEET/JOIN operations respect this duality
+- This is automatically satisfied if operations are implemented correctly in F₂[x], but MUST be verified
+
+### 6.10.6 Implementation Status
+
+**Current status:** Dual invariant checking is **not yet implemented** in the VM.
+
+**Required implementation:**
+1. Add dual invariant validation hooks to `PROJ_FANO` implementation
+2. Add dual equivalence checking to `CANON` implementation  
+3. Coordinate with Agent 5 (Geometry & Visualization) for geometric dual projections
+
+**Reference implementation path:**
+- See `lean/Tetragrammatron/Consensus/TriadicInvariant.lean` for formal specification
+- See `AGENTS.md` §128-138 for 4D dual consensus requirements
+
+### 6.10.7 Failure Modes
+
+If dual invariance is violated:
+- `PROJ_FANO` MUST trap with `FANO_DUAL_VIOLATION` (new error code)
+- `CANON` MUST trap with `CANON_DUAL_VIOLATION` (new error code)
+- VM MUST halt execution to prevent invalid state propagation
+
+**Error codes:**
+- `FANO_DUAL_VIOLATION` — PROJ_FANO result violates dual symmetry
+- `CANON_DUAL_VIOLATION` — CANON result violates dual symmetry
+
+### 6.10.8 Relationship to Other Invariants
+
+This section enforces:
+- RFC-0000 §4 (Fano plane "Closed under duality")
+- RFC-0000 §5 (Semantic closure — dual invariants are part of the 8-tuple closure)
+- `TETRAGRAMMATRON_OS_FORMAL_INVARIANTS.md` — Dual invariants (primal/dual, V↔E)
+
+**Cross-reference:** This complements the Fano validation requirements in §6.5 (PROJ_FANO) and canonicalization requirements in RFC-0011 §6.9.2 (CANON).
+
+**Agent 0 requirement:** Agent 0 (OBSERVER) MUST verify dual invariant preservation before approving merges. See Agent 0 verification checklist in `dev-docs/00 - RFC-0000 APPENDIX — AGENT CONSTELLATION & TASK MATRIX.md` §A.

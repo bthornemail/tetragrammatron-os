@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://canvasl.org/schema/can-isa.json",
+  "title": "CAN-ISA JSON Schema",
+  "description": "JSON Schema for CAN-ISA compilation layer",
+  "type": "object",
+  "required": ["axis", "ops"],
+  "properties": {
+    "axis": {
+      "$ref": "#/$defs/Axis"
+    },
+    "polynomials": {
+      "$ref": "#/$defs/Polynomials"
+    },
+    "ops": {
+      "$ref": "#/$defs/Operations"
+    },
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "Axis": {
+      "type": "string",
+      "enum": ["state", "alphabet", "left_marker", "right_marker", "transition", "start", "accept", "reject"],
+      "description": "Semantic axis identifier"
+    },
+    "Polynomials": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Polynomial"
+      }
+    },
+    "Polynomial": {
+      "type": "object",
+      "required": ["id", "representation"],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Polynomial identifier"
+        },
+        "representation": {
+          "type": "string",
+          "description": "Polynomial representation (e.g., x^3 + x + 1)"
+        },
+        "clbc_blob": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/=]*$",
+          "description": "Base64-encoded CLBC-POLY blob"
+        }
+      }
+    },
+    "Operations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Operation"
+      }
+    },
+    "Operation": {
+      "type": "object",
+      "required": ["op"],
+      "properties": {
+        "op": {
+          "type": "string",
+          "enum": [
+            "CANON",
+            "USE_POLY", 
+            "MEET",
+            "JOIN",
+            "PROJ_FANO",
+            "ASSERT_IDEMP",
+            "COMMIT",
+            "EMIT_GEOM",
+            "LDI16H",
+            "LDI16L",
+            "USEI32"
+          ]
+        },
+        "id": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Polynomial ID for USE_POLY"
+        },
+        "with": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Source register for MEET/JOIN"
+        },
+        "dst": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 7,
+          "description": "Destination register"
+        },
+        "flags": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Flags for PROJ_FANO"
+        },
+        "reg": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 7,
+          "description": "Register identifier"
+        },
+        "kind": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3,
+          "description": "Register field kind for USEI32: 0=poly_id, 1=str_id, 2=node_id, 3=mat_id"
+        },
+        "value": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "16-bit immediate value"
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "op": { "const": "USE_POLY" },
+            "id": {}
+          },
+          "required": ["op", "id"]
+        },
+        {
+          "properties": {
+            "op": { "enum": ["MEET", "JOIN"] },
+            "with": {},
+            "dst": {}
+          },
+          "required": ["op", "with", "dst"]
+        },
+        {
+          "properties": {
+            "op": { "const": "PROJ_FANO" },
+            "flags": {}
+          },
+          "required": ["op", "flags"]
+        },
+        {
+          "properties": {
+            "op": { "const": "USEI32" },
+            "reg": {},
+            "kind": {}
+          },
+          "required": ["op", "reg", "kind"]
+        },
+        {
+          "properties": {
+            "op": { "enum": ["LDI16H", "LDI16L"] },
+            "value": {}
+          },
+          "required": ["op", "value"]
+        },
+        {
+          "properties": {
+            "op": { "enum": ["CANON", "ASSERT_IDEMP", "COMMIT", "EMIT_GEOM"] }
+          },
+          "required": ["op"]
+        }
+      ]
+    },
+    "Metadata": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "CAN-ISA version"
+        },
+        "compiler": {
+          "type": "string",
+          "description": "Compiler identifier"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Compilation timestamp"
+        }
+      }
+    }
+  }
+}

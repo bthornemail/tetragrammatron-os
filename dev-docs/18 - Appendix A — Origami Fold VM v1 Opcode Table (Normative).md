@@ -41,6 +41,8 @@ bits:  31..24   23..20   19..16   15..0
   - Canonicalize VM semantic state.
   - **Idempotence MUST hold:** `CANON(CANON(s)) = CANON(s)`.
   - Canonicalization MUST include CLBC-POLY canonical form for any resident polynomials.
+- **Detailed specification:** See RFC-0011 §6.9.2 for canonicalization algorithm, idempotence enforcement (INV-1), and CLBC-POLY frame requirements.
+- **Dual invariants:** See RFC-0011 §6.10.4 for dual-normalization equivalence requirements.
 
 ### `0x03 OP_COMMIT`
 - **Format:** `opcode=0x03, A=frame_chan, B=0, imm16=commit_flags`
@@ -131,6 +133,9 @@ All polynomial operations are performed in the configured ring (default **F₂[x
   - bit2: emit all 7 points
   - bit3: attach keyword labels (RECOMMENDED)
   - others reserved (MUST be 0 in v1)
+- **Detailed specification:** See RFC-0011 §6.5 for STRICT_FANO validation (S1-S4 checks), error codes, and WEAK_FANO mode.
+- **Mathematical definition:** See RFC-0011 §5.3 for Fano Triad Predicate formalization.
+- **Dual invariants:** See RFC-0011 §6.10.3 for primal-dual symmetry and vertex-edge duality requirements.
 
 ### `0x31 OP_EMIT_NODE`
 - **Format:** `opcode=0x31, A=frame_chan, B=reg, imm16=node_flags`

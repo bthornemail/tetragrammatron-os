@@ -133,9 +133,11 @@ tetragrammatron-os/
 ├── README.md
 ├── AGENTS.md
 ├── rfc/
-│   ├── RFC-0009-origami-vm.md
+│   ├── README.md
+│   ├── RFC-0000-can-isa-invariants.md
+│   ├── RFC-0009-origami-fold-vm.md
 │   ├── RFC-0011-repo-lattice.md
-│   ├── RFC-0012-encoding.md
+│   ├── RFC-0012-binary-encoding.md
 │   └── RFC-0013-time-and-barriers.md
 ├── core/
 │   ├── canvasl/
@@ -164,6 +166,16 @@ Branches are semantic, not temporal:
 - `main` → normalized fixed point
 - `current` → integration manifold
 - `feature/*` → orthogonal semantic axes
+
+**Merge gate.** All repo.canvasl edits pass through the Agent‑6 Fano merge gate:
+
+- `repo.canvasl/kernel.canvasl` declares the lattice topology + branch policy.
+- `repo.canvasl/<axis>/<axis>/<axis>/reg.canvasl` are the 8×8×8 registers.
+- `repo.canvasl/triads/<axis>.canvasl` enumerate legal Fano lines per axis.
+- `tools/gen_repo_canvasl.py` regenerates the kernel, registers, and triad files (`--check` verifies without modifying files). `make repo-lattice`, `make repo-check`, and `make repo-verify` wrap these commands (`repo-verify` also runs the Fano merge gate with `FANO_BASE=origin/main` by default).
+- `tools/fano-merge-check.py` enforces topology + triads and runs in `.github/workflows/can-invariant-merge.yml`.
+
+A merge is valid iff touched axes only form legal Fano triads and each axis has its triad declaration.
 
 ---
 

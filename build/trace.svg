@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" shape-rendering="geometricPrecision">
+  <title>Repo Triads</title>
+  <defs><style>
+/* RFC-009 SVG STYLESET v1 (NORMATIVE) */
+.stroke{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.point{stroke-width:0}
+.label{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:24px}
+.style-0{stroke:#222;stroke-width:6;fill:#222}
+.style-1{stroke:#0a0;stroke-width:10;fill:#0a0}
+.style-2{stroke:#06c;stroke-width:10;fill:#06c;stroke-dasharray:16 10}
+.style-3{stroke:#c00;stroke-width:12;fill:#c00;stroke-dasharray:10 10}
+.style-4{stroke:#777;stroke-width:4;fill:#777;stroke-dasharray:6 12}
+.style-5{stroke:#a0a;stroke-width:10;fill:#a0a}
+.style-6{stroke:#999;stroke-width:2;fill:#999;stroke-dasharray:4 12}
+.style-7{stroke:#f80;stroke-width:6;fill:#f80;stroke-dasharray:2 6}
+
+  </style></defs>
+  <g id="frame0" data-proj="fano" data-canvsl-hash="sha256:trace" data-frame-flags="0x07">
+    <line id="L0" data-incidence="p0,p1,p2" x1="512" y1="256" x2="707" y2="369" class="stroke style-1"/>
+    <circle id="Lcircle" data-incidence="p1,p3,p5" cx="512" cy="512" r="192" class="stroke style-6"/>
+    <circle id="p0" cx="512" cy="256" r="10" class="point style-1" data-axis="state"/>
+    <circle id="p1" cx="707" cy="369" r="10" class="point style-1" data-axis="alphabet"/>
+    <circle id="p2" cx="707" cy="655" r="10" class="point style-1" data-axis="delta"/>
+    <text data-label-for="p0" x="526" y="242" class="label">STATE</text>
+    <text data-label-for="p1" x="721" y="355" class="label">ALPHABET</text>
+    <text data-label-for="p2" x="721" y="641" class="label">DELTA</text>
+  </g>
+  <g id="frame1" data-proj="fano" data-canvsl-hash="sha256:trace" data-frame-flags="0x07">
+    <line id="L5" data-incidence="p2,p3,p6" x1="707" y1="655" x2="512" y2="768" class="stroke style-1"/>
+    <circle id="Lcircle" data-incidence="p1,p3,p5" cx="512" cy="512" r="192" class="stroke style-6"/>
+    <circle id="p2" cx="707" cy="655" r="10" class="point style-1" data-axis="delta"/>
+    <circle id="p3" cx="512" cy="768" r="10" class="point style-1" data-axis="left"/>
+    <circle id="p6" cx="512" cy="512" r="10" class="point style-1" data-axis="right"/>
+    <text data-label-for="p2" x="721" y="641" class="label">DELTA</text>
+    <text data-label-for="p3" x="526" y="754" class="label">LEFT</text>
+    <text data-label-for="p6" x="526" y="498" class="label">RIGHT</text>
+  </g>
+  <g id="frame2" data-proj="fano" data-canvsl-hash="sha256:trace" data-frame-flags="0x07">
+    <circle id="Lcircle" data-incidence="p1,p3,p5" cx="512" cy="512" r="192" class="stroke style-6"/>
+    <circle id="p0" cx="512" cy="256" r="10" class="point style-3" data-axis="state"/>
+    <circle id="p3" cx="512" cy="768" r="10" class="point style-3" data-axis="left"/>
+    <circle id="p6" cx="512" cy="512" r="10" class="point style-3" data-axis="right"/>
+    <text data-label-for="p0" x="526" y="242" class="label">STATE✕</text>
+    <text data-label-for="p3" x="526" y="754" class="label">LEFT✕</text>
+    <text data-label-for="p6" x="526" y="498" class="label">RIGHT✕</text>
+  </g>
+</svg>

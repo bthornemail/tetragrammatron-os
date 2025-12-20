@@ -205,6 +205,10 @@ Canonicalization **MUST** include:
 1. Polynomial normalization (as defined by the CLBC-POLY canonical decode/encode rules).
 2. Any VM-internal caches **MUST NOT** affect canonical state.
 
+**Detailed specification:** See RFC-0011 §6.9.2 for canonicalization algorithm, idempotence enforcement (INV-1), and CLBC-POLY frame requirements.
+
+**Dual invariants:** See RFC-0011 §6.10.4 for dual-normalization equivalence requirements.
+
 ### X.7.2 Meet (GCD) and Join (LCM)
 
 - `0x20 OP_MEET_GCD A=dstReg B=srcReg imm16=0`  
@@ -260,6 +264,12 @@ This rule ensures:
 - stable projection under replay
 - stable projection across devices
 - projection is a pure function of canonical state
+
+**Detailed specification:** See RFC-0011 §6.5 for STRICT_FANO validation (S1-S4 checks), error codes, and WEAK_FANO mode.
+
+**Mathematical definition:** See RFC-0011 §5.3 for Fano Triad Predicate formalization.
+
+**Dual invariants:** See RFC-0011 §6.10.3 for primal-dual symmetry and vertex-edge duality requirements.
 
 ### X.8.3 Canonical Integer Coordinate System
 

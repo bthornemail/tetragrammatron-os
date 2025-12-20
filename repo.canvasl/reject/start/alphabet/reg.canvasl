@@ -1,0 +1,33 @@
+$schema: "canvasl://register/v1"
+kind: "repo.register"
+fingerprint: "REPO-LATTICE-TIME"
+id: "reg.reject.start.alphabet"
+axis:
+  a: "reject"
+  b: "start"
+  c: "alphabet"
+
+address:
+  a_idx: 7
+  b_idx: 5
+  c_idx: 1
+  addr_u9: 489
+
+semantics:
+  summary: ""
+  invariants:
+    - "Normalization MUST be idempotent"
+    - "Serialization MUST be canonical"
+  fano_scope:
+    participates: false
+
+can_isa_binding:
+  bank: 7
+  opcode_base: "0x70"
+  register: 41
+
+payload:
+  poly:
+    ring: "F2[x]"
+    clbc_poly_v1: null
+  events: []

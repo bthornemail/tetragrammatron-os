@@ -1,0 +1,37 @@
+;; fold_min.canasm
+;; Minimal Origami Fold VM program
+;; Demonstrates: CANON + MEET_GCD + JOIN_LCM + PROJ_FANO + COMMIT
+;; Role B: COMPILER / VM IMPLEMENTER
+;; Implements: RFC-009, RFC-0012
+
+;; Example program using semantic registers
+;; This is a minimal vertical slice demonstrating core operations
+
+(DEF COMMIT_DEFAULT #x0000)
+
+;; Load a polynomial reference into states register (r0)
+(LDI16H r0 r0 #x0000)      ; I32[31:16] := 0
+(LDI16L r0 r0 #x0001)      ; I32[15:0]  := 1
+(USEI32 states r0 #x0000)   ; states.poly_id := I32 (poly_id=1)
+
+;; Canonicalize the states register
+(CANON states states #x0000)
+
+;; Meet operation: gcd(states, states) -> transition
+(MEET_GCD transition states #x0000)
+
+;; Join operation: lcm(states, states) -> alphabet
+(JOIN_LCM alphabet states #x0000)
+
+;; Fano projection with flags
+;; flags: bit0=circle, bit1=lines, bit2=points, bit3=labels
+(PROJ_FANO r0 r0 #x003F)
+
+;; Assert idempotence on states register
+(ASSERT_IDEMP states r0 #x0000)
+
+;; Commit the state
+(COMMIT r0 r0 COMMIT_DEFAULT)
+
+;; Halt
+(HALT r0 r0 #x0000)

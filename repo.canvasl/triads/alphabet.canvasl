@@ -1,0 +1,10 @@
+$schema: "canvasl://repo/triad/v1"
+kind: "repo.triad"
+fingerprint: "REPO-LATTICE-TIME"
+axis: "alphabet"
+fano_scope:
+  participates: true
+triads:
+  - [state, alphabet, delta]
+  - [alphabet, left, accept]
+  - [alphabet, right, start]

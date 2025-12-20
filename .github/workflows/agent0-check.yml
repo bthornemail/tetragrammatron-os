@@ -1,0 +1,134 @@
+name: Agent 0 — Observer / Fano Guardian
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+jobs:
+  agent0-observer:
+    name: Agent 0 Observer Check (OBS-FANO-IDEM)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Determine base and head refs
+        id: refs
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="${{ github.event.pull_request.base.ref }}"
+            HEAD="${{ github.event.pull_request.head.sha }}"
+          else
+            BASE="origin/main"
+            HEAD="HEAD"
+          fi
+          echo "base=$BASE" >> $GITHUB_OUTPUT
+          echo "head=$HEAD" >> $GITHUB_OUTPUT
+          echo "Base ref: $BASE"
+          echo "Head ref: $HEAD"
+
+      - name: Run Agent 0 Observer
+        id: agent0
+        run: |
+          BASE="${{ steps.refs.outputs.base }}"
+          HEAD="${{ steps.refs.outputs.head }}"
+          
+          echo "Running Agent 0 observer: $BASE...$HEAD"
+          
+          # Run Agent 0 and capture output
+          OUTPUT=$(python3 tools/agent0-observer.py "origin/$BASE" "$HEAD" 2>&1) || EXIT_CODE=$?
+          EXIT_CODE=${EXIT_CODE:-0}
+          
+          echo "exit_code=$EXIT_CODE" >> $GITHUB_OUTPUT
+          echo "output<<EOF" >> $GITHUB_OUTPUT
+          echo "$OUTPUT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          
+          # Display output
+          echo "$OUTPUT"
+          
+          # Exit with the same code
+          exit $EXIT_CODE
+
+      - name: Comment PR with results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `${{ steps.agent0.outputs.output }}`;
+            const exitCode = parseInt(`${{ steps.agent0.outputs.exit_code }}`);
+            const approved = exitCode === 0;
+            
+            const comment = `## Agent 0 Observer Check (OBS-FANO-IDEM)
+            
+            ${approved ? '✅ **APPROVED**' : '❌ **REJECTED**'}
+            
+            \`\`\`
+            ${output}
+            \`\`\`
+            
+            ${approved 
+              ? 'All invariants preserved. Merge approved.' 
+              : 'Invariant violations detected. Merge blocked.'}
+            `;
+            
+            // Find existing comment
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const botComment = comments.data.find(
+              comment => comment.user.type === 'Bot' && 
+              comment.body.includes('Agent 0 Observer Check')
+            );
+            
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: comment,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment,
+              });
+            }
+
+      - name: Set PR status
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const exitCode = parseInt(`${{ steps.agent0.outputs.exit_code }}`);
+            const state = exitCode === 0 ? 'success' : 'failure';
+            const description = exitCode === 0 
+              ? 'All invariants preserved' 
+              : 'Invariant violations detected';
+            
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.payload.pull_request.head.sha,
+              state: state,
+              target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              description: description,
+              context: 'agent0-observer',
+            });
+

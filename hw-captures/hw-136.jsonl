@@ -1,0 +1,22 @@
+{"$schema":"canvasl://hw/v1","kind":"HW_HEADER","t":1766205164888,"dev":"android:sha256:e06c69e0105e9e7a68effd3569702a594d2835bd942c45ba54ee3edfd04c697d","note":"termux-hwscan"}
+{"kind":"HW_OS","t":1766205164888,"dev":"android:sha256:e06c69e0105e9e7a68effd3569702a594d2835bd942c45ba54ee3edfd04c697d","os":"android","uname":"Linux localhost 4.19.191-g97e8974607f7 #1 SMP PREEMPT Fri Jun 6 07:31:49 UTC 2025 aarch64 Android"}
+{"kind":"HW_PROP","t":1766205164888,"dev":"android:sha256:e06c69e0105e9e7a68effd3569702a594d2835bd942c45ba54ee3edfd04c697d","k":"ro.product.brand","v":"Nokia"}
+{"kind":"HW_PROP","t":1766205164888,"dev":"android:sha256:e06c69e0105e9e7a68effd3569702a594d2835bd942c45ba54ee3edfd04c697d","k":"ro.product.manufacturer","v":"HMD Global"}
+{"kind":"HW_PROP","t":1766205164888,"dev":"android:sha256:e06c69e0105e9e7a68effd3569702a594d2835bd942c45ba54ee3edfd04c697d","k":"ro.product.model","v":"N156DL"}
+{"kind":"HW_PROP","t":1766205164888,"dev":"android:sha256:e06c69e0105e9e7a68effd3569702a594d2835bd942c45ba54ee3edfd04c697d","k":"ro.product.device","v":"DGF"}
+{"kind":"HW_PROP","t":1766205164888,"dev":"android:sha256:e06c69e0105e9e7a68effd3569702a594d2835bd942c45ba54ee3edfd04c697d","k":"ro.product.name","v":"Dragon_02US"}
+{"kind":"HW_PROP","t":1766205164888,"dev":"android:sha256:e06c69e0105e9e7a68effd3569702a594d2835bd942c45ba54ee3edfd04c697d","k":"ro.build.fingerprint","v":"Nokia/Dragon_02US/DGF:12/SP1A.210812.016/02US_1_360:user/release-keys"}
+{"kind":"HW_PROP","t":1766205164888,"dev":"android:sha256:e06c69e0105e9e7a68effd3569702a594d2835bd942c45ba54ee3edfd04c697d","k":"ro.build.version.release","v":"12"}
+{"kind":"HW_PROP","t":1766205164888,"dev":"android:sha256:e06c69e0105e9e7a68effd3569702a594d2835bd942c45ba54ee3edfd04c697d","k":"ro.build.version.sdk","v":"31"}
+{"kind":"HW_PROP","t":1766205164888,"dev":"android:sha256:e06c69e0105e9e7a68effd3569702a594d2835bd942c45ba54ee3edfd04c697d","k":"ro.build.version.security_patch","v":"2025-06-01"}
+{"kind":"HW_PROP","t":1766205164888,"dev":"android:sha256:e06c69e0105e9e7a68effd3569702a594d2835bd942c45ba54ee3edfd04c697d","k":"ro.hardware","v":"mt6762"}
+{"kind":"HW_PROP","t":1766205164888,"dev":"android:sha256:e06c69e0105e9e7a68effd3569702a594d2835bd942c45ba54ee3edfd04c697d","k":"ro.board.platform","v":"mt6765"}
+{"kind":"HW_PROP","t":1766205164888,"dev":"android:sha256:e06c69e0105e9e7a68effd3569702a594d2835bd942c45ba54ee3edfd04c697d","k":"ro.bootloader","v":"unknown"}
+{"kind":"HW_CPU","t":1766205164888,"dev":"android:sha256:e06c69e0105e9e7a68effd3569702a594d2835bd942c45ba54ee3edfd04c697d","model":"MT6762V/CA","cores":8}
+{"kind":"HW_MEM","t":1766205164888,"dev":"android:sha256:e06c69e0105e9e7a68effd3569702a594d2835bd942c45ba54ee3edfd04c697d","mem_total_kb":2885192,"mem_avail_kb":1657628}
+{"kind":"HW_FS","t":1766205164888,"dev":"android:sha256:e06c69e0105e9e7a68effd3569702a594d2835bd942c45ba54ee3edfd04c697d","mount":"/storage/emulated/0/Android/obb","fs":"/dev/block/dm-9","size_kb":24022016,"used_kb":17302204,"avail_kb":6673364,"use_pct":"73%","scope":"termux_home"}
+{"kind":"HW_FS","t":1766205164888,"dev":"android:sha256:e06c69e0105e9e7a68effd3569702a594d2835bd942c45ba54ee3edfd04c697d","mount":"/storage/emulated","fs":"/dev/fuse","size_kb":24022016,"used_kb":17302204,"avail_kb":6673364,"use_pct":"73%","scope":"primary_storage"}
+{"kind":"NET_PROXY_ENV","t":1766205164888,"dev":"android:sha256:e06c69e0105e9e7a68effd3569702a594d2835bd942c45ba54ee3edfd04c697d","http_proxy":"","https_proxy":"","no_proxy":""}
+{"kind":"TERMUX","t":1766205164888,"dev":"android:sha256:e06c69e0105e9e7a68effd3569702a594d2835bd942c45ba54ee3edfd04c697d","prefix":"/data/data/com.termux/files/usr","termux_version":"Termux Variables:"}
+{"kind":"CANVASL_FIELDS","t":1766205164888,"dev":"android:sha256:e06c69e0105e9e7a68effd3569702a594d2835bd942c45ba54ee3edfd04c697d","fields":["os.android","cpu.cores","mem.total_kb","net.if","net.addr","net.route","net.dns","proxy.http","proxy.https","storage.home","storage.primary"]}
+{"kind":"HW_DONE","t":1766205213730,"dev":"android:sha256:e06c69e0105e9e7a68effd3569702a594d2835bd942c45ba54ee3edfd04c697d","out":"hw-136.jsonl"}

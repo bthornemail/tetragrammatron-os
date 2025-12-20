@@ -66,13 +66,13 @@ jobs:
 
             VALID_AXES=(
               state
-              symbol
-              boundary
-              duality
-              transition
-              origin
-              acceptance
-              rejection
+              alphabet
+              left
+              right
+              delta
+              start
+              accept
+              reject
             )
 
             FOUND=0
@@ -90,34 +90,13 @@ jobs:
             echo "✅ Semantic axis '$AXIS' valid"
           fi
 
-      - name: Enforce Fano-triad consistency
+      - name: Run Fano merge gate
         run: |
-          # Optional but powerful:
-          # Require triad declaration files when merging axes
+          python3 tools/fano-merge-check.py origin/$BASE HEAD
 
-          if [[ "$HEAD" =~ ^feature/ ]]; then
-            AXIS="${HEAD#feature/}"
-
-            TRIAD_FILE="repo.canvasl/triads/${AXIS}.canvasl"
-
-            if [[ ! -f "$TRIAD_FILE" ]]; then
-              echo "❌ Missing Fano triad declaration for axis '$AXIS'"
-              echo "Expected: $TRIAD_FILE"
-              exit 1
-            fi
-
-            echo "✅ Fano triad declared for '$AXIS'"
-          fi
-
-      - name: Enforce canonical normalization
+      - name: Verify repo.canvasl lattice
         run: |
-          # Ensure no raw or denormalized kernel edits
-          if git diff --name-only origin/$BASE...HEAD | grep -E '^kernel/raw'; then
-            echo "❌ Direct edits to raw kernel space are forbidden"
-            exit 1
-          fi
-
-          echo "✅ Canonical kernel integrity preserved"
+          python3 tools/gen_repo_canvasl.py --check
 
       - name: Merge approved
         run: echo "🟢 All CAN-ISA invariants satisfied"

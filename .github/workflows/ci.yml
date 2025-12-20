@@ -25,6 +25,10 @@ jobs:
     name: Repo Merge Policy (Fano-consistent)
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Validate branch naming
         run: |
           BRANCH="${GITHUB_REF#refs/heads/}"
@@ -48,6 +52,10 @@ jobs:
         run: |
           echo "❌ Direct pushes to main are forbidden"
           exit 1
+
+      - name: Verify repo.canvasl lattice
+        run: |
+          python3 tools/gen_repo_canvasl.py --check
 
   # ------------------------------------------------------------
   # 2. Lean proofs (formal invariants)

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tetragrammatron Mesh Portal</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main>
+    <h1>Tetragrammatron Mesh Portal</h1>
+    <section>
+      <p>Live heartbeats captured by <code>mesh_anchor.py</code>. This page refreshes every 5 seconds and shows the most recent samples per device.</p>
+      <div id="status" class="status">Loading…</div>
+      <table id="mesh-table">
+        <thead>
+          <tr>
+            <th>Device</th>
+            <th>Role</th>
+            <th>Tick</th>
+            <th>Phase</th>
+            <th>Grade</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+    <section>
+      <h2>Raw Logs</h2>
+      <ul>
+        <li><a href="../mesh-logs/anchor-heartbeats.jsonl" target="_blank">anchor-heartbeats.jsonl</a></li>
+        <li><a href="../mesh-logs/anchor.log" target="_blank">anchor.log</a></li>
+      </ul>
+    </section>
+  </main>
+  <script>
+    const tableBody = document.querySelector('#mesh-table tbody');
+    const statusEl = document.getElementById('status');
+    const seen = new Map();
+
+    async function loadData() {
+      try {
+        const resp = await fetch('../mesh-logs/anchor-heartbeats.jsonl?ts=' + Date.now());
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const text = await resp.text();
+        const lines = text.trim().split('\n').filter(Boolean);
+        seen.clear();
+        lines.slice(-200).forEach(line => {
+          try {
+            const record = JSON.parse(line);
+            const payload = record.payload || {};
+            const device = payload.device || 'unknown';
+            seen.set(device, {
+              device,
+              role: payload.role || '—',
+              tick: payload.tick ?? '—',
+              phase: payload.phase ?? '—',
+              grade: payload.grade ?? '—',
+              t_ms: payload.t_ms || record.recv_at || '—'
+            });
+          } catch (err) {
+            console.warn('Bad line', err, line);
+          }
+        });
+        render();
+        statusEl.textContent = `Updated ${new Date().toLocaleTimeString()}`;
+        statusEl.classList.remove('error');
+      } catch (err) {
+        statusEl.textContent = 'Error loading: ' + err.message;
+        statusEl.classList.add('error');
+      }
+    }
+
+    function render() {
+      tableBody.innerHTML = '';
+      Array.from(seen.values()).sort((a, b) => a.device.localeCompare(b.device)).forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${row.device}</td>
+          <td>${row.role}</td>
+          <td>${row.tick}</td>
+          <td>${row.phase}</td>
+          <td>${row.grade}</td>
+          <td>${row.t_ms}</td>`;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    loadData();
+    setInterval(loadData, 5000);
+  </script>
+</body>
+</html>

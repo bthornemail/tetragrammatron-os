@@ -1,0 +1,33 @@
+$schema: "canvasl://register/v1"
+kind: "repo.register"
+fingerprint: "REPO-LATTICE-TIME"
+id: "reg.alphabet.left.state"
+axis:
+  a: "alphabet"
+  b: "left"
+  c: "state"
+
+address:
+  a_idx: 1
+  b_idx: 2
+  c_idx: 0
+  addr_u9: 80
+
+semantics:
+  summary: ""
+  invariants:
+    - "Normalization MUST be idempotent"
+    - "Serialization MUST be canonical"
+  fano_scope:
+    participates: true
+
+can_isa_binding:
+  bank: 1
+  opcode_base: "0x10"
+  register: 16
+
+payload:
+  poly:
+    ring: "F2[x]"
+    clbc_poly_v1: null
+  events: []

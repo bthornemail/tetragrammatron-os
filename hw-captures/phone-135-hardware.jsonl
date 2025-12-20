@@ -1,0 +1,22 @@
+{"$schema":"canvasl://hw/v1","kind":"HW_HEADER","t":1766206888378,"dev":"android:sha256:d0950f632a40e2ba3a62ac5e5b6b7eb8d7022904b6bdafe1e4022359a8206de1","note":"termux-hwscan"}
+{"kind":"HW_OS","t":1766206888378,"dev":"android:sha256:d0950f632a40e2ba3a62ac5e5b6b7eb8d7022904b6bdafe1e4022359a8206de1","os":"android","uname":"Linux localhost 4.19.191 #1 SMP PREEMPT Wed Mar 19 12:46:43 CST 2025 armv7l Android"}
+{"kind":"HW_PROP","t":1766206888378,"dev":"android:sha256:d0950f632a40e2ba3a62ac5e5b6b7eb8d7022904b6bdafe1e4022359a8206de1","k":"ro.product.brand","v":"Cloud_Mobile"}
+{"kind":"HW_PROP","t":1766206888378,"dev":"android:sha256:d0950f632a40e2ba3a62ac5e5b6b7eb8d7022904b6bdafe1e4022359a8206de1","k":"ro.product.manufacturer","v":"Along"}
+{"kind":"HW_PROP","t":1766206888378,"dev":"android:sha256:d0950f632a40e2ba3a62ac5e5b6b7eb8d7022904b6bdafe1e4022359a8206de1","k":"ro.product.model","v":"Stratus_C7"}
+{"kind":"HW_PROP","t":1766206888378,"dev":"android:sha256:d0950f632a40e2ba3a62ac5e5b6b7eb8d7022904b6bdafe1e4022359a8206de1","k":"ro.product.device","v":"Stratus_C7"}
+{"kind":"HW_PROP","t":1766206888378,"dev":"android:sha256:d0950f632a40e2ba3a62ac5e5b6b7eb8d7022904b6bdafe1e4022359a8206de1","k":"ro.product.name","v":"Stratus_C7"}
+{"kind":"HW_PROP","t":1766206888378,"dev":"android:sha256:d0950f632a40e2ba3a62ac5e5b6b7eb8d7022904b6bdafe1e4022359a8206de1","k":"ro.build.fingerprint","v":"Cloud_Mobile/Stratus_C7/Stratus_C7:12/SP1A.250228.1101/mp1V0319:user/release-keys"}
+{"kind":"HW_PROP","t":1766206888378,"dev":"android:sha256:d0950f632a40e2ba3a62ac5e5b6b7eb8d7022904b6bdafe1e4022359a8206de1","k":"ro.build.version.release","v":"12"}
+{"kind":"HW_PROP","t":1766206888378,"dev":"android:sha256:d0950f632a40e2ba3a62ac5e5b6b7eb8d7022904b6bdafe1e4022359a8206de1","k":"ro.build.version.sdk","v":"31"}
+{"kind":"HW_PROP","t":1766206888378,"dev":"android:sha256:d0950f632a40e2ba3a62ac5e5b6b7eb8d7022904b6bdafe1e4022359a8206de1","k":"ro.build.version.security_patch","v":"2025-02-05"}
+{"kind":"HW_PROP","t":1766206888378,"dev":"android:sha256:d0950f632a40e2ba3a62ac5e5b6b7eb8d7022904b6bdafe1e4022359a8206de1","k":"ro.hardware","v":"mt6761"}
+{"kind":"HW_PROP","t":1766206888378,"dev":"android:sha256:d0950f632a40e2ba3a62ac5e5b6b7eb8d7022904b6bdafe1e4022359a8206de1","k":"ro.board.platform","v":"mt6761"}
+{"kind":"HW_PROP","t":1766206888378,"dev":"android:sha256:d0950f632a40e2ba3a62ac5e5b6b7eb8d7022904b6bdafe1e4022359a8206de1","k":"ro.bootloader","v":"unknown"}
+{"kind":"HW_CPU","t":1766206888378,"dev":"android:sha256:d0950f632a40e2ba3a62ac5e5b6b7eb8d7022904b6bdafe1e4022359a8206de1","model":"ARMv7 Processor rev 4 (v7l)","cores":4}
+{"kind":"HW_MEM","t":1766206888378,"dev":"android:sha256:d0950f632a40e2ba3a62ac5e5b6b7eb8d7022904b6bdafe1e4022359a8206de1","mem_total_kb":1906684,"mem_avail_kb":871256}
+{"kind":"HW_FS","t":1766206888378,"dev":"android:sha256:d0950f632a40e2ba3a62ac5e5b6b7eb8d7022904b6bdafe1e4022359a8206de1","mount":"/storage/emulated/0/Android/obb","fs":"/dev/block/dm-7","size_kb":11723744,"used_kb":8184016,"avail_kb":3517348,"use_pct":"70%","scope":"termux_home"}
+{"kind":"HW_FS","t":1766206888378,"dev":"android:sha256:d0950f632a40e2ba3a62ac5e5b6b7eb8d7022904b6bdafe1e4022359a8206de1","mount":"/storage/emulated","fs":"/dev/fuse","size_kb":11723744,"used_kb":8184016,"avail_kb":3517348,"use_pct":"70%","scope":"primary_storage"}
+{"kind":"NET_PROXY_ENV","t":1766206888378,"dev":"android:sha256:d0950f632a40e2ba3a62ac5e5b6b7eb8d7022904b6bdafe1e4022359a8206de1","http_proxy":"","https_proxy":"","no_proxy":""}
+{"kind":"TERMUX","t":1766206888378,"dev":"android:sha256:d0950f632a40e2ba3a62ac5e5b6b7eb8d7022904b6bdafe1e4022359a8206de1","prefix":"/data/data/com.termux/files/usr","termux_version":"Termux Variables:"}
+{"kind":"CANVASL_FIELDS","t":1766206888378,"dev":"android:sha256:d0950f632a40e2ba3a62ac5e5b6b7eb8d7022904b6bdafe1e4022359a8206de1","fields":["os.android","cpu.cores","mem.total_kb","net.if","net.addr","net.route","net.dns","proxy.http","proxy.https","storage.home","storage.primary"]}
+{"kind":"HW_DONE","t":1766206932855,"dev":"android:sha256:d0950f632a40e2ba3a62ac5e5b6b7eb8d7022904b6bdafe1e4022359a8206de1","out":"mesh-logs/phone-135-hardware.jsonl"}

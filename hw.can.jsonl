@@ -1,0 +1,43 @@
+{"$schema":"canvasl://hw/v1","kind":"HW_HEADER","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","note":"termux-hwscan"}
+{"kind":"HW_OS","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","os":"android","uname":"Linux TOSHIBA-PORTEGE-Z30t-C 6.14.0-37-generic #37~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Thu Nov 20 10:25:38 UTC 2 x86_64 x86_64 x86_64 GNU/Linux"}
+{"kind":"HW_CPU","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","model":"Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz","cores":4}
+{"kind":"HW_MEM","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","mem_total_kb":16291752,"mem_avail_kb":7420560}
+{"kind":"HW_FS","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","mount":"/","fs":"/dev/mapper/ubuntu--vg-ubuntu--lv","size_kb":241872348,"used_kb":210852684,"avail_kb":18660396,"use_pct":"92%","scope":"termux_home"}
+{"kind":"NET_IF","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","if":"lo","flags":"LOOPBACK,UP,LOWER_UP","state":"UNKNOWN"}
+{"kind":"NET_IF","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","if":"enp0s31f6","flags":"NO-CARRIER,BROADCAST,MULTICAST,UP","state":"DOWN"}
+{"kind":"NET_IF","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","if":"wlp2s0","flags":"BROADCAST,MULTICAST,UP,LOWER_UP","state":"UP"}
+{"kind":"NET_IF","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","if":"br-13a749ff076d","flags":"NO-CARRIER,BROADCAST,MULTICAST,UP","state":"DOWN"}
+{"kind":"NET_IF","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","if":"docker0","flags":"NO-CARRIER,BROADCAST,MULTICAST,UP","state":"DOWN"}
+{"kind":"NET_IF","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","if":"br-95f4fb4f25db","flags":"NO-CARRIER,BROADCAST,MULTICAST,UP","state":"DOWN"}
+{"kind":"NET_IF","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","if":"br-a6c908daf2e9","flags":"NO-CARRIER,BROADCAST,MULTICAST,UP","state":"DOWN"}
+{"kind":"NET_IF","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","if":"br-bb43eb1dd67d","flags":"NO-CARRIER,BROADCAST,MULTICAST,UP","state":"DOWN"}
+{"kind":"NET_IF","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","if":"br-c7f03d5f6598","flags":"NO-CARRIER,BROADCAST,MULTICAST,UP","state":"DOWN"}
+{"kind":"NET_ADDR","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","if":"lo","fam":"inet","addr":"127.0.0.1/8"}
+{"kind":"NET_ADDR","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","if":"lo","fam":"inet6","addr":"::1/128"}
+{"kind":"NET_ADDR","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","if":"wlp2s0","fam":"inet","addr":"10.229.211.5/24"}
+{"kind":"NET_ADDR","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","if":"wlp2s0","fam":"inet6","addr":"2607:fb91:33e:928e:121a:5a84:2b36:320/64"}
+{"kind":"NET_ADDR","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","if":"wlp2s0","fam":"inet6","addr":"2607:fb91:33e:928e:878a:d20b:a18:cf94/64"}
+{"kind":"NET_ADDR","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","if":"wlp2s0","fam":"inet6","addr":"fe80::eafe:a502:fa43:528c/64"}
+{"kind":"NET_ADDR","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","if":"br-13a749ff076d","fam":"inet","addr":"172.19.0.1/16"}
+{"kind":"NET_ADDR","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","if":"docker0","fam":"inet","addr":"172.17.0.1/16"}
+{"kind":"NET_ADDR","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","if":"br-95f4fb4f25db","fam":"inet","addr":"172.18.0.1/16"}
+{"kind":"NET_ADDR","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","if":"br-a6c908daf2e9","fam":"inet","addr":"192.168.49.1/24"}
+{"kind":"NET_ADDR","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","if":"br-bb43eb1dd67d","fam":"inet","addr":"172.21.0.1/16"}
+{"kind":"NET_ADDR","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","if":"br-c7f03d5f6598","fam":"inet","addr":"172.20.0.1/16"}
+{"kind":"NET_ROUTE","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","route":"10.229.211.0/24 dev wlp2s0 proto kernel scope link src 10.229.211.5 metric 600 "}
+{"kind":"NET_ROUTE","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","route":"172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown "}
+{"kind":"NET_ROUTE","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","route":"172.18.0.0/16 dev br-95f4fb4f25db proto kernel scope link src 172.18.0.1 linkdown "}
+{"kind":"NET_ROUTE","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","route":"172.19.0.0/16 dev br-13a749ff076d proto kernel scope link src 172.19.0.1 linkdown "}
+{"kind":"NET_ROUTE","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","route":"172.20.0.0/16 dev br-c7f03d5f6598 proto kernel scope link src 172.20.0.1 linkdown "}
+{"kind":"NET_ROUTE","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","route":"172.21.0.0/16 dev br-bb43eb1dd67d proto kernel scope link src 172.21.0.1 linkdown "}
+{"kind":"NET_ROUTE","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","route":"192.168.49.0/24 dev br-a6c908daf2e9 proto kernel scope link src 192.168.49.1 linkdown "}
+{"kind":"NET_ROUTE6","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","route":"2607:fb91:33e:928e::/64 dev wlp2s0 proto ra metric 600 pref medium"}
+{"kind":"NET_ROUTE6","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","route":"fe80::/64 dev wlp2s0 proto kernel metric 1024 pref medium"}
+{"kind":"NET_ROUTE6","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","route":"default via fe80::748f:a5ff:fec0:19ec dev wlp2s0 proto ra metric 20600 pref high"}
+{"kind":"NET_DNS","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","line":"nameserver 127.0.0.53"}
+{"kind":"NET_DNS","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","line":"options edns0 trust-ad"}
+{"kind":"NET_DNS","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","line":"search ."}
+{"kind":"NET_PROXY_ENV","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","http_proxy":"http://10.229.211.162:8888","https_proxy":"http://10.229.211.162:8888","no_proxy":"localhost,127.0.0.1,::1"}
+{"kind":"TERMUX","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","prefix":"","termux_version":""}
+{"kind":"CANVASL_FIELDS","t":1766201062863,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","fields":["os.android","cpu.cores","mem.total_kb","net.if","net.addr","net.route","net.dns","proxy.http","proxy.https","storage.home","storage.primary"]}
+{"kind":"HW_DONE","t":1766201072502,"dev":"android:sha256:285edc5006d305eb36b838dfde040b1e491103621bfe712a0dbab0ac1a8b3723","out":"hw.can.jsonl"}

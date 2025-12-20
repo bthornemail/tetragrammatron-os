@@ -1,0 +1,22 @@
+{"$schema":"canvasl://hw/v1","kind":"HW_HEADER","t":1766205264955,"dev":"android:sha256:ae80219f5f427abf5787b148ac79d2e3b0d8baba9a509eb3039ff6cf2e8bb617","note":"termux-hwscan"}
+{"kind":"HW_OS","t":1766205264955,"dev":"android:sha256:ae80219f5f427abf5787b148ac79d2e3b0d8baba9a509eb3039ff6cf2e8bb617","os":"android","uname":"Linux localhost 4.19.191 #1 SMP PREEMPT Fri Sep 5 15:34:08 CST 2025 aarch64 Android"}
+{"kind":"HW_PROP","t":1766205264955,"dev":"android:sha256:ae80219f5f427abf5787b148ac79d2e3b0d8baba9a509eb3039ff6cf2e8bb617","k":"ro.product.brand","v":"Cloud_Mobile"}
+{"kind":"HW_PROP","t":1766205264955,"dev":"android:sha256:ae80219f5f427abf5787b148ac79d2e3b0d8baba9a509eb3039ff6cf2e8bb617","k":"ro.product.manufacturer","v":"Cloud Mobile"}
+{"kind":"HW_PROP","t":1766205264955,"dev":"android:sha256:ae80219f5f427abf5787b148ac79d2e3b0d8baba9a509eb3039ff6cf2e8bb617","k":"ro.product.model","v":"Stratus C8"}
+{"kind":"HW_PROP","t":1766205264955,"dev":"android:sha256:ae80219f5f427abf5787b148ac79d2e3b0d8baba9a509eb3039ff6cf2e8bb617","k":"ro.product.device","v":"Stratus_C8"}
+{"kind":"HW_PROP","t":1766205264955,"dev":"android:sha256:ae80219f5f427abf5787b148ac79d2e3b0d8baba9a509eb3039ff6cf2e8bb617","k":"ro.product.name","v":"Stratus_C8"}
+{"kind":"HW_PROP","t":1766205264955,"dev":"android:sha256:ae80219f5f427abf5787b148ac79d2e3b0d8baba9a509eb3039ff6cf2e8bb617","k":"ro.build.fingerprint","v":"Cloud_Mobile/Stratus_C8/Stratus_C8:13/TP1A.250905.1415/p1rck6985v164P16:user/release-keys"}
+{"kind":"HW_PROP","t":1766205264955,"dev":"android:sha256:ae80219f5f427abf5787b148ac79d2e3b0d8baba9a509eb3039ff6cf2e8bb617","k":"ro.build.version.release","v":"13"}
+{"kind":"HW_PROP","t":1766205264955,"dev":"android:sha256:ae80219f5f427abf5787b148ac79d2e3b0d8baba9a509eb3039ff6cf2e8bb617","k":"ro.build.version.sdk","v":"33"}
+{"kind":"HW_PROP","t":1766205264955,"dev":"android:sha256:ae80219f5f427abf5787b148ac79d2e3b0d8baba9a509eb3039ff6cf2e8bb617","k":"ro.build.version.security_patch","v":"2025-09-05"}
+{"kind":"HW_PROP","t":1766205264955,"dev":"android:sha256:ae80219f5f427abf5787b148ac79d2e3b0d8baba9a509eb3039ff6cf2e8bb617","k":"ro.hardware","v":"mt6765"}
+{"kind":"HW_PROP","t":1766205264955,"dev":"android:sha256:ae80219f5f427abf5787b148ac79d2e3b0d8baba9a509eb3039ff6cf2e8bb617","k":"ro.board.platform","v":"mt6765"}
+{"kind":"HW_PROP","t":1766205264955,"dev":"android:sha256:ae80219f5f427abf5787b148ac79d2e3b0d8baba9a509eb3039ff6cf2e8bb617","k":"ro.bootloader","v":"unknown"}
+{"kind":"HW_CPU","t":1766205264955,"dev":"android:sha256:ae80219f5f427abf5787b148ac79d2e3b0d8baba9a509eb3039ff6cf2e8bb617","model":"MT6765","cores":8}
+{"kind":"HW_MEM","t":1766205264955,"dev":"android:sha256:ae80219f5f427abf5787b148ac79d2e3b0d8baba9a509eb3039ff6cf2e8bb617","mem_total_kb":2875132,"mem_avail_kb":741728}
+{"kind":"HW_FS","t":1766205264955,"dev":"android:sha256:ae80219f5f427abf5787b148ac79d2e3b0d8baba9a509eb3039ff6cf2e8bb617","mount":"/storage/emulated/0/Android/obb","fs":"/dev/block/dm-39","size_kb":20215908,"used_kb":15077756,"avail_kb":4990696,"use_pct":"76%","scope":"termux_home"}
+{"kind":"HW_FS","t":1766205264955,"dev":"android:sha256:ae80219f5f427abf5787b148ac79d2e3b0d8baba9a509eb3039ff6cf2e8bb617","mount":"/storage/emulated","fs":"/dev/fuse","size_kb":20215908,"used_kb":15077756,"avail_kb":4990696,"use_pct":"76%","scope":"primary_storage"}
+{"kind":"NET_PROXY_ENV","t":1766205264955,"dev":"android:sha256:ae80219f5f427abf5787b148ac79d2e3b0d8baba9a509eb3039ff6cf2e8bb617","http_proxy":"","https_proxy":"","no_proxy":""}
+{"kind":"TERMUX","t":1766205264955,"dev":"android:sha256:ae80219f5f427abf5787b148ac79d2e3b0d8baba9a509eb3039ff6cf2e8bb617","prefix":"/data/data/com.termux/files/usr","termux_version":"Termux Variables:"}
+{"kind":"CANVASL_FIELDS","t":1766205264955,"dev":"android:sha256:ae80219f5f427abf5787b148ac79d2e3b0d8baba9a509eb3039ff6cf2e8bb617","fields":["os.android","cpu.cores","mem.total_kb","net.if","net.addr","net.route","net.dns","proxy.http","proxy.https","storage.home","storage.primary"]}
+{"kind":"HW_DONE","t":1766205311624,"dev":"android:sha256:ae80219f5f427abf5787b148ac79d2e3b0d8baba9a509eb3039ff6cf2e8bb617","out":"hw-148.jsonl"}

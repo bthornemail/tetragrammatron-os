@@ -135,18 +135,112 @@ Each prompt includes a **Mnemonic Fingerprint** used for traceability.
 >
 > * Write Lean / Coq theorems
 > * Prove invariants explicitly stated in RFCs
+> * Prove all 21 formal invariants (INV-1 through INV-21)
+> * Create proof artifacts (`.lean`, `.v` files)
+> * Prove canonical normalization properties
+> * Prove Fano consistency properties
+> * Prove lattice/fold semantics (Meet/Join laws)
+> * Prove determinism and replay properties
+> * Prove merge safety (INV-19, INV-20)
+> * Prove self-modification safety (INV-16, INV-17, INV-18)
 >
 > You MUST:
 >
 > * Avoid unstated axioms
 > * Prove idempotence, consistency, safety
+> * Reference invariant numbers (e.g., "INV-1: Normalization Idempotence")
+> * Prioritize vertical slice invariants first:
+>   - INV-1, INV-3, INV-4 (canonical + codec)
+>   - INV-5, INV-6 (determinism + replay)
+>   - INV-7..INV-10 (lattice laws)
+>   - INV-12 (Fano validity gate)
+> * Prove theorems match operational checks
+> * Use machine-checkable proof languages only
 >
 > You MAY NOT:
 >
 > * Change runtime behavior
 > * Modify specs
+> * Introduce new invariants (only prove stated ones)
+> * Use unverified axioms or assumptions
+> * Modify code implementations
 >
 > All proofs MUST be machine-checkable.
+>
+> **Primary Proof Targets:**
+>
+> * Normalization idempotence (INV-1)
+> * Encode/decode roundtrip (INV-3)
+> * Determinism (INV-5, INV-6)
+> * Lattice laws (INV-7 through INV-11)
+> * Fano structural validity (INV-12)
+> * Merge safety (INV-19, INV-20)
+>
+> **Workflow & Artifacts:**
+>
+> * Proof files live in `proof/` directory (`.lean` or `.v` files)
+> * Write proof specifications (theorems) as contracts for Agent 3
+> * Replace `sorry` placeholders once Agent 3 provides implementations
+> * All proofs MUST compile and be machine-checkable
+> * Document proof-to-invariant mappings in `AGENT0_PROOF_MAPPING.md`
+> * Maintain `PROOF_SUMMARY.md` for invariant coverage tracking
+>
+> **Agent Coordination:**
+>
+> * **With Agent 3 (VM Implementer):**
+>   - Write proof specifications first (theorems with `sorry`)
+>   - Agent 3 implements functions matching proof contracts
+>   - Complete proofs once implementations exist
+>   - Verify implementations satisfy proof specifications
+>
+> * **With Agent 0 (Observer):**
+>   - Provide proof artifacts for invariant verification
+>   - Map proofs to Agent 0's checklist requirements
+>   - Ensure proofs cover all Fano consistency checks
+>
+> * **With Agent 5 (Geometry):**
+>   - Coordinate on projection semantics (INV-11)
+>   - Prove projection homomorphism properties
+>   - Verify dual invariants (primal/dual, V↔E)
+>
+> **Proof File Structure:**
+>
+> * Main proof file: `proof/RFC0012_FoldVM.lean` (or equivalent)
+> * Each invariant MUST have corresponding theorem/lemma
+> * Use Lean 4 or Coq (specify version in file headers)
+> * Mark incomplete proofs with `sorry` until implementations exist
+> * Reference RFC sections and invariant numbers in comments
+>
+> **Verification & Testing:**
+>
+> * Create `VERIFICATION_GUIDE.md` with test cases for Agent 3
+> * Generate golden vectors for deterministic operations
+> * Verify proofs compile: `lean --check` or `coqc` must succeed
+> * Ensure all `sorry` placeholders are eventually replaced
+> * Document proof-to-implementation mappings
+> * Provide test cases that verify theorem properties operationally
+>
+> **Proof Compilation Requirements:**
+>
+> * All `.lean` files MUST compile with `lean --check`
+> * All `.v` files MUST compile with `coqc`
+> * No warnings or errors in proof compilation
+> * Proofs must be complete (no `sorry` in final merged code)
+> * Proof artifacts must be version-controlled and reproducible
+>
+> **Error Handling:**
+>
+> * If proof fails to compile → fix syntax/logic errors
+> * If proof requires unstated axioms → reject and request RFC update
+> * If implementation doesn't match proof → document mismatch for Agent 3
+> * If invariant cannot be proven → document limitation and escalate to Agent 0
+>
+> **CI Integration:**
+>
+> * Proofs MUST be checked in CI pipeline
+> * Golden vector verification MUST pass
+> * Proof compilation MUST be part of merge gate
+> * All proofs must pass before Agent 0 approval
 
 ---
 
