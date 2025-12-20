@@ -1,0 +1,83 @@
+# ✅ Register File Map (the actual `.canvasl` files)
+
+Create this folder tree:
+
+```text
+repo/
+  repo.canvasl
+  registers/
+    state/
+      identity.canvasl
+      memory.canvasl
+      context.canvasl
+      phase.canvasl
+      time.canvasl
+      energy.canvasl
+      boundary.canvasl
+      closure.canvasl
+    symbols/
+      alphabet.canvasl
+      tokens.canvasl
+      grammar.canvasl
+      encoding.canvasl
+      decoder.canvasl
+      hashing.canvasl
+      canonical.canvasl
+      versioning.canvasl
+    boundaries/
+      types.canvasl
+      ranges.canvasl
+      constraints.canvasl
+      invariants.canvasl
+      normalization.canvasl
+      idempotence.canvasl
+      monotonicity.canvasl
+      termination.canvasl
+    transforms/
+      lift.canvasl
+      project.canvasl
+      meet_gcd.canvasl
+      join_lcm.canvasl
+      fold_axioms.canvasl
+      compose.canvasl
+      rewrites.canvasl
+      canonicalize.canvasl
+    control/
+      clock.canvasl
+      timing.canvasl
+      analog_constraints.canvasl
+      barriers.canvasl
+      transactions.canvasl
+      self_modify.canvasl
+      patching.canvasl
+      rollback.canvasl
+    validation/
+      golden_vectors.canvasl
+      codec_proof.canvasl
+      idempotence.canvasl
+      fano_incidence.canvasl
+      determinism.canvasl
+      consensus.canvasl
+      security.canvasl
+      traceability.canvasl
+    acceptance/
+      commit.canvasl
+      signature.canvasl
+      release.canvasl
+      version_tag.canvasl
+      publish.canvasl
+      provenance.canvasl
+      compat.canvasl
+      contracts.canvasl
+    rejection/
+      fail_fast.canvasl
+      quarantine.canvasl
+      divergence.canvasl
+      non_canonical.canvasl
+      unsafe_selfmod.canvasl
+      proof_missing.canvasl
+      fano_violation.canvasl
+      rollback_required.canvasl
+```
+
+---

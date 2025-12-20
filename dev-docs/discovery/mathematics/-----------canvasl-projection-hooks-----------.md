@@ -1,0 +1,1 @@
+# ---------- CanvasL “projection hooks” ----------

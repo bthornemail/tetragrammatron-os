@@ -1,0 +1,1 @@
+# Index.json provides master CID mapping

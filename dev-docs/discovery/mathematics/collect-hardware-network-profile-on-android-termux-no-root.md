@@ -1,0 +1,1 @@
+# Collect hardware + network profile on Android (Termux, no root)

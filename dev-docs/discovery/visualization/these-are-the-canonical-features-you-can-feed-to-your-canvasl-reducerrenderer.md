@@ -1,0 +1,1 @@
+# These are the canonical "features" you can feed to your CanvasL reducer/renderer.

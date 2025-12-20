@@ -1,0 +1,236 @@
+# RFC-0011 §6.9 — Canonicalization and Proof Hooks (Normative)
+
+## 6.9.1 New Opcodes
+
+We extend CAN-ISA v1.0 with two instructions:
+
+- `0x3 CANON` — canonicalize a polynomial frame (normalize/trim) and return canonical pointer
+- `0x8 ASSERT_EQ` — proof hook: byte-exact equality of CLBC-POLY frames (after canonicalization)
+
+These opcodes MUST be implemented identically on all targets.
+
+---
+
+## 6.9.2 Opcode: `0x3 CANON` (Canonicalize / Normalize)
+
+### Encoding (16-bit)
+
+```
+15..12  opcode = 0x3
+11..9   rd     (dest register)
+8..6    ra     (source register)
+5..3    rb     (MUST be 0)
+2..0    imm3   mode
+```
+
+Assembler forms:
+
+```
+CANON rd, ra           ; mode defaults to 0
+CANON.Z rd, ra         ; imm3=001  (allow zero canonical)
+CANON.STRICT rd, ra    ; imm3=000  (default)
+```
+
+### imm3 modes
+
+- `000` = STRICT_CANON (default)
+- `001` = CANON_Z (permits degree=0 with 0 word as canonical zero)
+- others reserved → MUST trap
+
+### Semantics
+
+Given `ra` points to a CLBC-POLY frame:
+
+1. VM MUST validate the header:
+   - magic `"CLBC"`, kind `'P'`, ver `0x01`, ring `0x01`.
+   - if invalid → trap `CANON_BAD_FRAME`.
+
+2. VM MUST rewrite the polynomial to **canonical form**:
+   - trim trailing zero `words[]` (high words),
+   - recompute `degree` = highest set bit (or 0 for zero),
+   - set `nwords = floor(degree/32)+1` (or 1 for zero),
+   - MUST store integers big-endian in the output frame.
+
+3. VM MUST place the canonical frame into VM-managed storage and store its pointer in `rd`.
+
+### Determinism requirements
+
+- CANON MUST NOT depend on:
+  - host endianness,
+  - pointer identity,
+  - allocator layout.
+- Only the **canonical byte sequence** is semantically meaningful.
+
+### Trap codes
+
+- `CANON_BAD_FRAME`
+- `CANON_RESERVED_MODE`
+- `CANON_ALLOC_FAIL` (if VM cannot allocate output frame)
+
+---
+
+## 6.9.3 Opcode: `0x8 ASSERT_EQ` (Byte-Exact Proof Hook)
+
+### Encoding (16-bit)
+
+```
+15..12  opcode = 0x8
+11..9   rd     (MUST be 0)  // reserved for future
+8..6    ra     (poly A pointer)
+5..3    rb     (poly B pointer)
+2..0    imm3   mode
+```
+
+Assembler forms:
+
+```
+ASSERT.EQ  ra, rb           ; default mode=CANON_THEN_EQ
+ASSERT.BYTES ra, rb         ; raw byte compare (debug only)
+ASSERT.DEG  ra, rb          ; degree+words only (debug)
+```
+
+### imm3 modes
+
+- `000` = CANON_THEN_EQ (normative default)
+- `001` = RAW_BYTES_EQ (debug; MAY be disabled in release firmware)
+- `010` = STRUCT_EQ (degree + nwords + words compare; equivalent to 000 if both are canonical)
+- others reserved → MUST trap
+
+### Normative semantics (mode 000)
+
+`ASSERT_EQ(A,B)` MUST succeed iff:
+
+1. `A' = CANON(A)` and `B' = CANON(B)` (as-if CANON executed; VM MAY optimize)
+2. `bytes(A') == bytes(B')` (byte-for-byte equality of full CLBC-POLY frames)
+
+On success:
+- VM continues and sets `FLAGS.ASSERT_OK = 1`.
+
+On failure:
+- VM MUST trap `ASSERT_EQ_FAIL`.
+
+### Debug modes
+
+- `RAW_BYTES_EQ` compares the exact bytes currently referenced.
+  - This is only safe for diagnostics because non-canonical representations may differ.
+- `STRUCT_EQ` compares (degree, nwords, words[]) logically; headers still MUST match.
+
+### Trap codes
+
+- `ASSERT_EQ_FAIL`
+- `ASSERT_BAD_FRAME` (if either input is not a valid CLBC-POLY v1)
+- `ASSERT_RESERVED_MODE`
+
+---
+
+## 6.9.4 Why these two opcodes matter (VM invariants)
+
+### A. Idempotence becomes executable
+
+Your “idempotence = what I mean by Fano plane” becomes enforceable:
+
+- `CANON` gives a **fixed point** representation.
+- `ASSERT_EQ` lets you encode:
+  - `ASSERT_EQ (CANON X) X`  (canonicalization idempotence)
+  - `ASSERT_EQ (MEET X X) X` (gcd idempotence)
+  - `ASSERT_EQ (JOIN X X) X` (lcm idempotence)
+
+### B. Merge gates become proofs
+
+A merge program can be:
+
+1. `CANON` inputs
+2. `FANO.S` barrier
+3. `ASSERT_EQ` on expected invariants (optional)
+4. commit/accept
+
+All of that runs **identically** on host VM and microcontrollers.
+
+---
+
+## 6.9.5 Encoding Examples (Byte Exact)
+
+### Example 1: `CANON R2, R5` (STRICT_CANON)
+
+- opcode=0x3 → `0011`
+- rd=2 → `010`
+- ra=5 → `101`
+- rb=0 → `000`
+- imm3=0 → `000`
+
+Bits:
+```
+0011 010 101 000 000
+```
+
+Bytes:
+```
+00110101 01000000
+   0x35     0x40
+```
+
+Stream bytes:
+```
+35 40
+```
+
+### Example 2: `ASSERT.EQ R1, R6` (CANON_THEN_EQ)
+
+- opcode=0x8 → `1000`
+- rd=0 → `000`
+- ra=1 → `001`
+- rb=6 → `110`
+- imm3=0 → `000`
+
+Bits:
+```
+1000 000 001 110 000
+```
+
+Bytes:
+```
+10000000 01110000
+   0x80     0x70
+```
+
+Stream bytes:
+```
+80 70
+```
+
+---
+
+## 6.9.6 Compatibility Note (Existing CLBC Record-Hash VM)
+
+These opcodes are for the **new fold/polynomial VM** path. They MUST NOT change semantics of the existing record-stream hashing VM.
+
+Recommended artifact split remains:
+
+- `.clbc` = legacy record-hash container
+- `.can` / `.canbc` = CAN-ISA fold VM container
+
+(We can pin that as a normative statement in RFC-009 / RFC-0011 §3 if you want.)
+
+---
+
+If you say **7**, I’ll write the minimal end-to-end “merge proof program” bytecode that uses:
+
+`CANON + MEET + JOIN + FANO.S + ASSERT_EQ`
+
+…and show the exact bytes plus a reference Scheme VM execution trace format you can mirror on ESP32/Pico.
+
+---
+
+## You
+
+7
+
+---
+
+## ChatGPT
+
+## RFC-009 Addendum: Instruction Binary Encoding (CLBC-compatible)
+
+This expands **RFC-009 (Origami Fold VM Semantics)** with a **fully specified 16-bit instruction word** and a **CLBC container “kind”** that mirrors the style of the existing **CLBC-POLY** codec (magic + kind + version + ids + big-endian integers).
+
+---

@@ -1,0 +1,1 @@
+# Share federation manifest for peer verification
