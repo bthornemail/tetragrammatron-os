@@ -1,0 +1,36 @@
+{
+  "$schema": "canvasl/hardware-context/v1",
+  "device": {
+    "class": "embedded|mobile|desktop|router",
+    "arch": "xtensa|arm|riscv|x86_64",
+    "model": "esp32-s3|rp2350|s20|x86",
+    "cores": 2,
+    "freq_hz": 240000000
+  },
+  "memory": {
+    "ram_bytes": 524288,
+    "heap_free_bytes": 312000,
+    "flash_bytes": 4194304
+  },
+  "timing": {
+    "clock_source": "crystal|pll|os",
+    "tick_hz": 1000000,
+    "drift_ppm": 40
+  },
+  "power": {
+    "source": "usb|battery|wall",
+    "voltage_mv": 5000,
+    "state": "stable|throttled|low"
+  },
+  "network": {
+    "available": true,
+    "latency_ms": 120,
+    "loss_pct": 8,
+    "proxy": "tinyproxy|none"
+  },
+  "constraints": {
+    "deterministic": true,
+    "self_modify": "sealed|allowed",
+    "visual_dim": "2D|3D"
+  }
+}
