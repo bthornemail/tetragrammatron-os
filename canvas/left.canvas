@@ -1,0 +1,23 @@
+{
+  "nodes": [
+    { "id": "left_L0", "type": "text", "x": -400, "y": 0, "width": 280, "height": 180,
+      "text": "# LEFT · L0
+
+Static knowledge
+Proof invariants" },
+    { "id": "left_L1", "type": "text", "x": 0, "y": 0, "width": 280, "height": 180,
+      "text": "# LEFT · L1
+
+Derived rules
+Lean/Coq evolution" },
+    { "id": "left_L2", "type": "text", "x": 400, "y": 0, "width": 280, "height": 180,
+      "text": "# LEFT · L2
+
+Certified semantics
+Published axioms" }
+  ],
+  "edges": [
+    { "id": "e1", "fromNode": "left_L0", "toNode": "left_L1", "direction": "forward", "label": "derive" },
+    { "id": "e2", "fromNode": "left_L1", "toNode": "left_L2", "direction": "forward", "label": "prove & freeze" }
+  ]
+}

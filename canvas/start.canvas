@@ -1,0 +1,23 @@
+{
+  "nodes": [
+    { "id": "start_L0", "type": "text", "x": -400, "y": 0, "width": 280, "height": 180,
+      "text": "# START · L0
+
+Genesis rules
+Bootstrap axioms" },
+    { "id": "start_L1", "type": "text", "x": 0, "y": 0, "width": 280, "height": 180,
+      "text": "# START · L1
+
+Initialization paths
+Entry states" },
+    { "id": "start_L2", "type": "text", "x": 400, "y": 0, "width": 280, "height": 180,
+      "text": "# START · L2
+
+Reproducible boot
+Deterministic entry" }
+  ],
+  "edges": [
+    { "id": "e1", "fromNode": "start_L0", "toNode": "start_L1", "direction": "forward", "label": "instantiate" },
+    { "id": "e2", "fromNode": "start_L1", "toNode": "start_L2", "direction": "forward", "label": "lock-in" }
+  ]
+}

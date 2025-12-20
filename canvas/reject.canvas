@@ -1,0 +1,23 @@
+{
+  "nodes": [
+    { "id": "reject_L0", "type": "text", "x": -400, "y": 0, "width": 280, "height": 180,
+      "text": "# REJECT · L0
+
+Exclusion axioms
+Invalid forms" },
+    { "id": "reject_L1", "type": "text", "x": 0, "y": 0, "width": 280, "height": 180,
+      "text": "# REJECT · L1
+
+Conflict detection
+Invariant breaks" },
+    { "id": "reject_L2", "type": "text", "x": 400, "y": 0, "width": 280, "height": 180,
+      "text": "# REJECT · L2
+
+Quarantined artifacts
+Non-propagating" }
+  ],
+  "edges": [
+    { "id": "e1", "fromNode": "reject_L0", "toNode": "reject_L1", "direction": "forward", "label": "detect" },
+    { "id": "e2", "fromNode": "reject_L1", "toNode": "reject_L2", "direction": "forward", "label": "isolate" }
+  ]
+}

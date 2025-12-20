@@ -1,0 +1,3 @@
+{"t":1,"op":"TRIAD","a":"state","b":"alphabet","c":"delta","result":"accept"}
+{"t":2,"op":"TRIAD","a":"delta","b":"left","c":"right","result":"accept"}
+{"t":3,"op":"TRIAD","a":"state","b":"left","c":"right","result":"accept"}  // NOT a Fano line → reject

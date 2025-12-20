@@ -1,0 +1,23 @@
+{
+  "nodes": [
+    { "id": "right_L0", "type": "text", "x": -400, "y": 0, "width": 280, "height": 180,
+      "text": "# RIGHT · L0
+
+Dynamic phase
+Runtime constraints" },
+    { "id": "right_L1", "type": "text", "x": 0, "y": 0, "width": 280, "height": 180,
+      "text": "# RIGHT · L1
+
+Execution feedback
+Timing effects" },
+    { "id": "right_L2", "type": "text", "x": 400, "y": 0, "width": 280, "height": 180,
+      "text": "# RIGHT · L2
+
+Stabilized dynamics
+Clock-aligned behavior" }
+  ],
+  "edges": [
+    { "id": "e1", "fromNode": "right_L0", "toNode": "right_L1", "direction": "forward", "label": "observe" },
+    { "id": "e2", "fromNode": "right_L1", "toNode": "right_L2", "direction": "forward", "label": "synchronize" }
+  ]
+}

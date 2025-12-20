@@ -1,0 +1,25 @@
+{
+  "nodes": [
+    { "id": "state_L0", "type": "text", "x": -400, "y": 0, "width": 280, "height": 180,
+      "text": "# STATE · L0
+
+Invariant state
+Canonical form
+Idempotent" },
+    { "id": "state_L1", "type": "text", "x": 0, "y": 0, "width": 280, "height": 180,
+      "text": "# STATE · L1
+
+Mutable state
+Feature evolution
+Testing" },
+    { "id": "state_L2", "type": "text", "x": 400, "y": 0, "width": 280, "height": 180,
+      "text": "# STATE · L2
+
+Stabilized state
+Release projection" }
+  ],
+  "edges": [
+    { "id": "e1", "fromNode": "state_L0", "toNode": "state_L1", "direction": "forward", "label": "propagate" },
+    { "id": "e2", "fromNode": "state_L1", "toNode": "state_L2", "direction": "forward", "label": "commit if Fano-consistent" }
+  ]
+}

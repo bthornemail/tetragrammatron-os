@@ -1,0 +1,23 @@
+{
+  "nodes": [
+    { "id": "accept_L0", "type": "text", "x": -400, "y": 0, "width": 280, "height": 180,
+      "text": "# ACCEPT · L0
+
+Validity axioms
+Acceptance criteria" },
+    { "id": "accept_L1", "type": "text", "x": 0, "y": 0, "width": 280, "height": 180,
+      "text": "# ACCEPT · L1
+
+Checks
+Fano consistency" },
+    { "id": "accept_L2", "type": "text", "x": 400, "y": 0, "width": 280, "height": 180,
+      "text": "# ACCEPT · L2
+
+Certified output
+Release gate" }
+  ],
+  "edges": [
+    { "id": "e1", "fromNode": "accept_L0", "toNode": "accept_L1", "direction": "forward", "label": "evaluate" },
+    { "id": "e2", "fromNode": "accept_L1", "toNode": "accept_L2", "direction": "forward", "label": "approve" }
+  ]
+}

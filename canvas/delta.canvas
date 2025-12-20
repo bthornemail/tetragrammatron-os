@@ -1,0 +1,23 @@
+{
+  "nodes": [
+    { "id": "delta_L0", "type": "text", "x": -400, "y": 0, "width": 280, "height": 180,
+      "text": "# DELTA · L0
+
+Primitive transforms
+MEET / JOIN" },
+    { "id": "delta_L1", "type": "text", "x": 0, "y": 0, "width": 280, "height": 180,
+      "text": "# DELTA · L1
+
+Fold sequences
+Origami programs" },
+    { "id": "delta_L2", "type": "text", "x": 400, "y": 0, "width": 280, "height": 180,
+      "text": "# DELTA · L2
+
+Verified transforms
+Opcode legality" }
+  ],
+  "edges": [
+    { "id": "e1", "fromNode": "delta_L0", "toNode": "delta_L1", "direction": "forward", "label": "compose" },
+    { "id": "e2", "fromNode": "delta_L1", "toNode": "delta_L2", "direction": "forward", "label": "validate" }
+  ]
+}

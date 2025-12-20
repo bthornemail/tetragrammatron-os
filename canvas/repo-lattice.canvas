@@ -1,0 +1,193 @@
+{
+  "nodes": [
+    {
+      "id": "kernel",
+      "type": "text",
+      "x": -800,
+      "y": -300,
+      "width": 360,
+      "height": 220,
+      "text": "# Kernel
+
+repo.canvasl
+RFC-0009
+RFC-0011
+canvasl.schema.json
+
+Invariant rules
+Normalization
+Fano consistency"
+    },
+    {
+      "id": "lattice",
+      "type": "text",
+      "x": -300,
+      "y": -300,
+      "width": 420,
+      "height": 260,
+      "text": "# Lattice (8-Tuple Registers)
+
+L0 / L1 / L2
+
+state
+alphabet
+left
+right
+delta
+start
+accept
+reject
+
+8³ register space"
+    },
+    {
+      "id": "compiler",
+      "type": "text",
+      "x": 250,
+      "y": -300,
+      "width": 380,
+      "height": 220,
+      "text": "# Assembler
+
+can_asm.scm
+can_disasm.scm
+
+CanvasL → CAN-ISA
+Deterministic lowering"
+    },
+    {
+      "id": "vm",
+      "type": "text",
+      "x": 750,
+      "y": -300,
+      "width": 420,
+      "height": 260,
+      "text": "# Origami Fold VM
+
+can_vm_ref.scm
+can_vm_portable.c
+
+MEET (GCD)
+JOIN (LCM)
+FANO.S
+PROJ_FANO"
+    },
+    {
+      "id": "artifacts",
+      "type": "text",
+      "x": 250,
+      "y": 50,
+      "width": 380,
+      "height": 200,
+      "text": "# Artifacts
+
+*.canbc
+
+CLBC-POLY blobs
+Instruction stream
+Canonical bytes"
+    },
+    {
+      "id": "hardware",
+      "type": "text",
+      "x": 750,
+      "y": 80,
+      "width": 420,
+      "height": 240,
+      "text": "# Hardware Targets
+
+ESP32-S3
+Pico 2 W
+
+Bare-metal execution
+Clock-driven VM loop"
+    },
+    {
+      "id": "renderer",
+      "type": "text",
+      "x": 1200,
+      "y": -300,
+      "width": 420,
+      "height": 260,
+      "text": "# Geometry Renderer
+
+geom_bridge.c
+renderer_contract.md
+
+Fano plane
+Origami folds
+Idempotent projection"
+    },
+    {
+      "id": "obsidian",
+      "type": "text",
+      "x": 1200,
+      "y": 80,
+      "width": 420,
+      "height": 220,
+      "text": "# Obsidian Visualization
+
+.canvas events
+Directed edges
+Semantic navigation"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "fromNode": "kernel",
+      "toNode": "lattice",
+      "label": "defines",
+      "direction": "forward"
+    },
+    {
+      "id": "e2",
+      "fromNode": "lattice",
+      "toNode": "compiler",
+      "label": "compiled as",
+      "direction": "forward"
+    },
+    {
+      "id": "e3",
+      "fromNode": "compiler",
+      "toNode": "artifacts",
+      "label": "emits",
+      "direction": "forward"
+    },
+    {
+      "id": "e4",
+      "fromNode": "artifacts",
+      "toNode": "vm",
+      "label": "loaded by",
+      "direction": "forward"
+    },
+    {
+      "id": "e5",
+      "fromNode": "vm",
+      "toNode": "renderer",
+      "label": "projects",
+      "direction": "forward"
+    },
+    {
+      "id": "e6",
+      "fromNode": "renderer",
+      "toNode": "obsidian",
+      "label": "emits events to",
+      "direction": "forward"
+    },
+    {
+      "id": "e7",
+      "fromNode": "vm",
+      "toNode": "hardware",
+      "label": "executes on",
+      "direction": "forward"
+    },
+    {
+      "id": "e8",
+      "fromNode": "hardware",
+      "toNode": "renderer",
+      "label": "feeds back",
+      "direction": "forward"
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+name: CAN-ISA Merge Invariant Guard
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  can-invariant-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract branch names
+        id: branches
+        run: |
+          echo "BASE=${{ github.base_ref }}" >> $GITHUB_ENV
+          echo "HEAD=${{ github.head_ref }}" >> $GITHUB_ENV
+
+      - name: Enforce branch topology
+        run: |
+          BASE="$BASE"
+          HEAD="$HEAD"
+
+          echo "Checking merge: $HEAD → $BASE"
+
+          # --- main branch rules ---
+          if [[ "$BASE" == "main" ]]; then
+            if [[ "$HEAD" != "current" ]]; then
+              echo "❌ main may only accept merges from current"
+              exit 1
+            fi
+          fi
+
+          # --- current branch rules ---
+          if [[ "$BASE" == "current" ]]; then
+            if [[ ! "$HEAD" =~ ^feature/ ]]; then
+              echo "❌ current may only accept merges from feature/*"
+              exit 1
+            fi
+          fi
+
+          # --- feature branch rules ---
+          if [[ "$HEAD" =~ ^feature/ ]]; then
+            if [[ "$BASE" != "current" ]]; then
+              echo "❌ feature branches may only merge into current"
+              exit 1
+            fi
+          fi
+
+          # --- release immutability ---
+          if [[ "$BASE" =~ ^release/ ]]; then
+            echo "❌ release branches are immutable"
+            exit 1
+          fi
+
+          echo "✅ Branch topology OK"
+
+      - name: Enforce semantic axis validity
+        run: |
+          if [[ "$HEAD" =~ ^feature/ ]]; then
+            AXIS="${HEAD#feature/}"
+
+            VALID_AXES=(
+              state
+              symbol
+              boundary
+              duality
+              transition
+              origin
+              acceptance
+              rejection
+            )
+
+            FOUND=0
+            for A in "${VALID_AXES[@]}"; do
+              if [[ "$AXIS" == "$A" ]]; then
+                FOUND=1
+              fi
+            done
+
+            if [[ "$FOUND" -eq 0 ]]; then
+              echo "❌ Invalid semantic axis: $AXIS"
+              exit 1
+            fi
+
+            echo "✅ Semantic axis '$AXIS' valid"
+          fi
+
+      - name: Enforce Fano-triad consistency
+        run: |
+          # Optional but powerful:
+          # Require triad declaration files when merging axes
+
+          if [[ "$HEAD" =~ ^feature/ ]]; then
+            AXIS="${HEAD#feature/}"
+
+            TRIAD_FILE="repo.canvasl/triads/${AXIS}.canvasl"
+
+            if [[ ! -f "$TRIAD_FILE" ]]; then
+              echo "❌ Missing Fano triad declaration for axis '$AXIS'"
+              echo "Expected: $TRIAD_FILE"
+              exit 1
+            fi
+
+            echo "✅ Fano triad declared for '$AXIS'"
+          fi
+
+      - name: Enforce canonical normalization
+        run: |
+          # Ensure no raw or denormalized kernel edits
+          if git diff --name-only origin/$BASE...HEAD | grep -E '^kernel/raw'; then
+            echo "❌ Direct edits to raw kernel space are forbidden"
+            exit 1
+          fi
+
+          echo "✅ Canonical kernel integrity preserved"
+
+      - name: Merge approved
+        run: echo "🟢 All CAN-ISA invariants satisfied"
