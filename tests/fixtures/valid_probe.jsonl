@@ -1,0 +1,6 @@
+{"t":"2025-01-01T00:00:00Z","k":"cpu.arch","v":"aarch64","src":"test-host","q":"KK"}
+{"t":"2025-01-01T00:00:01Z","k":"cpu.cores","v":4,"src":"test-host","q":"KK"}
+{"t":"2025-01-01T00:00:02Z","k":"mem.total_bytes","v":8589934592,"src":"test-host","q":"KK"}
+{"t":"2025-01-01T00:00:03Z","k":"os.kernel","v":"Linux","src":"test-host","q":"KK"}
+{"t":"2025-01-01T00:00:04Z","k":"cpu.endian","v":"little","src":"test-host","q":"KK"}
+

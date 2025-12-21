@@ -1,225 +1,81 @@
-# AGENTS.md  
-**Tetragrammatron-OS**
+# Tetragrammatron-OS — Agents Guide
 
-> A proof-carrying, geometry-first operating system and virtual machine for origami-based computation, polynomial constraint execution, and physically grounded autonomy.
+This `AGENTS.md` file provides **AI coding agents** machine-readable guidance about the structure, conventions, and workflows of the Tetragrammatron-OS project. AGENTS.md is a recognized standard for guiding AI coding agents and tools.
 
----
+## 🧭 Project Structure
 
-## 1. Purpose
+- `trees/`: Contains all life trees.
+  - `<tree>/`: A specific tree like "genesis", "john", "revelation".
+    - `branches/<branch>/`: Conceptual chapters (e.g., creation, spirit).
+      - `books/<book>/`: Subsections within a branch (ex. "day-1", "day-2").
+        - `entries.jsonl`: Event or entry records for that book.
+- `hardware/`: Canonical hardware probe, canon, and sphere records.
+- `descriptors/render.map.yaml`: 3D renderer and scene mapping rules.
+- `ulp/viewer/react/`: React three-fiber based interactive renderer.
+- `ulp/viewer/agents/`: Viewer panels, inspectors, and tools.
 
-This document defines **who and what is allowed to act** within the Tetragrammatron-OS codebase.
+## 🛠 Build & Tooling
 
-An **Agent** is any human, program, model, or system component that:
-- Writes code
-- Modifies specifications
-- Executes or mutates bytecode
-- Generates proofs, geometry, or artifacts
-- Interacts with hardware or time constraints
+AI agents should assume the following workflow:
 
-All agents are governed by **formal constraints**, **idempotence rules**, and **Fano-consistency invariants**.
+```bash
+# Validate JSONL probe files
+node tools/validate_jsonl.mjs hardware/probe.jsonl schemas/hw_event.schema.json
 
----
+# Generate canonical record from probe
+node tools/hw_canon.mjs hardware/probe.jsonl hardware/canon.json
 
-## 2. Primary Maintainer (Human Agent)
+# Generate sphere projection from canonical
+node tools/hw_project.mjs hardware/canon.json hardware/sphere.json
 
-**Name:** Brian Thorne  
-**GitHub:** https://github.com/bthornemail  
-**Email:** bthornemail@gmail.com  
+# Generate index manifests
+node tools/gen_tree_indexes.mjs trees/
 
-**Public links (identity & sponsorship):**
-- Cash App: https://cash.app/$brianthorne  
-- Venmo: https://venmo.com/u/brianthorne  
-- LinkedIn: https://www.linkedin.com/in/brian-thorne-5b8a96112/
+# Validate branch structure
+node tools/validate_axes.mjs
 
-### Authority
-The primary maintainer has final authority over:
-- RFC acceptance and versioning
-- ISA changes
-- Canonical semantics
-- Release branch promotion
-- Security decisions
+# Run drift scan
+node tools/drift_scan.mjs
 
----
+# Run the React viewer locally (when available)
+cd ulp/viewer/react/
+npm install
+npm run dev
 
-## 3. Agent Classes
-
-### 3.1 Human Agents
-
-Humans interact through Git, issues, RFCs, and code reviews.
-
-**Permissions:**
-- May propose changes via PRs
-- May author RFC drafts
-- May not bypass invariants or rewrite history without approval
-
-**Constraints:**
-- All merges must preserve **Fano consistency**
-- No direct commits to `main`
-- All work flows through semantic branches
-
----
-
-### 3.2 Software Agents (Internal)
-
-These agents are part of the system itself.
-
-#### VM Agents
-- `origami-vm`
-- `can-isa-vm`
-- `poly-logos-engine`
-
-**Capabilities:**
-- Execute bytecode
-- Enforce barriers
-- Apply fold semantics
-- Emit geometry and events
-
-**Restrictions:**
-- Cannot self-modify without `PATCH_*` opcode sequence
-- Must produce deterministic output
-- Must emit proofs or hashes for all state changes
-
----
-
-### 3.3 Proof Agents
-
-Formal reasoning components.
-
-Examples:
-- Lean proof kernels
-- Coq models
-- Canonical normalizers
-
-**Role:**
-- Verify idempotence
-- Prove fold correctness
-- Check invariants across merges, execution, and projection
-
-**Rule:**
-> No execution step is “valid” unless it is *provably admissible* or reducible to a proven primitive.
-
----
-
-### 3.4 AI / LLM Agents
-
-AI agents may assist with:
-- Drafting RFCs
-- Generating boilerplate
-- Exploring design spaces
-- Producing reference implementations
-
-**Hard limits:**
-- AI agents **cannot** be authoritative
-- AI output must be reviewed by a human agent
-- AI may not introduce unverifiable semantics
-
-**Canonical rule:**
-> AI can propose; proofs must dispose.
-
----
-
-### 3.5 Hardware Agents
-
-Physical systems executing or constraining the VM.
-
-Examples:
-- ESP32 (S3, C6)
-- Raspberry Pi Pico 2 W
-- Android devices (Termux)
-- Routers (OpenWRT / LuCI)
-
-**Responsibilities:**
-- Provide time signals
-- Enforce physical constraints
-- Emit sensor and clock data
-- Act as schedulable nodes in RR topology
-
-**Constraint:**
-Hardware agents may **delay**, **block**, or **gate** execution, but may not invent state.
-
----
-
-## 4. Agent Interaction Model
-
-All agent interaction is mediated through **formal artifacts**:
-
-- `.can` / `.canbc` — CAN-ISA bytecode
-- `.canvasl` — semantic topology descriptors
-- `.jsonl` — event streams
-- `.svg` / `.glb` — geometric projections
-- `.lean` / `.v` — proofs
-
-There is **no implicit shared state** between agents.
-
-Everything flows through:
-```
-Artifact → Validation → Projection → Commit
+# Build static viewer output (when available)
+npm run build
 ```
 
----
+## 📐 Coding Conventions
 
-## 5. Security & Trust Model
+- JavaScript/TypeScript: follow existing patterns under `ulp/viewer/react/src/`.
+- `AGENTS.md` and `README.md` should be updated in tandem for both humans and agents.
+- Three.js + react-three-fiber is canonical renderer stack.
 
-### 5.1 Trust Anchors
-- RFCs
-- Proof kernels
-- Deterministic VM execution
-- Hashes of canonical forms
+## 📊 Project Understanding
 
-### 5.2 What Is Not Trusted
-- Floating-point geometry
-- Wall-clock time without barrier verification
-- Undocumented side effects
-- Implicit global state
+Agents should leverage:
 
----
+- Canvases and bases for structural layout (Obsidian integration).
+- JSONL → canonical → sphere pipeline for hardware context.
+- Tree/Branch/Book/Entry shapes as primary data lenses.
 
-## 6. Self-Modification Policy
+Agents should **not modify source manifest files** or data streams; treat them as immutable ground truth.
 
-Self-modifying behavior is allowed **only** through:
+## 🧪 Test & Validation Conventions
 
-```
-PATCH_BEGIN
-PATCH_WRITE
-PATCH_SEAL
-PATCH_APPLY
-```
+- JSONL files must validate against schema with the provided validator.
+- Index manifests must reflect the folder structure exactly.
+- React viewer must load without errors and conform to asset loading rules.
 
-Rules:
-- Patches must be bounded
-- Patches must be reversible or provably idempotent
-- Patches must preserve invariants
-- Patch application is a *first-class event* (loggable + provable)
+## ⚠️ Safety & Boundaries
 
----
+- Do not generate or commit secrets or environment variables.
+- Always confirm actionable paths before opening or modifying files.
+- Respect the read-only tree of canonical data when suggesting fixes.
 
-## 7. Ethical & Philosophical Constraint
+## 🧾 Pull Request & Commit Guidelines
 
-Tetragrammatron-OS is designed to support:
-- Autonomy
-- Reciprocity
-- Determinism
-- Transparency
-- Physical grounding
+- PR titles should begin with the target area: `[renderer]`, `[schema]`, `[viewer]`.
+- All entries must include linked index updates where relevant.
 
-It explicitly rejects:
-- Surveillance-only architectures
-- Centralized coercive control
-- Opaque execution semantics
-
----
-
-## 8. Canonical Statement
-
-> **An agent in Tetragrammatron-OS is not defined by power, but by constraint.  
-> What is allowed to act is what can be proven to act correctly.**
-
----
-
-## 9. Version
-
-- **AGENTS.md v1.0**
-- Aligned with:
-  - RFC-009 (Origami Fold VM Semantics)
-  - RFC-011+ (Repository topology & lattice model)
-  - CAN-ISA v1.x

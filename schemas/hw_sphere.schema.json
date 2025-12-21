@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ulp://schemas/hw_sphere.schema.json",
+  "title": "ULP Sphere Projection Record",
+  "type": "object",
+  "required": ["meta", "pointer", "admissible"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["schema_version", "generated_at_utc", "source"],
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "description": "Schema version identifier"
+        },
+        "generated_at_utc": {
+          "type": "string",
+          "description": "ISO8601 UTC timestamp of generation",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+        },
+        "source": {
+          "type": "string",
+          "description": "Source canonical record file"
+        }
+      }
+    },
+    "pointer": {
+      "type": "integer",
+      "description": "Computed pointer residue (0-7)",
+      "minimum": 0,
+      "maximum": 7
+    },
+    "admissible": {
+      "type": "boolean",
+      "description": "Whether pointer is admissible (p ≠ 6)"
+    },
+    "vm_state": {
+      "type": "object",
+      "description": "VM state derived from projection"
+    }
+  }
+}
+

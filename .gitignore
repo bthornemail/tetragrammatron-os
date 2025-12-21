@@ -1,8 +1,40 @@
-
+context/services/
 
 #Ignore cursor AI rules
 .cursor/rules/codacy.mdc
 
+# Test artifacts
+tests/tmp/
+tests/**/tmp/
+dev-docs
 
-#Ignore vscode AI rules
-.github/instructions/codacy.instructions.md
+# Ignore cursor AI rules
+.cursor/rules/codacy.mdc
+/.lake
+.obsidian/workspace.json
+_build/
+esp-idf/
+venv/
+.deps/
+embedded/
+
+# Python
+__pycache__/
+*.pyc
+
+# ESP-IDF / ESP32 builds (all projects)
+embedded/**/build/
+
+# asciinema renders (generated artifacts)
+demos/asciinema/**/render/
+
+# demo run artifacts
+demos/**/events.jsonl
+
+# Coq build artifacts
+src/coq/*.glob
+src/coq/*.vo
+src/coq/*.vos
+src/coq/*.vok
+src/coq/.*.aux
+.nia.cache

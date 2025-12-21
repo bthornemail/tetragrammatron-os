@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "schema_version": "1.0",
+    "generated_at_utc": "2025-12-21T21:09:42Z",
+    "source_set": [
+      "hardware/probe.jsonl"
+    ]
+  },
+  "fields": {
+    "cpu.arch": {
+      "q": "KK",
+      "v": "aarch64",
+      "defaulted": false,
+      "evidence": [
+        "observed:2025-01-01T00:00:00Z"
+      ]
+    },
+    "cpu.cores": {
+      "q": "KK",
+      "v": 8,
+      "defaulted": false,
+      "evidence": [
+        "observed:2025-01-01T00:00:01Z"
+      ]
+    },
+    "mem.total_bytes": {
+      "q": "KK",
+      "v": 17179869184,
+      "defaulted": false,
+      "evidence": [
+        "observed:2025-01-01T00:00:02Z"
+      ]
+    },
+    "os.kernel": {
+      "q": "KK",
+      "v": "Linux",
+      "defaulted": false,
+      "evidence": [
+        "observed:2025-01-01T00:00:03Z"
+      ]
+    },
+    "os.version": {
+      "q": "KK",
+      "v": "6.14.0-37-generic",
+      "defaulted": false,
+      "evidence": [
+        "observed:2025-01-01T00:00:04Z"
+      ]
+    },
+    "time.tick_hz": {
+      "q": "KK",
+      "v": 1000000,
+      "defaulted": false,
+      "evidence": [
+        "observed:2025-01-01T00:00:05Z"
+      ]
+    },
+    "io.model": {
+      "q": "KU",
+      "v": "nondet",
+      "defaulted": true,
+      "evidence": [
+        "default:io.model=nondet"
+      ]
+    },
+    "cpu.endian": {
+      "q": "KK",
+      "v": "little",
+      "defaulted": false,
+      "evidence": [
+        "observed:2025-01-01T00:00:07Z"
+      ]
+    },
+    "word_bits": {
+      "q": "UK",
+      "v": 64,
+      "defaulted": false,
+      "evidence": [
+        "derived:arch->word_bits"
+      ]
+    },
+    "addr_bits": {
+      "q": "UK",
+      "v": 64,
+      "defaulted": false,
+      "evidence": [
+        "derived:word_bits->addr_bits"
+      ]
+    }
+  }
+}

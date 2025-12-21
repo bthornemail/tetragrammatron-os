@@ -1,0 +1,6 @@
+{"t":"2025-01-01T00:00:00Z","k":"cpu.arch","v":"aarch64"}
+{"t":"invalid-timestamp","k":"cpu.cores","v":4}
+{"t":"2025-01-01T00:00:02Z","k":"invalid key","v":"value"}
+{"t":"2025-01-01T00:00:03Z","k":"cpu.cores","v":}
+{"t":"2025-01-01T00:00:04Z","k":"cpu.endian","v":"little","extra":"field"}
+

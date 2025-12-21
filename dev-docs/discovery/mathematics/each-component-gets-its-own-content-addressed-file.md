@@ -1,1 +1,0 @@
-# Each component gets its own content-addressed file

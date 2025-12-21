@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ulp://schemas/hw_event.schema.json",
+  "title": "ULP Hardware Probe Event (JSONL line)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["t", "k", "v"],
+  "properties": {
+    "t": {
+      "type": "string",
+      "description": "UTC timestamp in RFC3339 form",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "k": {
+      "type": "string",
+      "description": "Dot-separated key",
+      "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$"
+    },
+    "v": {
+      "description": "Value (string/number/bool/object/array/null)",
+      "type": ["string", "number", "boolean", "object", "array", "null"]
+    },
+    "src": {
+      "type": "string",
+      "description": "Optional source identifier (host/device id)",
+      "maxLength": 128
+    },
+    "q": {
+      "type": "string",
+      "description": "Optional quadrant tag (KK/KU/UK/UU). Usually added later by canonicalizer/adapters.",
+      "enum": ["KK", "KU", "UK", "UU"]
+    }
+  }
+}
+

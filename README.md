@@ -1,240 +1,127 @@
 # Tetragrammatron-OS
 
-> **A geometry-first, proof-carrying operating system and virtual machine for deterministic computation across software, hardware, and space.**
+This repository encodes the **Tetragrammatron-OS** semantic modeling system, hardware canonicalization pipeline, and interactive spatial renderers. It integrates JSONL hardware probes, canonical sphere projection, index manifests, and 3D visualization via React and Obsidian.
 
-Tetragrammatron-OS is an experimental but rigorous computing substrate that unifies:
+## 🔹 What's Here
 
-- **Computation** (bytecode, VM, assembler)
-- **Mathematics** (polynomials, lattices, projective geometry)
-- **Time & physics** (clocks, barriers, scheduling)
-- **Visualization** (SVG / GLB / projection geometry)
-- **Formal verification** (Lean / Coq)
-- **Embedded execution** (ESP32, RP2040, mobile, routers)
+### Data Layer
+- `hardware/`
+  - `probe.jsonl`: hardware observations
+  - `canon.json`: canonical hardware profile
+  - `sphere.json`: VM projection record
 
-This is not an application framework.  
-It is a **computational ontology**.
+### Structural Layer
+- `trees/`: all tree data
+  - `<tree>/branches/<branch>/books/<book>/entries.jsonl`
 
----
+### Viewer Layer
+- `ulp/viewer/react/`: React three-fiber 3D renderer
+- `ulp/viewer/three/`: Legacy Three.js single-file viewer
+- `obsidian/`: Canvas & Bases support files for Obsidian
 
-## 1. What Problem This Solves
+### Tools
+- `tools/validate_jsonl.mjs`: JSONL validator
+- `tools/hw_canon.mjs`: Canonicalization script (probe → canon)
+- `tools/hw_project.mjs`: Projection script (canon → sphere)
+- `tools/gen_tree_indexes.mjs`: Index manifest generator
+- `tools/validate_axes.mjs`: Structural validator for branches
+- `tools/drift_scan.mjs`: Drift tracking scanner
 
-Modern systems suffer from:
-- Implicit global state
-- Unverifiable execution
-- Inconsistent geometry across platforms
-- Separation of logic, proof, time, and visualization
-- Fragile abstractions between software and hardware
+### Tests
+- `tests/unit/`: Unit tests for individual tools
+- `tests/integration/`: End-to-end pipeline tests
+- `tests/fixtures/`: Test data and expected outputs
 
-**Tetragrammatron-OS replaces those with:**
+## 🚀 Quick Start
 
-- Explicit constraints
-- Idempotent normalization
-- Deterministic execution
-- Proof-carrying state transitions
-- A minimal geometric core (the Fano plane)
+1. **Validate hardware probe data**  
+   ```bash
+   node tools/validate_jsonl.mjs hardware/probe.jsonl schemas/hw_event.schema.json
+   ```
 
----
+2. **Generate canonical record**
+   ```bash
+   node tools/hw_canon.mjs hardware/probe.jsonl hardware/canon.json
+   ```
 
-## 2. Core Idea (Plain Language)
+3. **Generate sphere projection**
+   ```bash
+   node tools/hw_project.mjs hardware/canon.json hardware/sphere.json
+   ```
 
-Every computation is treated as a **fold**:
+4. **Generate tree indices**
+   ```bash
+   node tools/gen_tree_indexes.mjs trees
+   ```
 
-- A fold reduces a space of possibilities
-- Folding twice yields the same result as folding once (idempotence)
-- Valid folds preserve structure (invariants)
+5. **Validate branch structure**
+   ```bash
+   node tools/validate_axes.mjs
+   ```
 
-The **Fano plane** (7 points, 7 lines) is the smallest structure where:
-- All folds are representable
-- Consistency can be checked locally
-- Projection is loss-bounded
+6. **Run drift scan**
+   ```bash
+   node tools/drift_scan.mjs
+   ```
 
-This becomes the **universal execution surface**.
+7. **Run viewer** (when available)
+   ```bash
+   cd ulp/viewer/react
+   npm install
+   npm run dev
+   ```
 
----
+8. **Build viewer** (when available)
+   ```bash
+   npm run build
+   ```
 
-## 3. The 8-Tuple (Semantic Closure)
+9. **Run tests**
+   ```bash
+   npm test
+   ```
 
-All system behavior is expressed through **eight semantic registers**  
-(derivable, composable, and sufficient):
+10. **Run full pipeline**
+    ```bash
+    npm run pipeline
+    ```
 
-| Axis | Meaning |
-|----|----|
-| **State** | What exists |
-| **Symbol** | What is referenced |
-| **Left** | Structural / static projection |
-| **Right** | Experiential / dynamic projection |
-| **Transition** | Change |
-| **Source** | Origin |
-| **Target** | Destination |
-| **Result** | Outcome |
+## 🧠 Philosophy
 
-Every instruction, proof, visualization, and branch maps to this tuple.
+This project treats:
+- **Data as immutable truth**
+- **Indices as projection artifacts**
+- **Agents and viewers as read-only observers**
+- **Human developers and AI tools as collaborators**
 
----
+## 📐 Architecture Overview
 
-## 4. Architecture Overview
-
-```
-┌──────────────────────────┐
-│      RFC Layer           │  ← Formal semantics
-├──────────────────────────┤
-│     Proof Layer          │  ← Lean / Coq
-├──────────────────────────┤
-│     VM / ISA Layer       │  ← CAN-ISA, Origami VM
-├──────────────────────────┤
-│     Geometry Layer       │  ← Fano / folds / projections
-├──────────────────────────┤
-│     Time & Barrier Layer │  ← clocks, waits, scheduling
-├──────────────────────────┤
-│     Hardware Layer       │  ← ESP32, Pico, Android, Router
-└──────────────────────────┘
-```
-
-No layer bypasses another.
-
----
-
-## 5. Instruction Model (High Level)
-
-Instructions are **folds**, not commands.
-
-Examples:
-- `MEET` → constraint intersection (GCD-like)
-- `JOIN` → constraint union (LCM-like)
-- `PROJ_FANO` → canonical projection
-- `BARRIER_T` → physical time constraint
-- `PATCH_*` → bounded self-modification
-
-All instructions:
-- Have fixed binary encodings
-- Are formally spec’d
-- Are provably safe or rejected
-
----
-
-## 6. Visualization Is Not Decoration
-
-Visualization is **semantic output**, not UI.
-
-- SVG = exact 2D projection
-- GLB = exact 3D/4D projection
-- Edges encode direction, time, and causality
-- Colors encode semantic axes
-- Geometry **is executable state**
-
-A rendered object always corresponds to a verifiable computation.
-
----
-
-## 7. Repository Structure (Canonical)
+The pipeline works as follows:
 
 ```
-tetragrammatron-os/
-├── README.md
-├── AGENTS.md
-├── rfc/
-│   ├── README.md
-│   ├── RFC-0000-can-isa-invariants.md
-│   ├── RFC-0009-origami-fold-vm.md
-│   ├── RFC-0011-repo-lattice.md
-│   ├── RFC-0012-binary-encoding.md
-│   └── RFC-0013-time-and-barriers.md
-├── core/
-│   ├── canvasl/
-│   ├── poly/
-│   └── geometry/
-├── vm/
-│   ├── can-isa/
-│   ├── origami-vm/
-│   └── disassembler/
-├── proof/
-│   ├── lean/
-│   └── coq/
-├── assembler/
-│   └── scheme/
-├── hardware/
-│   ├── esp32/
-│   ├── pico/
-│   └── android/
-├── visualization/
-│   ├── svg/
-│   └── glb/
-└── demos/
+hardware probe (JSONL)
+     ↓ validate (validate_jsonl.mjs)
+     ↓ canonicalize (hw_canon.mjs)
+hardware canon
+     ↓ project (hw_project.mjs)
+hardware sphere (VM state)
+     ↓ visualize (when viewer available)
+3D renderers + Inspector UIs
 ```
 
-Branches are semantic, not temporal:
-- `main` → normalized fixed point
-- `current` → integration manifold
-- `feature/*` → orthogonal semantic axes
+### Data Flow
 
-**Merge gate.** All repo.canvasl edits pass through the Agent‑6 Fano merge gate:
+1. **Probe** (`hardware/probe.jsonl`): Raw hardware observations
+2. **Canon** (`hardware/canon.json`): Canonical record with quadrant-tagged values
+3. **Sphere** (`hardware/sphere.json`): VM projection with pointer and admissibility
 
-- `repo.canvasl/kernel.canvasl` declares the lattice topology + branch policy.
-- `repo.canvasl/<axis>/<axis>/<axis>/reg.canvasl` are the 8×8×8 registers.
-- `repo.canvasl/triads/<axis>.canvasl` enumerate legal Fano lines per axis.
-- `tools/gen_repo_canvasl.py` regenerates the kernel, registers, and triad files (`--check` verifies without modifying files). `make repo-lattice`, `make repo-check`, and `make repo-verify` wrap these commands (`repo-verify` also runs the Fano merge gate with `FANO_BASE=origin/main` by default).
-- `tools/fano-merge-check.py` enforces topology + triads and runs in `.github/workflows/can-invariant-merge.yml`.
+## 🧪 Contributing
 
-A merge is valid iff touched axes only form legal Fano triads and each axis has its triad declaration.
+- Follow the AGENTS.md instructions at each level.
+- Update index files only through the designated generator tools.
+- Confirm all new entries include valid manifest updates.
 
----
+## 📜 License
 
-## 8. Hardware Philosophy
+*(Add your license here if applicable)*
 
-Hardware is not an endpoint — it is a **constraint oracle**.
-
-ESP32, Pico, phones, and routers provide:
-- Time
-- Latency
-- Entropy
-- Physical limits
-
-The VM adapts — never assumes.
-
----
-
-## 9. Status
-
-This project is:
-- Research-grade
-- Actively evolving
-- Internally consistent
-- Externally experimental
-
-Expect:
-- RFC-driven changes
-- Formalization first
-- Implementation second
-- Demos last
-
----
-
-## 10. Why the Name
-
-**Tetragrammatron-OS**
-
-- **Tetra** — binary quadratic form
-- **Gramma** — grammar / wave / symbol
-- **Tron** — automaton / machine
-- **OS** — a 64-bit mnemonic interpreter
-
-It names the *function*, not the myth.
-
----
-
-## 11. Getting Involved
-
-If you:
-- Care about correctness
-- Enjoy foundational systems
-- Prefer proof over promise
-- Want computation grounded in reality
-
-Open an issue or read the RFCs.
-
----
-
-## 12. Canonical Statement
-
-> **Tetragrammatron-OS treats computation as geometry under constraint,  
-> where execution, proof, time, and visualization are the same act.**

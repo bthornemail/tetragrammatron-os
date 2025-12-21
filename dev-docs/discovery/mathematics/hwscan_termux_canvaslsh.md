@@ -1,1 +1,0 @@
-# hwscan_termux_canvasl.sh
