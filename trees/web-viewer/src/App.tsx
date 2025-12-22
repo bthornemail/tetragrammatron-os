@@ -34,7 +34,7 @@ export default function App() {
           console.log(schemaMap)
         } else {
           // Runtime BIN + SIG (signatures enforced)
-          for (const att of atts) {
+          for (const att of a) {
             const v = att.v;
             if (!v?.realm || !v?.schema_hash || !v?.schema_class) continue;
 
