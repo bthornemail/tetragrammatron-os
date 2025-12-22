@@ -26,3 +26,19 @@ context: public
 prefix40: "1A:02:04:03:02::/40"
 ---
 ```
+# 7) Obsidian: visible policy + trust signal
+
+Add to frontmatter:
+
+```yaml
+schema_hash: a9f3c21d9e4b0a77d1a5f0b3a9e7c2ff
+schema_version: v2
+context_mode: public4
+```
+
+In Bases:
+- group by `schema_hash`
+- highlight mismatches
+- show **policy drift visually**
+
+---

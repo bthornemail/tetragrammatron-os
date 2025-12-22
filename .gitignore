@@ -1,5 +1,5 @@
 context/services/
-
+node_modules/
 #Ignore cursor AI rules
 .cursor/rules/codacy.mdc
 
@@ -38,3 +38,136 @@ src/coq/*.vos
 src/coq/*.vok
 src/coq/.*.aux
 .nia.cache
+
+test-repos/
+
+
+venv/
+Images/
+snapshots*
+snapshots*/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.eslintcache
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+coverage/
+
+# Caches
+.cache/
+**/.cache/
+.turbo/
+
+# OS/Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Env/Secrets
+.env
+.env.*
+!.env.example
+
+# Logs & temp
+*.log
+logs/
+tmp/
+
+# Test artifacts
+test-results/
+playwright-report/
+**/.playwright-artifacts-*/
+**/test-results/**/*.png
+**/test-results/**/*.webm
+**/test-results/**/*.zip
+**/test-results/**/*.trace
+**/test-results/**/*.md
+coverage/
+*.lcov
+.nyc_output/
+
+# Archives/bundles
+*.tgz
+*.zip
+*.tar.gz
+
+# Helm binaries
+helm
+helm-*
+
+# Generated reports (keep committed canonical docs under docs/)
+cleaned-reports/
+
+# Large benchmark/test result files
+benchmark-results-*.jsonl
+**/benchmark-results-*.jsonl
+
+
+#Ignore vscode AI rules
+.github/instructions/codacy.instructions.md
+mosquitto.db
+speak-generate-templates/.git
+# Racket compiled files
+compiled/
+*.zo
+*.dep
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+
+# Environment files
+.env
+.env.local
+
+# Build artifacts
+dist/
+build/
+
+# Test coverage
+coverage/
+
+# Documentation builds
+docs/_build/
+
+
+
+#Ignore cursor AI rules
+.cursor/rules/codacy.mdc
+
+
+
+
+
+
+
+
+# Security and sensitive files
+SECURITY-WARNING.md
+*.txt
+*.cast
+
+# Conversation exports
+2025-*.txt

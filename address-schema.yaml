@@ -1,43 +1,19 @@
+schema: tetragrammatron/address-schema@v3
+schema_class: public        # private | protected | public
+realm: 0x1A
+epoch: 3
+abi_version: 2
 
-schema: tetragrammatron/address-schema@v2
-endianness: big
 rows: 8
 schema_rows: 5
 
 rowspec:
-  R0:
-    name: realm
-    fixed: true
-    allowed: [0x00, 0x01, 0x1A]
+  R0: { fixed: true, allowed: [0x1A] }
+  R1: { fixed: true, allowed: [0x02] }
+  R2: { fixed: true, allowed: [0x04] }
+  R3: { fixed: true, allowed: [0x03] }
+  R4: { fixed: true, allowed: [0x02] }
 
-  R1:
-    name: ontology
-    fixed: true
-    allowed: [0x01,0x02,0x03,0x04,0x05,0x06,0x07]
-
-  R2:
-    name: capability
-    fixed: true
-    allowed: [0x01,0x02,0x03,0x04,0x05,0x06,0x07]
-
-  R3:
-    name: process
-    fixed: true
-    allowed: [0x01,0x02,0x03,0x04,0x05,0x06]
-
-  R4:
-    name: context
-    fixed: true
-    allowed: [0x01,0x02,0x03,0x04,0x05,0x06]
-
-  R5:
-    name: instance_a
-    fixed: false
-
-  R6:
-    name: instance_b
-    fixed: false
-
-  R7:
-    name: instance_c
-    fixed: false
+  R5: { fixed: false }
+  R6: { fixed: false }
+  R7: { fixed: false }
