@@ -15,7 +15,8 @@ export async function fetchSchemasJsonl(url: string): Promise<Map<string, Schema
 
   const map = new Map<string, SchemaJson>();
   const lines = text.split(/\r?/).map(l => l.trim()).filter(Boolean);
-
+  console.log(lines)
+  
   for (const line of lines) {
     let obj: any;
     try { obj = JSON.parse(line); } catch { continue; }

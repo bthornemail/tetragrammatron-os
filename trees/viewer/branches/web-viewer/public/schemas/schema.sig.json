@@ -1,0 +1,13 @@
+{
+    "k": "schema.sig",
+    "v": {
+      "realm": "1A",
+      "schema_hash": "a9f3c2...",
+      "schema_class": "public",
+      "epoch": 3,
+      "pubkey_ed25519": "<hex-32-bytes>",
+      "sig_ed25519": "<hex-64-bytes>",
+      "signed_over": "schema.bin",
+      "abi": 2
+    }
+  }

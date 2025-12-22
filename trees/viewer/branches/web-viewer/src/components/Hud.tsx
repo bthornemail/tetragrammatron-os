@@ -6,6 +6,8 @@ export function Hud({ nodes, groups }: { nodes: NodeRecord[]; groups: GroupRecor
   const unknownSchema = groups.filter(g => g.schemaHash === "unknown").length;
   const invalid = nodes.filter(n => n.validation?.kind === "invalid").length;
   const unknown = nodes.filter(n => n.validation?.kind === "unknown-schema").length;
+  // const unsigned = [...schemaStatus.values()].filter(s => s === "unsigned").length;
+  // const invalidSig = [...schemaStatus.values()].filter(s => s === "invalid").length;
   return (
     <div style={{
       position: "absolute", top: 12, left: 12, zIndex: 10,
@@ -29,6 +31,11 @@ export function Hud({ nodes, groups }: { nodes: NodeRecord[]; groups: GroupRecor
       <div style={{ marginTop: 6 }}>
         <div>unknown schema groups: <b>{unknownSchema}</b></div>
       </div>
+      {/* <div style={{ marginTop: 8 }}>
+        <div>schemas loaded: <b>{schemas.size}</b></div>
+        <div style={{ color: "#ffa94d" }}>unsigned rejected: <b>{unsigned}</b></div>
+        <div style={{ color: "#ff6b6b" }}>invalid signature: <b>{invalidSig}</b></div>
+      </div> */}
       <div style={{ marginTop: 10, opacity: 0.85 }}>
         Data: <code>/public/data/events.jsonl</code> and <code>/public/data/attestations.jsonl</code>
       </div>
