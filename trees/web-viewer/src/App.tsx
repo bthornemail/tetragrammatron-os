@@ -10,7 +10,7 @@ import { fetchSchemasJsonl } from "./lib/schema-jsonl";
 import { fetchSchemaSig, verifySchemaSignature } from "./lib/schema-sig";
 import { SchemaCompiler } from "./components/SchemaCompiler";
 
-const DEV_SCHEMA_JSONL = true;
+const DEV_SCHEMA_JSONL = false; //true;
 export default function App() {
   const [schemas, setSchemas] = useState<Map<string, any>>(new Map());
   const [events, setEvents] = useState<JsonlEvent[]>([]);

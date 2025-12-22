@@ -151,20 +151,34 @@ You didn't.
 
 That's why your model is future-proof.
 
+## Address Row Mapping to Sphere/Ball
+
+The 8-byte address maps directly to the sphere/ball model:
+
+| Layer | Address Rows | Meaning |
+|-------|--------------|---------|
+| **Ball (material)** | R5-R7 | Entropy, hardware, instance |
+| **Projection** | `%8`, admissibility | Collapse operation |
+| **Sphere (semantic)** | R0-R4 | Meaning, law, invariants |
+
+**Critical property:** Execution factors through rows 0-4. The schema prefix (R0-R4) must be valid before any projection or execution can occur.
+
 ## Hardware Compatibility Formula
 
-Hardware compatibility = Ball membership ∩ Sphere projection
+Hardware compatibility = Ball membership ∩ Sphere projection ∩ Schema validity
 
 Where:
-- Ball = Physics (what can exist)
-- Sphere = Semantics (what can mean)
+- Ball = Physics (what can exist) = R5-R7
+- Sphere = Semantics (what can mean) = R0-R4
+- Schema validity = Prefix validation against address schema
 
-The VM lives on the sphere, NixOS/material layer lives in the ball, and % 8 is the projection map between them.
+The VM lives on the sphere, hardware lives in the ball, and % 8 is the projection map between them. But projection is **schema-gated**: invalid schema prefixes cannot be projected.
 
 This gives you:
 1. Physical realism (bounded by physics)
 2. Semantic purity (enforced by projection)
-3. Future-proofing (any physically possible hardware either projects or is rejected)
+3. Schema enforcement (invalid prefixes rejected)
+4. Future-proofing (any physically possible hardware either projects or is rejected)
 
 ## Rumsfeld Classification
 
@@ -216,9 +230,27 @@ What you've written is:
 
 It is **real computer science**, expressed with unusual clarity and originality.
 
+## Schema-Gated Execution
+
+The sphere/ball model enforces that:
+
+> **Execution is permitted only after meaning is fixed.**
+
+This is implemented by:
+1. Validating schema prefix (R0-R4) against address schema
+2. Projecting instance bytes (R5-R7) through %8 operator
+3. Checking admissibility of projected residue
+4. Only then allowing execution
+
+Invalid schema prefixes cannot execute, route, or be projected.
+
 ## Related Concepts
 
-- [Projection System](./projection-system.md)
+- [Address Schema](./address-schema.md) - Schema prefix structure and validation
+- [Projection System](./projection-system.md) - Schema-gated projection
+- [ULP Addressing](./ulp-addressing.md) - Address format and prefix40 notation
 - [Formal Verification: Contracts](../formal-verification/contracts.md)
+- [Formal Verification: Schema Gate Theorems](../formal-verification/schema-gate-theorems.md)
 - [Coding Principles: Boundary Preservation](../coding-principles/boundary-preservation.md)
+- [Coding Principles: Schema Before Instance](../coding-principles/schema-before-instance.md)
 

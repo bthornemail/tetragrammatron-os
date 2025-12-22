@@ -194,15 +194,116 @@ Validator can be extended to **require** that file for "public sphere mode".
 - **Private / ball mode**: structure-only, permissive
 - **Public / sphere mode**: structure + contract required
 
+## Schema Validation Contracts
+
+### Schema Prefix Validation Contract
+
+**Contract:** All addresses must have valid schema prefixes (R0-R4) before any operation.
+
+```lean
+def SchemaValidationContract (addr : Addr8) (schema : SchemaTable) : Prop :=
+  schemaValid schema addr
+```
+
+**Enforcement:**
+- Execution requires valid schema prefix
+- Routing requires valid schema prefix
+- Projection requires valid schema prefix
+
+**Theorem:**
+```lean
+theorem invalid_schema_no_execute :
+  ¬ schemaValid schema addr →
+  runChecked fuel code vm = Outcome.trap vm "invalid_schema"
+```
+
+### Signature Verification Contract
+
+**Contract:** Protected/public schemas must have valid signatures.
+
+```lean
+def SignatureVerificationContract 
+  (schema : SchemaTable) 
+  (sig : SchemaSignature) 
+  (ctx : TrustCtx) : Prop :=
+  match schema.schemaClass with
+  | .private => True  -- Optional
+  | .protected => verifySignature schema.bin sig ctx.sharedKey
+  | .public => verifySignature schema.bin sig ctx.publicKey
+```
+
+**Enforcement:**
+- Protected schemas: Require group key signature
+- Public schemas: Require public trust root signature
+- Private schemas: Signature optional
+
+**Theorem:**
+```lean
+theorem protected_requires_signature :
+  schema.schemaClass = .protected →
+  ¬ verifySignature schema.bin sig ctx.sharedKey →
+  rejectSchema schema
+```
+
+### Class Admissibility Contract
+
+**Contract:** Schema class must be admissible for trust context.
+
+```lean
+def ClassAdmissibilityContract 
+  (schema : SchemaTable) 
+  (ctx : TrustCtx) : Prop :=
+  classAdmissible schema.schemaClass ctx
+```
+
+**Enforcement:**
+- Private: Requires `ctx.isSelf`
+- Protected: Requires `ctx.sharedKeyOK`
+- Public: Always admissible
+
+**Theorem:**
+```lean
+theorem exec_implies_class_admissible :
+  executes reg ctx pkt →
+  classAdmissible pkt.schemaClass ctx
+```
+
+## Combined Execution Contract
+
+The complete execution contract requires all three:
+
+```lean
+def ExecutionContract 
+  (addr : Addr8) 
+  (schema : SchemaTable) 
+  (sig : SchemaSignature) 
+  (ctx : TrustCtx) : Prop :=
+  SchemaValidationContract addr schema ∧
+  SignatureVerificationContract schema sig ctx ∧
+  ClassAdmissibilityContract schema ctx
+```
+
+**Meaning:** Execution can only occur if:
+1. Schema prefix is valid
+2. Signature is valid (if required)
+3. Class is admissible for trust context
+
 ## Key Theorems
 
 1. **validator_contract_implies_projection**: Validator + contract ⇒ projection exists
 2. **validator_boundary_preservation**: Validator + boundary contract + boundary ⇒ boundary preservation
 3. **alpha_induces_contract**: α-adapter proves admissibility ⇒ induces contract
+4. **invalid_schema_no_execute**: Invalid schema prefix cannot execute
+5. **protected_requires_signature**: Protected schemas require valid signature
+6. **exec_implies_class_admissible**: Execution implies class admissibility
 
 ## Related Concepts
 
+- [Schema Gate Theorems](./schema-gate-theorems.md) - Formal proofs
+- [Triadic Law Proofs](./triadic-law-proofs.md) - Class admissibility proofs
 - [Sphere-Ball Model](../architecture/sphere-ball-model.md)
 - [Validation System](../architecture/validation-system.md)
+- [Architecture: Address Schema](../architecture/address-schema.md)
+- [Architecture: Triadic Law](../architecture/triadic-law.md)
 - [Adapter Pattern](../implementation-patterns/adapter-pattern.md)
 

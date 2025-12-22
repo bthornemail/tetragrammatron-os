@@ -169,6 +169,47 @@ Agents MAY read from but MUST NOT mutate:
 - Alter source JSONL / CanvasL / documents
 - Introduce new axes or rename folders
 - Infer intent beyond explicit content
+- Modify `address-schema.yaml` without human confirmation
+- Bypass schema validation
+- Interpret instance bytes (R5-R7) as semantic values
+
+## Address Schema Validation
+
+Agents MUST validate address prefixes before any operation:
+
+1. **Schema validation**: R0-R4 must be valid according to `address-schema.yaml`
+2. **Schema-gated execution**: Invalid schema prefixes cannot execute, route, or project
+3. **No instance interpretation**: R5-R7 are pure entropy, no semantic meaning
+
+**Critical rule:** All addresses must pass schema prefix validation before use.
+
+## Schema-Gated Execution
+
+Agents MUST enforce the execution gate:
+
+```c
+if (!schema_prefix_valid(addr)) {
+  trap("invalid_schema");
+} else {
+  proceed();
+}
+```
+
+This applies to:
+- VM execution
+- Mesh routing
+- Projection operations
+- Web viewer rendering
+
+## Signature Verification
+
+For protected/public schemas:
+
+- **Protected schemas**: Require valid signature (group key)
+- **Public schemas**: Require valid signature (public trust root)
+- **Private schemas**: Signature optional
+
+Agents MUST verify signatures before accepting protected/public schemas.
 
 ## Output Expectations
 
@@ -176,7 +217,8 @@ When asked to act on this branch, agents should:
 
 1. State which axis they are operating on
 2. Identify which context constraints apply
-3. Produce outputs that can be traced back to files
+3. Validate address schema prefixes (if addresses are involved)
+4. Produce outputs that can be traced back to files
 
 Silence or ambiguity must be preserved, not "filled in".
 ```
@@ -191,6 +233,10 @@ Silence or ambiguity must be preserved, not "filled in".
 
 ## Related Concepts
 
+- [Address Schema](./address-schema.md) - Address format conventions
+- [Schema Files](./schema-files.md) - Schema file formats
 - [File Structure](../architecture/file-structure.md)
+- [Architecture: Address Schema](../architecture/address-schema.md)
+- [Coding Principles: Schema Before Instance](../coding-principles/schema-before-instance.md)
 - [Validation Patterns](../implementation-patterns/validation-patterns.md)
 

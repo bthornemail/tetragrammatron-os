@@ -16,6 +16,25 @@ This ensures:
 - Deterministic regeneration of derived artifacts
 - Clear separation between source and derived data
 
+## Address Schema Immutability
+
+The **address schema** (`address-schema.yaml`) is the immutable source of truth:
+
+- **Human-edited only**: Schema changes require explicit human confirmation
+- **Versioned**: Schema version tracked in metadata
+- **Deterministic compilation**: Same YAML always produces same binary
+- **Binary schemas are derived**: `address-schema.bin` is generated, not edited
+
+**Agents MUST NOT:**
+- Modify `address-schema.yaml` without human confirmation
+- Generate schema binaries that don't match the YAML source
+- Infer schema values from instance bytes
+
+**Schema compilation is deterministic:**
+- Same YAML input → same binary output
+- Schema hash is computed from canonicalized structure
+- No randomness in compilation process
+
 ## Three-Layer Architecture
 
 | Layer | Role | Writes |
@@ -67,7 +86,10 @@ Renderers and viewers are read-only:
 
 ## Related Concepts
 
-- [Determinism](./determinism.md)
+- [Determinism](./determinism.md) - Schema compilation determinism
+- [Schema Before Instance](./schema-before-instance.md) - Schema is immutable law
+- [Architecture: Address Schema](../architecture/address-schema.md) - Schema format and compilation
 - [Architecture: File Structure](../architecture/file-structure.md)
+- [Implementation Patterns: Schema Compilation](../implementation-patterns/schema-compilation.md)
 - [Implementation Patterns: Drift Tracking](../implementation-patterns/drift-tracking.md)
 

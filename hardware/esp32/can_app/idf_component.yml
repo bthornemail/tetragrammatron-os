@@ -1,0 +1,3 @@
+dependencies:
+  tetragrammatron_schema:
+    path: ../../../components/tetragrammatron_schema

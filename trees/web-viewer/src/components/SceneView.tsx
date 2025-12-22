@@ -1,7 +1,8 @@
 import * as THREE from "three";
-import React, { useMemo } from "react";
-import { Canvas } from "@react-three/fiber";
+import React, { useMemo, useCallback, useRef } from "react";
+import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls, Html } from "@react-three/drei";
+import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { GroupRecord, NodeRecord } from "../lib/lattice";
 import { SchemaClass } from "../lib/model";
 
@@ -32,11 +33,11 @@ function posFromAddr(n: NodeRecord): THREE.Vector3 {
   return new THREE.Vector3(x, y, z);
 }
 
-function GroupPlane({ g, center }: { g: GroupRecord; center: THREE.Vector3 }) {
+function GroupPlane({ g, center, onFocus }: { g: GroupRecord; center: THREE.Vector3; onFocus?: (point: THREE.Vector3) => void }) {
   const opacity = classToOpacity(g.class);
   const size = 6 + Math.min(12, g.nodes.length); // scale by density
   return (
-    <mesh position={center}>
+    <mesh position={center} onClick={(e) => { e.stopPropagation(); onFocus?.(center); }}>
       <planeGeometry args={[size, size]} />
       <meshBasicMaterial transparent opacity={opacity} />
       <Html distanceFactor={12} style={{ pointerEvents: "none" }}>
@@ -58,7 +59,7 @@ function GroupPlane({ g, center }: { g: GroupRecord; center: THREE.Vector3 }) {
   );
 }
 
-function NodesPoints({ nodes }: { nodes: NodeRecord[] }) {
+function NodesPoints({ nodes, onNodeClick }: { nodes: NodeRecord[]; onNodeClick?: (point: THREE.Vector3) => void }) {
   const { positions, sizes, opacities } = useMemo(() => {
     const positions = new Float32Array(nodes.length * 3);
     const sizes = new Float32Array(nodes.length);
@@ -74,8 +75,17 @@ function NodesPoints({ nodes }: { nodes: NodeRecord[] }) {
     return { positions, sizes, opacities };
   }, [nodes]);
 
+  const handleClick = useCallback((event: any) => {
+    if (!onNodeClick) return;
+    event.stopPropagation();
+    if (typeof event.index !== "number") return;
+    const node = nodes[event.index];
+    if (!node) return;
+    onNodeClick(posFromAddr(node));
+  }, [nodes, onNodeClick]);
+
   return (
-    <points>
+    <points onClick={handleClick}>
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>

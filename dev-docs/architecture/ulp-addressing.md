@@ -56,22 +56,57 @@ This is:
 - copyable
 - file-system safe (with minor encoding)
 
-## 8-Register Semantic Mapping
+## 8-Register Semantic Mapping (Canonical 5+3 Schema)
 
-Here is a clean, defensible assignment:
+The address is partitioned into **schema** (R0-R4) and **instance** (R5-R7):
 
-| Register | Meaning | Examples |
-|----------|---------|----------|
-| R0 | Identity class | device / human / service / abstract |
-| R1 | Hardware family | esp32 / arm / x86 / wasm |
-| R2 | Capability tier | cpu/mem/radio/storage class |
-| R3 | Execution context | bare / vm / container / browser |
-| R4 | Network role | leaf / router / gateway / anchor |
-| R5 | Time / epoch | boot epoch / generation |
-| R6 | Semantic mode | private(7-pt) / public(4-pt) |
-| R7 | Local entropy | uniqueness within cell |
+```
+R0 : R1 : R2 : R3 : R4 : R5 : R6 : R7
+└──────── schema ────────┘ └── instance ──┘
+```
 
-You can change names later — the **positions must not move**. That's the invariant.
+### Schema Rows (R0-R4) - Fixed, Predefined
+
+The first five bytes define **meaning** and are governed by the address schema:
+
+| Register | Name | Meaning | Allowed Values |
+|----------|------|---------|---------------|
+| R0 | Realm | Global universe / trust domain | `0x00`=local, `0x01`=public, `0x1A`=ULP |
+| R1 | Ontology | What kind of entity | `0x01`=human, `0x02`=device, `0x03`=agent, `0x04`=service, `0x05`=document, `0x06`=constraint, `0x07`=environment |
+| R2 | Capability | Primary capability or relation | `0x01`=observe, `0x02`=compute, `0x03`=store, `0x04`=route, `0x05`=decide, `0x06`=attest, `0x07`=transform |
+| R3 | Process | Temporal behavior / protocol class | `0x01`=batch, `0x02`=stream, `0x03`=consensus, `0x04`=proof, `0x05`=execution, `0x06`=arbitration |
+| R4 | Context | Interpretive and normative context | `0x01`=private, `0x02`=public, `0x03`=legal, `0x04`=scientific, `0x05`=religious, `0x06`=economic |
+
+**Critical rule:** Schema rows (R0-R4) must be valid according to the address schema before any execution or routing can occur.
+
+### Instance Rows (R5-R7) - Free Entropy
+
+The last three bytes define **existence** and are free for assignment:
+- Hash fragments
+- Counters
+- MAC-derived bytes
+- Nonce space
+
+**Critical rule:** Instance bytes may only be assigned after schema prefix (R0-R4) is validated.
+
+### Pascal's Triangle Row Mapping
+
+The address schema corresponds to Pascal's triangle rows:
+
+| Row | Meaning | Address Bytes |
+|-----|---------|---------------|
+| 0 | Identity (point) | R0 |
+| 1 | Line / role | R1 |
+| 2 | Plane / relation | R2 |
+| 3 | Volume / process | R3 |
+| 4 | Context / domain | R4 |
+| **5** | **Execution / application instance** | R5-R7 |
+
+This ensures that:
+- Rows 0-4 are **schema-controlled** (fixed, predefined)
+- Row 5 is **instance-controlled** (free, entropy-based)
+
+You cannot allow arbitrary addressing at row 5 unless rows 0-4 are fixed schemas. This is a **design constraint**, not a limitation.
 
 ## Why IPv6 Notation Works
 
@@ -132,6 +167,25 @@ context/documents/ulp_01a4_ff02__0007.md
 ### Mesh identities
 - ephemeral ID → canonical ULP address
 - public compression → parity / odd-even fold
+
+## Prefix40 Notation
+
+The **prefix40** notation represents the schema portion (R0-R4):
+
+```
+R0:R1:R2:R3:R4::/40
+```
+
+Examples:
+- `1A:02:04:03:02::/40` - ULP realm, device, route, consensus, public
+- `00:01:02:01:01::/40` - Local realm, human, compute, batch, private
+
+This notation is used for:
+- Routing table keys
+- Obsidian Bases grouping
+- Three.js scene hierarchy
+- Mesh prefix matching
+- Schema validation
 
 ## Address Scopes
 
@@ -317,8 +371,22 @@ This gives you:
 - machine efficiency
 - zero central authority
 
+## Schema-Gated Execution
+
+**Fundamental invariant:** Invalid schema prefixes cannot execute.
+
+Execution requires:
+1. Valid schema prefix (R0-R4) according to address schema
+2. Schema present in registry (for mesh nodes)
+3. Class admissibility (private/protected/public trust context)
+
+See [Address Schema](./address-schema.md) for the complete schema system.
+
 ## References
 
-- See `projection-system.md` for how addresses integrate with Ball/Sphere projection
-- See `sphere-ball-model.md` for the underlying duality model
-- See `four-axis-ontology.md` for how addresses map to Freedom/Autonomy/Sovereignty/Context
+- [Address Schema](./address-schema.md) - Authoritative schema definition and validation
+- [Schema Negotiation](./schema-negotiation.md) - Mesh node protocol
+- [Triadic Law](./triadic-law.md) - Private/Protected/Public classes
+- [Projection System](./projection-system.md) - Schema-gated projection
+- [Sphere-Ball Model](./sphere-ball-model.md) - Address rows mapped to sphere/ball layers
+- [Four-Axis Ontology](./four-axis-ontology.md) - How addresses map to Freedom/Autonomy/Sovereignty/Context

@@ -77,3 +77,4 @@ Canonical records use quadrant tags to track knowledge provenance:
 - 7 out of 8 possible residues are admissible
 
 
+

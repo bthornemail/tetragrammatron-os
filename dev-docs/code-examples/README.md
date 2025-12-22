@@ -12,12 +12,15 @@ This directory contains reference implementations and code examples extracted fr
 ## Key Examples
 
 ### Lean 4
+- **[Schema Gate](./lean/schema-gate.lean)** - Schema-gated execution theorems and proofs
+- **[Triadic Law](./lean/triadic-law.lean)** - Private/protected/public class admissibility proofs
 - Admissibility contracts
 - Validator soundness theorems
 - Completion theory formalization
 - Sphere-Ball projection proofs
 
 ### TypeScript/React
+- **[Web Viewer Integration](./typescript/web-viewer-integration.ts)** - React Three Fiber lattice visualization with schema-aware validation
 - React-Three-Fiber renderer
 - Component patterns
 - Type definitions
@@ -29,6 +32,8 @@ This directory contains reference implementations and code examples extracted fr
 - JSONL processing
 
 ### JavaScript/Node.js
+- **[Address Schema](./javascript/address-schema.js)** - Address parsing, validation, and prefix40 formatting
+- **[Schema Compilation](./javascript/schema-compilation.js)** - JSONL → BIN compilation with hash computation
 - Drift scanning
 - Axis validation
 - JSONL validation

@@ -4,7 +4,7 @@
 
 ## Overview
 
-The projection system implements the mod 8 operator as a semantic quotient projection, mapping hardware configurations (Ball) to VM semantic states (Sphere).
+The projection system implements the mod 8 operator as a semantic quotient projection, mapping hardware configurations (Ball) to VM semantic states (Sphere). **Projection is schema-gated:** only addresses with valid schema prefixes (R0-R4) can be projected.
 
 ## Projection Operator
 
@@ -55,17 +55,46 @@ Projection is a retraction onto a quotient, not an embedding.
 
 Hardware variation is observationally irrelevant; execution depends only on equivalence class.
 
-## Implementation
+## Schema-Gated Projection
+
+Projection requires a valid schema prefix before it can proceed:
 
 ```lean
-/-- Projection: succeeds iff pointer admissible. -/
-def project (h : HardwareBall) : Option VMSphere :=
-  let p := pointer h
-  if hp : admissibleGeodesic p then
-    some ⟨p, hp⟩
+/-- Projection: requires valid schema prefix, then checks admissibility. -/
+def project (addr : Addr8) (schema : SchemaTable) : Option VMSphere :=
+  if h_schema : schemaValid schema addr then
+    let p := projected_residue addr
+    if hp : admissibleGeodesic p then
+      some ⟨p, hp⟩
+    else
+      none
   else
     none
 ```
+
+**Critical rule:** Projection is only permitted after schema validation. Invalid schema prefixes cannot be projected.
+
+## Mode Enforcement
+
+For schemas with mode constraints (e.g., `public4` or `private7`), projection must also check mode admissibility:
+
+```lean
+def projectWithMode (addr : Addr8) (schema : SchemaTable) (residue : Fin 8) : Option VMSphere :=
+  if h_schema : schemaValid schema addr then
+    if h_mode : modeAdmissible schema.mode residue then
+      if hp : admissibleGeodesic residue.val then
+        some ⟨residue.val, hp⟩
+      else
+        none
+    else
+      none
+  else
+    none
+```
+
+Where:
+- `private7` mode: residue ≠ 6
+- `public4` mode: residue ∈ {0, 1, 3, 5}
 
 ## Why Mod 8?
 
@@ -92,9 +121,22 @@ theorem project_sound (h : HardwareBall) (hp : admissibleGeodesic (pointer h)) :
   simp [hp]
 ```
 
+## Address Row Mapping
+
+The projection system maps address rows to sphere/ball layers:
+
+- **Ball (material)**: R5-R7 (entropy, hardware, instance)
+- **Projection**: %8, admissibility check
+- **Sphere (semantic)**: R0-R4 (meaning, law, invariants)
+
+Execution factors through rows 0-4: the schema prefix must be valid before any projection or execution can occur.
+
 ## Related Concepts
 
-- [Sphere-Ball Model](./sphere-ball-model.md)
+- [Address Schema](./address-schema.md) - Schema validation and prefix structure
+- [Sphere-Ball Model](./sphere-ball-model.md) - Address rows mapped to layers
 - [Formal Verification: Contracts](../formal-verification/contracts.md)
+- [Formal Verification: Schema Gate Theorems](../formal-verification/schema-gate-theorems.md)
 - [Coding Principles: Boundary Preservation](../coding-principles/boundary-preservation.md)
+- [Coding Principles: Schema Before Instance](../coding-principles/schema-before-instance.md)
 

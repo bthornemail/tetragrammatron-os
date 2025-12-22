@@ -127,6 +127,14 @@ node tools/validate_axes.mjs
 
 ## Validation Layers
 
+### Layer 0: Schema Prefix Validation (First Gate)
+- **Address schema validation**: R0-R4 must be valid according to address schema
+- **Schema registry lookup**: Schema must be present for mesh nodes
+- **Signature verification**: Protected/public schemas require valid signatures
+- **Schema hash validation**: Ensures schema integrity
+
+**Critical rule:** This is the **first gate**. Invalid schema prefixes cannot proceed to any other validation or execution.
+
 ### Layer 1: Structural Validation
 - Enforces filesystem organization
 - Checks required axes and subfolders
@@ -142,13 +150,80 @@ node tools/validate_axes.mjs
 - Proof artifacts
 - Adapter compliance
 
+## Schema Prefix Validation Pattern
+
+### Address Validation
+
+```c
+bool tg_schema_prefix_valid(const tg_schema_t *s, const tg_addr8_t *a) {
+  // Validate R0..R4
+  for (int i = 0; i < s->schema_rows; i++) {
+    const tg_row_spec_t *r = &s->row[i];
+    if (!r->fixed) continue;
+    if (!one_of(a->r[i], r->allowed, r->allowed_count)) return false;
+  }
+  return true;
+}
+```
+
+### Execution Gate
+
+```c
+if (!tg_schema_prefix_valid_global(&addr)) {
+  trap("invalid_schema");
+} else {
+  execute();
+}
+```
+
+## Signature Verification Pattern
+
+### Signature Check
+
+```typescript
+async function verifySchemaSignature(
+  schemaBin: ArrayBuffer,
+  sigJson: SchemaSignature
+): Promise<boolean> {
+  if (sigJson.schema_class === "private") {
+    return true;  // Optional for private
+  }
+  
+  const pubkey = hexToU8(sigJson.pubkey_ed25519);
+  const sig = hexToU8(sigJson.sig_ed25519);
+  
+  return await crypto.subtle.verify(
+    { name: "Ed25519" },
+    await crypto.subtle.importKey("raw", pubkey, "Ed25519", false, ["verify"]),
+    sig,
+    schemaBin
+  );
+}
+```
+
+### Policy Enforcement
+
+```typescript
+function requiresSignature(schemaClass: SchemaClass): boolean {
+  return schemaClass === "protected" || schemaClass === "public";
+}
+
+if (requiresSignature(schema.schemaClass)) {
+  if (!sigJson || !await verifySchemaSignature(schemaBin, sigJson)) {
+    reject("invalid_signature");
+  }
+}
+```
+
 ## Principles
 
+- **Schema first**: Schema prefix validation is the first gate
 - **Structure only**: Validator enforces structure, not meaning
 - **Fail fast**: Report errors immediately
 - **Clear messages**: Descriptive error messages
 - **Non-invasive**: Only checks, never modifies
 - **Deterministic**: Same structure always produces same result
+- **Trust-aware**: Signature verification for protected/public schemas
 
 ## Integration with Drift Tracking
 
@@ -203,8 +278,14 @@ It works because:
 
 ## Related Concepts
 
+- [Schema Compilation](./schema-compilation.md) - Schema binary format
+- [Schema Registry](./schema-registry.md) - Runtime schema management
+- [Signature Verification](./signature-verification.md) - Ed25519 verification
 - [Drift Tracking](./drift-tracking.md)
 - [File Structure](../architecture/file-structure.md)
+- [Architecture: Address Schema](../architecture/address-schema.md)
+- [Architecture: Validation System](../architecture/validation-system.md)
 - [AGENTS.md Standard](../conventions/agents-md.md)
 - [Formal Verification: Contracts](../formal-verification/contracts.md)
+- [Formal Verification: Schema Gate Theorems](../formal-verification/schema-gate-theorems.md)
 

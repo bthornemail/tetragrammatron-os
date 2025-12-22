@@ -8,6 +8,15 @@ The validation system enforces structural soundness without interpreting meaning
 
 ## Validation Layers
 
+### Layer 0: Schema Prefix Validation (First Gate)
+- **Address schema validation**: R0-R4 must be valid according to address schema
+- **Schema registry lookup**: Schema must be present for mesh nodes
+- **Signature verification**: Protected/public schemas require valid signatures
+- **Schema hash validation**: Ensures schema integrity
+- Implemented by: `tg_schema_prefix_valid()` (ESP32), schema validation (web viewer)
+
+**Critical rule:** This is the **first gate**. Invalid schema prefixes cannot proceed to any other validation or execution.
+
 ### Layer 1: Structural Validation
 - Enforces filesystem organization
 - Checks required axes and subfolders
@@ -69,13 +78,49 @@ appendJsonl(EVENTS, {
 });
 ```
 
+## Schema Validation Pipeline
+
+### 1. Schema Prefix Check
+```c
+if (!tg_schema_prefix_valid_global(&addr)) {
+  return VALIDATION_ERROR_INVALID_SCHEMA;
+}
+```
+
+### 2. Schema Registry Lookup (Mesh Nodes)
+```c
+SchemaKey k = { addr.r[0], schema_hash };
+if (!registry_has(k)) {
+  send_schema_need(k, sender);
+  return VALIDATION_ERROR_SCHEMA_MISSING;
+}
+```
+
+### 3. Signature Verification (Protected/Public)
+```c
+if (schema_class == PROTECTED || schema_class == PUBLIC) {
+  if (!verify_schema_signature(schema_bin, sig_json)) {
+    return VALIDATION_ERROR_INVALID_SIGNATURE;
+  }
+}
+```
+
+### 4. Class Admissibility Check
+```c
+if (!schema_class_ok(schema_class, trust_ctx)) {
+  return VALIDATION_ERROR_CLASS_INADMISSIBLE;
+}
+```
+
 ## Principles
 
+- **Schema first**: Schema prefix validation is the first gate
 - **Structure only**: Validator enforces structure, not meaning
 - **Fail fast**: Report errors immediately
 - **Clear messages**: Descriptive error messages
 - **Non-invasive**: Only checks, never modifies
 - **Deterministic**: Same structure always produces same result
+- **Trust-aware**: Signature verification for protected/public schemas
 
 ## What Validation Provides
 
@@ -99,8 +144,13 @@ It works because:
 
 ## Related Concepts
 
+- [Address Schema](./address-schema.md) - Schema format and validation rules
+- [Schema Negotiation](./schema-negotiation.md) - Schema acquisition protocol
+- [Triadic Law](./triadic-law.md) - Private/Protected/Public validation rules
 - [Validation Patterns](../implementation-patterns/validation-patterns.md)
+- [Implementation Patterns: Signature Verification](../implementation-patterns/signature-verification.md)
 - [Drift Tracking](../implementation-patterns/drift-tracking.md)
 - [Formal Verification: Contracts](../formal-verification/contracts.md)
+- [Formal Verification: Schema Gate Theorems](../formal-verification/schema-gate-theorems.md)
 - [File Structure](./file-structure.md)
 
