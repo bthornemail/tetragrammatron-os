@@ -11,8 +11,8 @@ This `AGENTS.md` file provides **AI coding agents** machine-readable guidance ab
         - `entries.jsonl`: Event or entry records for that book.
 - `hardware/`: Canonical hardware probe, canon, and sphere records.
 - `descriptors/render.map.yaml`: 3D renderer and scene mapping rules.
-- `ulp/viewer/react/`: React three-fiber based interactive renderer.
-- `ulp/viewer/agents/`: Viewer panels, inspectors, and tools.
+- `trees/universal-life-protocol/branches/development/context/services/viewer/react/`: React three-fiber based interactive renderer.
+- `trees/obsidian/branches/development/services/plugin/`: Obsidian plugin bridge.
 
 ## 🛠 Build & Tooling
 
@@ -38,7 +38,7 @@ node tools/validate_axes.mjs
 node tools/drift_scan.mjs
 
 # Run the React viewer locally (when available)
-cd ulp/viewer/react/
+cd trees/universal-life-protocol/branches/development/context/services/viewer/react/
 npm install
 npm run dev
 
@@ -48,7 +48,7 @@ npm run build
 
 ## 📐 Coding Conventions
 
-- JavaScript/TypeScript: follow existing patterns under `ulp/viewer/react/src/`.
+- JavaScript/TypeScript: follow existing patterns under `trees/universal-life-protocol/branches/development/context/services/viewer/react/src/`.
 - `AGENTS.md` and `README.md` should be updated in tandem for both humans and agents.
 - Three.js + react-three-fiber is canonical renderer stack.
 

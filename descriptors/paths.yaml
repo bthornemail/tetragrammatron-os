@@ -1,0 +1,25 @@
+version: "1.0"
+# Path mappings - allows referencing components regardless of location
+# All paths are relative to vault root
+paths:
+  # Core directories
+  vault_root: "."
+  trees: "trees"
+  hardware: "hardware"
+  descriptors: "descriptors"
+  obsidian_bases: "obsidian/bases"
+  tools: "tools"
+  tests: "tests"
+  
+  # Services (discoverable in tree structure)
+  services:
+    viewer_react: "trees/universal-life-protocol/branches/development/context/services/viewer/react"
+    obsidian_plugin: "trees/obsidian/branches/development/services/plugin"
+    esptool: "trees/tetragrammatron/branches/development/context/services/python/venv/esptool"
+    esp_idf: "trees/tetragrammatron/branches/development/context/services/esp-idf"
+  
+  # Build outputs
+  viewer_dist: "trees/universal-life-protocol/branches/development/context/services/viewer/react/dist"
+  plugin_build: "trees/obsidian/branches/development/services/plugin"
+
+

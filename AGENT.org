@@ -1,0 +1,415 @@
+#+TITLE: Tetragrammatron-OS Agent Protocol
+#+SUBTITLE: Canonical Instructions + Tangled Tooling
+#+AUTHOR: Universal Life Protocol
+#+VERSION: v1.1
+#+OPTIONS: toc:2 num:nil ^:nil
+#+PROPERTY: header-args :results silent :exports none :noweb yes
+#+PROPERTY: header-args:sh :shebang "#!/usr/bin/env sh"
+#+PROPERTY: header-args:python :results output :exports both
+#+PROPERTY: header-args:c :comments link
+#+PROPERTY: header-args:lean :comments link
+
+* Purpose
+
+This file is both:
+- a normative protocol for agents
+- a literate source that tangles runtime + formal enforcement code
+
+Agents MUST follow the rules herein.
+
+* Law
+
+**Schema before instance.**
+- Rows R0–R4 are schema (law)
+- Rows R5–R7 are instance (entropy)
+
+If schema invalid:
+- MUST NOT execute
+- MUST NOT route
+- MUST trap
+
+* Files (Authoritative)
+
+- address-schema.yaml :: single source of truth
+- build/address-schema.bin :: compiled runtime table (flash-friendly)
+- events.jsonl :: append-only truth (agents only append)
+
+Agents MUST NOT mutate events except by append.
+
+* Data-driven schema compilation
+
+**ESP32 MUST NOT parse YAML.**
+YAML is compiled offline into a compact binary table.
+
+This tool is tangled to:
+- tools/compile_schema.py
+
+#+BEGIN_SRC python :tangle tools/compile_schema.py
+#!/usr/bin/env python3
+import sys, struct, yaml, argparse
+MAGIC = 0x54414452  # 'TADR'
+MAX_ALLOWED = 16
+ROWS = 8
+
+def parse_u8(x):
+  if isinstance(x, int):
+    return x & 0xFF
+  s = str(x).strip()
+  if s.startswith("0x") or s.startswith("0X"):
+    return int(s, 16) & 0xFF
+  return int(s) & 0xFF
+
+def main():
+  ap = argparse.ArgumentParser()
+  ap.add_argument("yaml_path")
+  ap.add_argument("-o", "--out", default="build/address-schema.bin")
+  args = ap.parse_args()
+
+  with open(args.yaml_path, "r", encoding="utf-8") as f:
+    y = yaml.safe_load(f)
+
+  rowspec = y["rowspec"]
+  rows = int(y.get("rows", 8))
+  schema_rows = int(y.get("schema_rows", 5))
+  if rows != 8:
+    raise SystemExit("rows must be 8 for Addr8")
+  if schema_rows != 5:
+    raise SystemExit("schema_rows must be 5 (R0..R4)")
+
+  out = bytearray()
+  # Header: >I H B B
+  out += struct.pack(">IHBB", MAGIC, 1, rows, schema_rows)
+
+  for i in range(ROWS):
+    key = f"R{i}"
+    r = rowspec.get(key, {})
+    fixed = 1 if r.get("fixed", False) else 0
+    allowed = [parse_u8(v) for v in r.get("allowed", [])]
+    if len(allowed) > MAX_ALLOWED:
+      raise SystemExit(f"{key}.allowed too long (max {MAX_ALLOWED})")
+    out += struct.pack("BB", fixed, len(allowed))
+    out += bytes(allowed)
+    out += bytes([0] * (MAX_ALLOWED - len(allowed)))
+
+  import os
+  os.makedirs(os.path.dirname(args.out), exist_ok=True)
+  with open(args.out, "wb") as f:
+    f.write(out)
+
+  print(f"Wrote {args.out} ({len(out)} bytes)")
+  print("Header:", hex(MAGIC), "version=1 rows=8 schema_rows=5")
+
+if __name__ == "__main__":
+  main()
+#+END_SRC
+
+* ESP32 runtime: schema load + prefix validation
+
+This is the embedded, data-driven enforcement layer.
+
+**Tangled files:**
+- components/tetragrammatron_schema/include/tetragrammatron_schema.h
+- components/tetragrammatron_schema/tetragrammatron_schema.c
+
+#+BEGIN_SRC c :tangle components/tetragrammatron_schema/include/tetragrammatron_schema.h
+#pragma once
+#include <stdint.h>
+#include <stdbool.h>
+#include <stddef.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+// Addr8: R0..R7
+typedef struct { uint8_t r[8]; } tg_addr8_t;
+
+// Binary schema ABI (v1)
+#define TG_SCHEMA_MAGIC 0x54414452u /* 'TADR' */
+#define TG_SCHEMA_MAX_ALLOWED 16
+#define TG_SCHEMA_ROWS 8
+
+typedef struct {
+  uint8_t fixed;          // 1 = fixed, 0 = free
+  uint8_t allowed_count;  // 0 if free
+  uint8_t allowed[TG_SCHEMA_MAX_ALLOWED];
+} tg_row_spec_t;
+
+typedef struct {
+  uint32_t magic;
+  uint16_t version;
+  uint8_t  rows;
+  uint8_t  schema_rows; // 5
+  tg_row_spec_t row[TG_SCHEMA_ROWS];
+} tg_schema_t;
+
+// Load schema from bytes (for unit tests or custom storage)
+bool tg_schema_load_from_bytes(const uint8_t *data, size_t len, tg_schema_t *out);
+
+// Validate prefix R0..R4 according to schema (data-driven)
+bool tg_schema_prefix_valid(const tg_schema_t *s, const tg_addr8_t *a);
+
+// Convenience: validate prefix against globally loaded schema
+bool tg_schema_prefix_valid_global(const tg_addr8_t *a);
+
+// Global schema storage
+extern tg_schema_t g_tg_schema;
+
+#ifdef __cplusplus
+}
+#endif
+#+END_SRC
+
+#+BEGIN_SRC c :tangle components/tetragrammatron_schema/tetragrammatron_schema.c
+#include "tetragrammatron_schema.h"
+#include <string.h>
+
+// If you embed build/address-schema.bin via ESP-IDF component embedding,
+// you can provide these symbols. Otherwise load from SPIFFS/NVS.
+extern const uint8_t _binary_address_schema_bin_start[];
+extern const uint8_t _binary_address_schema_bin_end[];
+
+tg_schema_t g_tg_schema;
+
+static bool one_of(uint8_t x, const uint8_t *xs, uint8_t n) {
+  for (uint8_t i = 0; i < n; i++) if (xs[i] == x) return true;
+  return false;
+}
+
+bool tg_schema_load_from_bytes(const uint8_t *data, size_t len, tg_schema_t *out) {
+  if (!data || !out) return false;
+  if (len < sizeof(tg_schema_t)) return false;
+  memcpy(out, data, sizeof(tg_schema_t));
+  if (out->magic != TG_SCHEMA_MAGIC) return false;
+  if (out->version != 1) return false;
+  if (out->rows != 8) return false;
+  if (out->schema_rows != 5) return false;
+  return true;
+}
+
+bool tg_schema_prefix_valid(const tg_schema_t *s, const tg_addr8_t *a) {
+  if (!s || !a) return false;
+  // Validate R0..R4
+  for (int i = 0; i < (int)s->schema_rows; i++) {
+    const tg_row_spec_t *r = &s->row[i];
+    if (!r->fixed) continue;
+    if (!one_of(a->r[i], r->allowed, r->allowed_count)) return false;
+  }
+  return true;
+}
+
+bool tg_schema_prefix_valid_global(const tg_addr8_t *a) {
+  return tg_schema_prefix_valid(&g_tg_schema, a);
+}
+
+// Optional helper: load the embedded binary blob at boot
+bool tg_schema_load_embedded(void) {
+  const uint8_t *start = _binary_address_schema_bin_start;
+  const uint8_t *end   = _binary_address_schema_bin_end;
+  size_t len = (size_t)(end - start);
+  return tg_schema_load_from_bytes(start, len, &g_tg_schema);
+}
+#+END_SRC
+
+* Lean: formal schema gate (invalid schema cannot execute)
+
+This is the formal contract. Tangled to:
+- formal/lean/Tetragrammatron/SchemaGate.lean
+
+#+BEGIN_SRC lean :tangle formal/lean/Tetragrammatron/SchemaGate.lean
+namespace Tetragrammatron
+
+abbrev Addr8 := Vector UInt8 8
+
+/-- Schema table is data: fixed rows + allowed sets. -/
+structure SchemaTable where
+  fixed   : Fin 8 → Bool
+  allowed : Fin 8 → Finset UInt8
+
+/-- Schema-valid means: for i∈{0..4}, if fixed then byte is in allowed. -/
+def schemaValid (tab : SchemaTable) (a : Addr8) : Prop :=
+  ∀ i : Fin 5,
+    tab.fixed ⟨i.val, by
+      -- i.val < 5 < 8
+      exact lt_trans i.isLt (by decide)⟩ = true →
+    a.get ⟨i.val, by exact lt_trans i.isLt (by decide)⟩ ∈
+      tab.allowed ⟨i.val, by exact lt_trans i.isLt (by decide)⟩
+
+/-- Minimal VM state for the gate theorem. Extend later. -/
+structure VM where
+  addr : Addr8
+  pc   : Nat
+
+inductive Outcome where
+  | cont (vm : VM)
+  | halt (vm : VM)
+  | trap (vm : VM) (reason : String)
+
+abbrev Code := List UInt8
+
+/-- One-step placeholder (your real CanISA semantics plugs in here). -/
+def step (_code : Code) (vm : VM) : Outcome :=
+  Outcome.halt vm
+
+def run : Nat → Code → VM → Outcome
+  | 0, _, vm => Outcome.trap vm "out_of_fuel"
+  | Nat.succ fuel, code, vm =>
+      match step code vm with
+      | Outcome.cont vm' => run fuel code vm'
+      | o => o
+
+/-- Gate: invalid schema traps before any stepping. -/
+def runChecked (tab : SchemaTable) (fuel : Nat) (code : Code) (vm : VM) : Outcome :=
+  if h : schemaValid tab vm.addr then
+    run fuel code vm
+  else
+    Outcome.trap vm "invalid_schema"
+
+theorem invalid_schema_no_execute (tab : SchemaTable) (fuel : Nat) (code : Code) (vm : VM)
+    (hbad : ¬ schemaValid tab vm.addr) :
+    runChecked tab fuel code vm = Outcome.trap vm "invalid_schema" := by
+  unfold runChecked
+  simp [hbad]
+
+theorem valid_schema_exec (tab : SchemaTable) (fuel : Nat) (code : Code) (vm : VM)
+    (hgood : schemaValid tab vm.addr) :
+    runChecked tab fuel code vm = run fuel code vm := by
+  unfold runChecked
+  simp [hgood]
+
+end Tetragrammatron
+#+END_SRC
+
+* Obsidian export profile: frontmatter + Bases + Canvas
+
+This section tangles:
+- tools/obsidian/frontmatter_template.md
+- tools/obsidian/lattice.base
+- tools/obsidian/export_profile.yaml
+- tools/obsidian/gen_frontmatter.py
+- tools/obsidian/gen_base.py
+
+#+BEGIN_SRC yaml :tangle tools/obsidian/export_profile.yaml
+profile: tetragrammatron/obsidian@v1
+frontmatter:
+  required:
+    - addr
+    - r0
+    - r1
+    - r2
+    - r3
+    - r4
+    - r5
+    - r6
+    - r7
+    - realm
+    - ontology
+    - capability
+    - process
+    - context
+    - prefix40
+bases:
+  file: tools/obsidian/lattice.base
+canvas:
+  file_ext: .canvas
+  node_title_key: addr
+#+END_SRC
+
+#+BEGIN_SRC text :tangle tools/obsidian/frontmatter_template.md
+---
+addr: "{{ADDR}}"
+r0: "{{R0}}"
+r1: "{{R1}}"
+r2: "{{R2}}"
+r3: "{{R3}}"
+r4: "{{R4}}"
+r5: "{{R5}}"
+r6: "{{R6}}"
+r7: "{{R7}}"
+realm: "{{REALM}}"
+ontology: "{{ONTOLOGY}}"
+capability: "{{CAPABILITY}}"
+process: "{{PROCESS}}"
+context: "{{CONTEXT}}"
+prefix40: "{{PFX40}}"
+schema: "tetragrammatron/address-schema@v1"
+---
+#+END_SRC
+
+#+BEGIN_SRC yaml :tangle tools/obsidian/lattice.base
+filters:
+  and:
+    - 'note.addr'
+    - 'file.ext == "md"'
+
+formulas:
+  schema_prefix: 'note.r0 + ":" + note.r1 + ":" + note.r2 + ":" + note.r3 + ":" + note.r4'
+  instance_tail: 'note.r5 + ":" + note.r6 + ":" + note.r7'
+  addr_norm: 'schema_prefix + ":" + instance_tail'
+  prefix40_norm: 'schema_prefix + "::/40"'
+
+properties:
+  note.addr: { displayName: Address }
+  formula.addr_norm: { displayName: "Addr (norm)" }
+  formula.prefix40_norm: { displayName: Prefix40 }
+  note.realm: { displayName: Realm }
+  note.ontology: { displayName: Ontology }
+  note.capability: { displayName: Capability }
+  note.process: { displayName: Process }
+  note.context: { displayName: Context }
+  file.path: { displayName: File }
+
+views:
+  - type: table
+    name: "Tetragrammatron Lattice"
+    groupBy:
+      property: formula.prefix40_norm
+      direction: ASC
+    order:
+      - formula.addr_norm
+      - file.path
+#+END_SRC
+
+#+BEGIN_SRC python :tangle tools/obsidian/gen_frontmatter.py
+#!/usr/bin/env python3
+import argparse, pathlib
+
+TEMPLATE = pathlib.Path("tools/obsidian/frontmatter_template.md").read_text(encoding="utf-8")
+
+def main():
+  ap = argparse.ArgumentParser()
+  ap.add_argument("--addr", required=True, help="AA:BB:CC:DD:EE:FF:GG:HH")
+  ap.add_argument("--labels", nargs=5, default=["ulp","device","route","consensus","public"])
+  ap.add_argument("-o", "--out", required=True)
+  args = ap.parse_args()
+
+  parts = args.addr.split(":")
+  if len(parts) != 8: raise SystemExit("addr must have 8 bytes")
+  R0,R1,R2,R3,R4,R5,R6,R7 = [p.upper() for p in parts]
+  REALM,ONTOLOGY,CAPABILITY,PROCESS,CONTEXT = args.labels
+  pfx40 = f"{R0}:{R1}:{R2}:{R3}:{R4}::/40"
+
+  s = TEMPLATE
+  for k,v in {
+    "ADDR": args.addr.upper(),
+    "R0":R0,"R1":R1,"R2":R2,"R3":R3,"R4":R4,"R5":R5,"R6":R6,"R7":R7,
+    "REALM":REALM,"ONTOLOGY":ONTOLOGY,"CAPABILITY":CAPABILITY,"PROCESS":PROCESS,"CONTEXT":CONTEXT,
+    "PFX40":pfx40
+  }.items():
+    s = s.replace("{{"+k+"}}", v)
+
+  pathlib.Path(args.out).write_text(s, encoding="utf-8")
+
+if __name__ == "__main__":
+  main()
+#+END_SRC
+
+#+BEGIN_SRC python :tangle tools/obsidian/gen_base.py
+#!/usr/bin/env python3
+# Placeholder generator if you later want to synthesize .base from address-schema.yaml
+# For now we keep a static lattice.base tangled above, which is simplest and stable.
+print("Use tools/obsidian/lattice.base (static) or extend this generator later.")
+#+END_SRC
+
+* End
+This file tangles code. Agents MUST keep it coherent.

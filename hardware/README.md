@@ -76,3 +76,4 @@ Canonical records use quadrant tags to track knowledge provenance:
 - Admissibility: `(p + 2) % 8 ≠ 0` (equiv `p ≠ 6`)
 - 7 out of 8 possible residues are admissible
 
+

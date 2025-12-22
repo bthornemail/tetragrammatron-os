@@ -15,8 +15,8 @@ This repository encodes the **Tetragrammatron-OS** semantic modeling system, har
   - `<tree>/branches/<branch>/books/<book>/entries.jsonl`
 
 ### Viewer Layer
-- `ulp/viewer/react/`: React three-fiber 3D renderer
-- `ulp/viewer/three/`: Legacy Three.js single-file viewer
+- `trees/universal-life-protocol/branches/development/context/services/viewer/react/`: React three-fiber 3D renderer
+- `trees/obsidian/branches/development/services/plugin/`: Obsidian plugin bridge
 - `obsidian/`: Canvas & Bases support files for Obsidian
 
 ### Tools
@@ -66,13 +66,14 @@ This repository encodes the **Tetragrammatron-OS** semantic modeling system, har
 
 7. **Run viewer** (when available)
    ```bash
-   cd ulp/viewer/react
+   cd trees/universal-life-protocol/branches/development/context/services/viewer/react
    npm install
    npm run dev
    ```
 
 8. **Build viewer** (when available)
    ```bash
+   cd trees/universal-life-protocol/branches/development/context/services/viewer/react
    npm run build
    ```
 
@@ -123,5 +124,19 @@ hardware sphere (VM state)
 
 ## 📜 License
 
-*(Add your license here if applicable)*
+GPL-3.0-or-later
+
+## 🔗 Links
+
+- **Repository**: https://github.com/bthornemail/tetragrammatron-os
+- **Author**: Brian Thorne (bthornemail@gmail.com)
+- **Funding**: 
+  - [Cash App](https://cash.app/$brianthorne)
+  - [Venmo](https://venmo.com/u/brianthorne)
+
+## 📚 Additional Documentation
+
+- [Obsidian Integration Guide](OBSIDIAN_INTEGRATION.md) - How to integrate with Obsidian
+- [Demo Setup](demos/setup.md) - Setup guide for demos
+- [Demos](demos/README.md) - Demo scenarios and examples
 

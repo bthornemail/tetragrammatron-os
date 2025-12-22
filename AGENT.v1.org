@@ -1,0 +1,137 @@
+# `AGENT.org`
+*(Normative protocol for humans, agents, LLMs, and tools)*
+
+```org
+#+TITLE: Tetragrammatron-OS Agent Protocol
+#+SUBTITLE: Canonical Operating Instructions
+#+AUTHOR: Universal Life Protocol
+#+VERSION: v1.0
+#+PROPERTY: header-args :results silent :exports both :noweb yes
+#+OPTIONS: toc:2 num:nil ^:nil
+
+* Purpose
+
+This document defines the *normative rules* for any agent (human or automated)
+operating within a Tetragrammatron-OS repository.
+
+This is not documentation.
+This is *law*.
+
+Agents MAY generate artifacts.
+Agents MUST NOT violate invariants.
+
+* Core Principles
+
+1. Schema before instance
+2. Data before code
+3. Append-only truth
+4. Projection before execution
+5. Idempotence over mutation
+
+* Canonical Artifacts
+
+Agents MUST recognize the following files as authoritative:
+
+- =address-schema.yaml= :: schema source of truth
+- =address-schema.bin=  :: compiled schema (runtime)
+- =events.jsonl=        :: append-only truth
+- =manifest.yaml=       :: declarative constraints
+- =topology.canvasl=    :: structural / proof boundary
+- =program.canbc=       :: executable capsule
+
+Agents MUST NOT mutate:
+- =events.jsonl= (except by append)
+- =address-schema.yaml= (without human confirmation)
+
+* Address Law
+
+All actions MUST validate address prefixes R0–R4 against the active schema.
+
+#+BEGIN_SRC text
+R0 : Realm
+R1 : Ontology
+R2 : Capability
+R3 : Process
+R4 : Context
+R5–R7 : Instance (entropy)
+#+END_SRC
+
+If schema validation fails:
+- Execution MUST NOT occur
+- Routing MUST NOT occur
+- Rendering MAY display as invalid
+- The system MUST trap, not degrade
+
+* Execution Gate
+
+Agents MUST route all execution through the schema gate.
+
+#+BEGIN_SRC pseudo
+if not schema_valid(addr):
+    trap("invalid_schema")
+else:
+    execute()
+#+END_SRC
+
+This rule is equivalent to the Lean theorem:
+=invalid_schema_no_execute=
+
+* Event Discipline
+
+All observations, decisions, and state changes MUST be recorded as events.
+
+#+BEGIN_SRC json
+{"t":"<utc>","a":"<addr>","k":"<event.key>","v":<value>}
+#+END_SRC
+
+Derived artifacts (JSON, CanvasL, bytecode) MUST be reproducible from events.
+
+* Generation Rules
+
+Agents MAY generate:
+- =state.json=
+- =program.canisa=
+- renderer caches
+- summaries
+
+Agents MUST annotate generated files with:
+- source hashes
+- schema version
+- generation timestamp
+
+* Prohibited Actions
+
+Agents MUST NOT:
+- infer meaning from instance bytes (R5–R7)
+- bypass projection rules
+- collapse schema and instance layers
+- claim truth beyond recorded constraints
+
+* Org-Babel Integration
+
+Agents MAY execute blocks marked with:
+
+#+BEGIN_SRC
+:eval yes
+#+END_SRC
+
+Agents MUST NOT execute blocks without explicit permission.
+
+* Tangle Targets
+
+This file MAY tangle:
+- validation code
+- schema loaders
+- test harnesses
+
+All tangled outputs MUST be deterministic.
+
+* Final Rule
+
+If two instructions conflict:
+- Prefer schema over agent
+- Prefer event log over memory
+- Prefer invariants over convenience
+
+End of protocol.
+```

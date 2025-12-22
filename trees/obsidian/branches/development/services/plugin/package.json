@@ -1,0 +1,22 @@
+{
+  "name": "tetragrammatron-os-obsidian",
+  "version": "0.1.0",
+  "description": "Obsidian plugin bridge for Tetragrammatron-OS viewer",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "node esbuild.config.mjs --production"
+  },
+  "keywords": [
+    "obsidian",
+    "obsidian-plugin",
+    "tetragrammatron"
+  ],
+  "author": "Brian Thorne",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "@types/node": "^25.0.3",
+    "esbuild": "^0.27.2",
+    "typescript": "^5.9.3"
+  }
+}

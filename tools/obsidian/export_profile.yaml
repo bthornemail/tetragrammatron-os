@@ -1,0 +1,23 @@
+profile: tetragrammatron/obsidian@v1
+frontmatter:
+  required:
+    - addr
+    - r0
+    - r1
+    - r2
+    - r3
+    - r4
+    - r5
+    - r6
+    - r7
+    - realm
+    - ontology
+    - capability
+    - process
+    - context
+    - prefix40
+bases:
+  file: tools/obsidian/lattice.base
+canvas:
+  file_ext: .canvas
+  node_title_key: addr

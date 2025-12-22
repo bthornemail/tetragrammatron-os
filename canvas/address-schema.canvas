@@ -1,0 +1,21 @@
+
+(canvasl
+  (address-schema
+    (rows
+      (row R0 :realm :fixed)
+      (row R1 :ontology :fixed)
+      (row R2 :capability :fixed)
+      (row R3 :process :fixed)
+      (row R4 :context :fixed)
+      (row R5 :instance)
+      (row R6 :instance)
+      (row R7 :instance))
+
+    (constraints
+      (requires-fixed-prefix R0 R1 R2 R3 R4)
+      (routing-prefix-length 5)
+      (execution-after-prefix))
+
+    (projection
+      (%8-collapse R5 R6 R7)
+      (admissible except 6))))

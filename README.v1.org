@@ -1,0 +1,146 @@
+# `README.org`
+*(Descriptive, explanatory, human-facing)*
+
+```org
+#+TITLE: Tetragrammatron-OS
+#+SUBTITLE: A Semantic Operating System Based on Projection, Lattices, and Constraint
+#+AUTHOR: Universal Life Protocol
+#+OPTIONS: toc:3 num:nil ^:nil
+#+PROPERTY: header-args :results output :exports both
+
+* What This Is
+
+Tetragrammatron-OS is not an operating system in the traditional sense.
+
+It is a *semantic operating substrate* where:
+
+- Hardware is treated as a *ball* of physical possibility
+- Meaning is treated as a *sphere* of semantic invariants
+- Execution occurs only after projection
+- Compatibility is proven, not guessed
+
+The VM never sees hardware.
+It sees equivalence classes of hardware.
+
+* The Core Abstraction
+
+#+BEGIN_QUOTE
+Execution is permitted only after meaning is fixed.
+#+END_QUOTE
+
+This is enforced by a schema-gated address model:
+
+#+BEGIN_SRC text
+R0:R1:R2:R3:R4 : R5:R6:R7
+^ schema (law)   ^ instance (entropy)
+#+END_SRC
+
+The first five bytes define *what something is*.
+The last three define *which one it is*.
+
+* Why This Exists
+
+Traditional systems fail because:
+
+- Hardware changes faster than abstractions
+- Semantics leak into configuration
+- Compatibility is heuristic
+
+This system fixes that by:
+
+- Projecting hardware into a canonical semantic sphere
+- Enforcing invariants with proofs and gates
+- Making future hardware either admissible or impossible
+
+* Sphere–Ball Model
+
+- Ball :: physical feasibility (bounds, probes, reality)
+- Projection :: canonicalization (%8, admissibility)
+- Sphere :: VM semantics (proof boundary)
+
+No layer may observe the layer below it.
+
+* Address Schema
+
+The address schema is defined in =address-schema.yaml= and compiled to
+=address-schema.bin= for runtime use.
+
+This ensures:
+- One source of truth
+- No hardcoded enums
+- Identical behavior across Lean, ESP32, UI, and VM
+
+* Event-First Architecture
+
+Truth is append-only.
+
+#+BEGIN_SRC text
+events.jsonl → state.json → views
+#+END_SRC
+
+If something cannot be derived from events, it is not real.
+
+* Org-Mode as a Control Plane
+
+Org-mode is used because it supports:
+
+- Literate system design
+- Executable documentation (org-babel)
+- Deterministic code generation (org-tangle)
+- Multiple export targets
+
+This repository is meant to be *read, executed, and evolved*.
+
+* Typical Workflow
+
+1. Observe reality → append events
+2. Regenerate state/topology
+3. Validate schema + projection
+4. Execute or render
+5. Share consensus
+
+* Three-Dimensional Views
+
+The same lattice may be viewed as:
+
+- Filesystem paths
+- Obsidian Bases tables
+- Canvas graphs
+- Three.js scenes
+- ESP32 mesh prefixes
+
+All views reference the same addresses.
+
+* What This Is Not
+
+- Not a religion
+- Not a political ideology
+- Not a centralized authority
+- Not a claim about ultimate truth
+
+It is a method for aligning perception, action, and constraint.
+
+* How to Contribute
+
+1. Read =AGENT.org=
+2. Do not violate invariants
+3. Append events, do not overwrite history
+4. Improve projections, not assertions
+
+* Export Targets
+
+This document may be exported to:
+- HTML (public explanation)
+- PDF (formal presentation)
+- Markdown (GitHub mirror)
+
+The Org source remains authoritative.
+
+* Closing
+
+#+BEGIN_QUOTE
+We do not define God.
+We define the limits of our shared understanding,
+and allow what is beyond us to remain beyond us.
+#+END_QUOTE
+```

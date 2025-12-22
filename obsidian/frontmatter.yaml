@@ -1,0 +1,17 @@
+---
+addr: "1A:02:04:03:02:7F:11:C7"
+r0: "1A"
+r1: "02"
+r2: "04"
+r3: "03"
+r4: "02"
+r5: "7F"
+r6: "11"
+r7: "C7"
+realm: ulp
+ontology: device
+capability: route
+process: consensus
+context: public
+prefix40: "1A:02:04:03:02::/40"
+---

@@ -13,7 +13,8 @@ const ROOTS = [
   "trees",
   "descriptors",
   "tools",
-  "ulp/viewer"
+  "hardware",
+  "tests"
 ];
 
 const HASH_EXTS = new Set([

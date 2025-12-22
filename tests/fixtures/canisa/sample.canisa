@@ -1,0 +1,7 @@
+; Emits full address bytes and the R2 residue
+LOADADDR8 r0
+EMITREGS "addr.bytes", r0, 8
+MOD8 r2
+ADMISS_EXCEPT6 r2
+EMIT8 "addr.r2.mod8", r2
+HALT

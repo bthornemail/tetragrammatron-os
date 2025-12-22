@@ -11,7 +11,11 @@
     "canon": "node tools/hw_canon.mjs hardware/probe.jsonl hardware/canon.json",
     "project": "node tools/hw_project.mjs hardware/canon.json hardware/sphere.json",
     "index": "node tools/gen_tree_indexes.mjs trees",
-    "pipeline": "npm run validate && npm run canon && npm run project && npm run index"
+    "pipeline": "npm run validate && npm run canon && npm run project && npm run index",
+    "viewer:build": "cd $(node tools/resolve_path.mjs services.viewer_react) && npm run build",
+    "viewer:dev": "cd $(node tools/resolve_path.mjs services.viewer_react) && npm run dev",
+    "plugin:build": "cd $(node tools/resolve_path.mjs services.obsidian_plugin) && npm run build",
+    "plugin:dev": "cd $(node tools/resolve_path.mjs services.obsidian_plugin) && npm run dev"
   },
   "description": "Tetragrammatron-OS semantic modeling system and hardware abstraction pipeline",
   "author": {
