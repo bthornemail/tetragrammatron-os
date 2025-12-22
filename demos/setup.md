@@ -15,17 +15,17 @@
 npm install
 
 # Viewer dependencies
-cd trees/universal-life-protocol/branches/development/context/services/viewer/react
+cd trees/web-viewer
 npm install
-cd ../../../../../../../../..
+cd ../../..
 ```
 
 ### 2. Build Viewer
 
 ```bash
-cd trees/universal-life-protocol/branches/development/context/services/viewer/react
+cd trees/web-viewer
 npm run build
-cd ../../../../../../../../..
+cd ../../..
 ```
 
 ### 3. Generate Tree Indices
@@ -43,21 +43,21 @@ npm run pipeline
 ### 5. Install Obsidian Plugin (Development)
 
 ```bash
-cd trees/obsidian/branches/development/services/plugin
+cd trees/obsidian/plugin
 npm install
 npm run build
-cd ../../../../../../..
+cd ../../..
 ```
 
 Then:
-1. Copy `trees/obsidian/branches/development/services/plugin/` to your Obsidian vault's `.obsidian/plugins/tetragrammatron-os/`
+1. Copy `trees/obsidian/plugin/` to your Obsidian vault's `.obsidian/plugins/tetragrammatron-os/`
 2. Enable the plugin in Obsidian Settings → Community Plugins
 
 ### 6. Open Viewer in Obsidian
 
 1. Create a new note
 2. Insert a Web Viewer block (or use HTML)
-3. Point to: `trees/universal-life-protocol/branches/development/context/services/viewer/react/dist/index.html` (relative to vault root)
+3. Point to: `trees/web-viewer/dist/index.html` (relative to vault root)
 
 ## Quick Test
 
@@ -69,7 +69,7 @@ npm test
 npm run pipeline
 
 # Verify viewer builds
-cd trees/universal-life-protocol/branches/development/context/services/viewer/react && npm run build && cd ../../../../../../../../..
+cd trees/web-viewer && npm run build && cd ../../..
 ```
 
 ## Next Steps

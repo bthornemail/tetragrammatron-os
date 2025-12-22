@@ -1,0 +1,21 @@
+base:
+  name: Freedom Axis
+  source:
+    folders:
+      - trees
+  filters:
+    - path.includes("/freedom/")
+  columns:
+    - name: Tree
+      value: path.split("/")[1]
+    - name: Branch
+      value: path.split("/")[3]
+    - name: Capability
+      value: file.name
+    - name: Format
+      value: file.extension
+    - name: Path
+      value: path
+views:
+  - type: table
+    name: Table

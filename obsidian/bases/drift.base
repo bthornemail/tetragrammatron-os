@@ -1,0 +1,17 @@
+base:
+  name: Drift Events
+  source:
+    folders:
+      - .ulp/drift/events
+  filters:
+    - path.endsWith("drift.jsonl")
+  columns:
+    - name: Time
+      value: t
+    - name: Kind
+      value: k
+    - name: Value
+      value: v
+views:
+  - type: table
+    name: Table

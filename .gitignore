@@ -1,12 +1,12 @@
 context/services/
-node_modules/
+node_modules
 #Ignore cursor AI rules
 .cursor/rules/codacy.mdc
 
 # Test artifacts
 tests/tmp/
 tests/**/tmp/
-dev-docs
+# dev-docs
 
 # Ignore cursor AI rules
 .cursor/rules/codacy.mdc
@@ -15,13 +15,13 @@ dev-docs
 _build/
 esp-idf/
 venv/
+vendor/
 .deps/
 embedded/
 
 # Python
 __pycache__/
 *.pyc
-
 # ESP-IDF / ESP32 builds (all projects)
 embedded/**/build/
 

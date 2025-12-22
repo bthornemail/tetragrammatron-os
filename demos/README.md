@@ -19,7 +19,7 @@ cat hardware/sphere.json | jq
 
 ```bash
 # Build the viewer
-cd trees/universal-life-protocol/branches/development/context/services/viewer/react
+cd trees/web-viewer
 npm run build
 
 # The viewer is now in dist/
@@ -30,7 +30,7 @@ npm run build
 
 1. **Install the plugin** (development mode):
    ```bash
-   cd trees/obsidian/branches/development/services/plugin
+   cd trees/obsidian/plugin
    npm install
    npm run build
    # Copy the plugin folder to your Obsidian vault's .obsidian/plugins/
@@ -41,7 +41,7 @@ npm run build
 3. **Open the viewer**:
    - Create a new note
    - Insert a Web Viewer block
-   - Point it to `trees/universal-life-protocol/branches/development/context/services/viewer/react/dist/index.html`
+   - Point it to `trees/web-viewer/dist/index.html`
 
 4. **Interact**:
    - Click nodes in the 3D viewer
@@ -68,7 +68,7 @@ Demonstrates the 3D visualization:
 
 **Files:**
 - `trees/` - Tree structure
-- `trees/universal-life-protocol/branches/development/context/services/viewer/react/dist/` - Built viewer
+- `trees/web-viewer/dist/` - Built viewer
 
 ### Scenario 3: Obsidian Integration
 
@@ -77,7 +77,7 @@ Demonstrates the bridge:
 - Bases and Canvas integration
 
 **Files:**
-- `trees/obsidian/branches/development/services/plugin/` - Plugin source
+- `trees/obsidian/plugin/` - Plugin source
 - `obsidian/bases/` - Base configurations
 
 ## Sample Data
