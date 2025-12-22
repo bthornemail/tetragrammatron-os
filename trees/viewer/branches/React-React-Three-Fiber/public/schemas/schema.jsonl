@@ -1,0 +1,15 @@
+{
+    "k": "schema.def",
+    "v": {
+      "realm": "1A",
+      "schema_hash": "a9f3c21d9e4b0a77d1a5f0b3a9e7c2ff",
+      "schema_class": "public",
+      "epoch": 3,
+      "rows": 8,
+      "schema_rows": 5,
+      "allowed_prefixes": [
+        "1A:02:04:03:02::/40",
+        "1A:02:04:03:03::/40"
+      ]
+    }
+  }

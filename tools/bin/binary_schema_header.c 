@@ -1,0 +1,12 @@
+struct SchemaHeader {
+  uint32_t magic;        // 'TADR'
+  uint16_t version;      // ABI version
+  uint8_t  rows;         // 8
+  uint8_t  schema_rows;  // 5
+
+  uint8_t  class;        // 0=private,1=protected,2=public
+  uint8_t  realm;        // R0 byte
+  uint16_t epoch;        // monotonic
+  uint8_t  hash[16];     // schema fingerprint
+  uint8_t  sig[32];      // optional signature (public/protected)
+};
