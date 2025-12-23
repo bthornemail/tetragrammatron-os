@@ -33,9 +33,11 @@ bool tg_schema_load_from_bytes(const uint8_t *data, size_t len, tg_schema_t **ou
   // Check rows
   if (data[6] != 8 || data[7] != 5) return false;
   
-  // Read header fields
-  uint8_t prefix_count = data[12];
-  if (prefix_count == 0 || prefix_count > TG_SCHEMA_MAX_PREFIXES) return false;
+      // Read header fields
+      uint8_t prefix_count = data[12];
+      if (prefix_count == 0) return false;
+      // Note: prefix_count is uint8_t (0-255), and TG_SCHEMA_MAX_PREFIXES is 255,
+      // so prefix_count > 255 is always false. The check is removed to avoid compiler warning.
   
   // Calculate required size
   size_t required_size = 13 + (prefix_count * 5);

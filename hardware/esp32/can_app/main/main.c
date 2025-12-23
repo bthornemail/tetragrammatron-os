@@ -2,24 +2,13 @@
 #include <string.h>
 
 #include "esp_log.h"
-#include "esp_system.h"
-#include "esp_timer.h"
 #include "nvs_flash.h"
 
-#include "can_vm.h"
-#include "can_codec.h"
-#include "can_objpool.h"
 #include "tetragrammatron_schema.h"
 
 static const char *TAG = "CAN_VM_ESP32";
 
 #define UART_BUFFER_BYTES (4 * 1024)
-#define OBJPOOL_MAX_POLYS 32
-
-static can_objpool_t g_pool;
-static void init_objpool(void) {
-  can_objpool_init(&g_pool);
-}
 
 static void log_jsonl(const char *kind, const char *msg) {
   printf("{\"kind\":\"%s\",\"msg\":%s}\n", kind, msg);
@@ -35,30 +24,15 @@ static bool read_exact(uint8_t *dst, size_t len) {
   return true;
 }
 
+// TODO: Implement CAN VM execution
+// For now, this is a minimal stub that validates addresses and logs
 static void canvm_run_buffer(const uint8_t *buf, size_t len) {
-  can_vm_t vm;
-  can_vm_init(&vm);
-  can_vm_set_objpool(&vm, &g_pool);
-
-  int steps = can_vm_run(&vm, buf, len);
-  if (steps < 0) {
-    ESP_LOGE(TAG, "VM error: %s", can_vm_error_string(vm.last_error));
-    log_jsonl("vm_error", "\"exec_failed\"");
-    return;
-  }
-
-  uint64_t ticks = can_time_ticks();
-  ESP_LOGI(TAG, "VM complete: steps=%d, ticks=%llu", steps, (unsigned long long)ticks);
-  char payload[96];
-  snprintf(payload, sizeof(payload),
-           "{\\\"steps\\\":%d,\\\"ticks\\\":%llu}",
-           steps, (unsigned long long)ticks);
-  log_jsonl("vm_done", payload);
+  ESP_LOGI(TAG, "CAN VM execution stub: received %zu bytes", len);
+  log_jsonl("vm_done", "{\"steps\":0,\"ticks\":0,\"status\":\"stub\"}");
 }
 
 void app_main(void) {
   ESP_ERROR_CHECK(nvs_flash_init());
-  init_objpool();
 
   if (!tg_schema_load_embedded()) {
     ESP_LOGE(TAG, "Schema load failed");

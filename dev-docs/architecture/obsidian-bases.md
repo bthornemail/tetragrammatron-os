@@ -19,7 +19,7 @@ This mirrors:
 ## Folder Placement
 
 ```
-obsidian/bases/
+tools/tools/obsidian/bases/
 ├── axes.base.md           # Master overview lattice
 ├── freedom.base.md        # Freedom axis view
 ├── autonomy.base.md       # Autonomy axis view
@@ -30,7 +30,7 @@ obsidian/bases/
 
 ## Master Axes Base
 
-File: `obsidian/bases/axes.base.md`
+File: `tools/obsidian/bases/axes.base.md`
 
 This is the **overview lattice** showing all constraint artifacts across all branches.
 
@@ -80,7 +80,7 @@ This gives you a **consensus lattice surface** immediately.
 
 ### Freedom Base
 
-File: `obsidian/bases/freedom.base.md`
+File: `tools/obsidian/bases/freedom.base.md`
 
 ```markdown
 ---
@@ -116,7 +116,7 @@ Interpretation rules:
 
 ### Autonomy Base
 
-File: `obsidian/bases/autonomy.base.md`
+File: `tools/obsidian/bases/autonomy.base.md`
 
 ```markdown
 ---
@@ -152,7 +152,7 @@ Interpretation rules:
 
 ### Sovereignty Base
 
-File: `obsidian/bases/sovereignty.base.md`
+File: `tools/obsidian/bases/sovereignty.base.md`
 
 ```markdown
 ---
@@ -188,7 +188,7 @@ Interpretation rules:
 
 ### Context Base (Expanded)
 
-File: `obsidian/bases/context.base.md`
+File: `tools/obsidian/bases/context.base.md`
 
 The Context base is special — it reflects the six subfolders.
 
@@ -229,7 +229,7 @@ This base defines **how interpretation is framed**, not what is true.
 
 ## Drift Events Base
 
-File: `obsidian/bases/drift.base.md`
+File: `tools/obsidian/bases/drift.base.md`
 
 ```markdown
 ---

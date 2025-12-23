@@ -15834,7 +15834,7 @@ universal-life-protocol/
 │       ├── freedom_beyond.glb
 │       ├── autonomy_self.glb
 │       └── sovereignty_beyond.glb
-└── obsidian/
+└── tools/obsidian/
     ├── bases/
     │   └── consensus.base.yaml
     ├── canvas/
@@ -16164,7 +16164,7 @@ This repo is a **read-only, descriptor-driven** integration template that unifie
 - `trees/` — source-of-truth data (YAML/JSONL + optional Markdown)
 - `descriptors/` — relation maps + projection maps + render policy
 - `assets/glb/` — symbolic 3D assets (placeholder notes; add your `.glb` files)
-- `obsidian/` — generated / maintained configs (Canvas + Bases)
+- `tools/obsidian/` — generated / maintained configs (Canvas + Bases)
 - `packages/` — code (read-only Obsidian plugin + Three.js viewer)
 
 ## Quick start
@@ -16184,7 +16184,7 @@ The viewer reads:
 ### 3) Obsidian workflow
 - Put the `trees/` folder (or the whole repo) inside an Obsidian vault.
 - Use Bases to create a table from frontmatter / file paths.
-- Use Canvas JSON in `obsidian/canvas/lattice.canvas.json` to create the lattice canvas.
+- Use Canvas JSON in `tools/obsidian/canvas/lattice.canvas.json` to create the lattice canvas.
 
 ### 4) Tetragrammatron-OS alignment
 - `descriptors/relations.yaml` is the **Relation Reference Map**.
@@ -16445,7 +16445,7 @@ Use as a Base view filter set."}
     {"id":"e5","fromNode":"n_public","toNode":"n_filters_highfree"}
   ]
 }
-write("obsidian/canvas/lattice.canvas.json", json.dumps(canvas_json, indent=2))
+write("tools/obsidian/canvas/lattice.canvas.json", json.dumps(canvas_json, indent=2))
 
 bases_note = """# Obsidian Bases (Placeholder)
 
@@ -16468,7 +16468,7 @@ Use this as a reference for columns:
 
 This repo does NOT mutate vault files. It only reads them.
 """
-write("obsidian/bases/consensus.base.md", bases_note)
+write("tools/obsidian/bases/consensus.base.md", bases_note)
 
 workspace_note = """// workspace.json placeholder
 // Obsidian generates and manages this.
@@ -16476,7 +16476,7 @@ workspace_note = """// workspace.json placeholder
 // If you write an Obsidian plugin, read-only is default.
 // If you must update workspace state, do it as an explicit user action.
 """
-write("obsidian/workspace.json", workspace_note)
+write("tools/obsidian/workspace.json", workspace_note)
 
 # ---------- Three.js viewer (TypeScript) ----------
 viewer_readme = """# Three Viewer (Read-only)
@@ -17124,7 +17124,7 @@ This repo is a **read-only, descriptor-driven** integration template that unifie
 - `trees/` — source-of-truth data (YAML/JSONL + optional Markdown)
 - `descriptors/` — relation maps + projection maps + render policy
 - `assets/glb/` — symbolic 3D assets (placeholder notes; add your `.glb` files)
-- `obsidian/` — Canvas + Bases notes
+- `tools/obsidian/` — Canvas + Bases notes
 - `packages/` — code (read-only Obsidian plugin + Three.js viewer)
 
 ## Safety & scope
@@ -17343,8 +17343,8 @@ Use as a Base view filter set."}
     {"id":"e5","fromNode":"n_public","toNode":"n_filters_highfree"}
   ]
 }
-write("obsidian/canvas/lattice.canvas.json", json.dumps(canvas, indent=2))
-write("obsidian/bases/consensus.base.md", """# Obsidian Bases (Reference)
+write("tools/obsidian/canvas/lattice.canvas.json", json.dumps(canvas, indent=2))
+write("tools/obsidian/bases/consensus.base.md", """# Obsidian Bases (Reference)
 
 Create a Base with columns:
 - freedom.self, freedom.beyond
@@ -17356,7 +17356,7 @@ Create a Base with columns:
 
 Do not write back to notes automatically. Read-only by default.
 """)
-write("obsidian/workspace.json", """{
+write("tools/obsidian/workspace.json", """{
   "//": "workspace.json placeholder — Obsidian manages this. Do not mutate automatically."
 }
 """)
@@ -17735,7 +17735,7 @@ This repo is a **read-only, descriptor-driven** integration template that unifie
 - `trees/` — source-of-truth data (YAML/JSONL + optional Markdown)
 - `descriptors/` — relation maps + projection maps + render policy
 - `assets/glb/` — symbolic 3D assets (placeholder notes; add your `.glb` files)
-- `obsidian/` — Canvas + Bases notes
+- `tools/obsidian/` — Canvas + Bases notes
 - `packages/` — code (read-only Obsidian plugin + Three.js viewer)
 
 ## Safety & scope
@@ -17954,8 +17954,8 @@ Use as a Base view filter set."}
     {"id":"e5","fromNode":"n_public","toNode":"n_filters_highfree"}
   ]
 }
-write("obsidian/canvas/lattice.canvas.json", json.dumps(canvas, indent=2))
-write("obsidian/bases/consensus.base.md", """# Obsidian Bases (Reference)
+write("tools/obsidian/canvas/lattice.canvas.json", json.dumps(canvas, indent=2))
+write("tools/obsidian/bases/consensus.base.md", """# Obsidian Bases (Reference)
 
 Create a Base with columns:
 - freedom.self, freedom.beyond
@@ -17967,7 +17967,7 @@ Create a Base with columns:
 
 Do not write back to notes automatically. Read-only by default.
 """)
-write("obsidian/workspace.json", """{
+write("tools/obsidian/workspace.json", """{
   "//": "workspace.json placeholder — Obsidian manages this. Do not mutate automatically."
 }
 """)
@@ -18342,7 +18342,7 @@ This repo is a **read-only, descriptor-driven** integration template that unifie
 - `trees/` — source-of-truth data (YAML/JSONL + optional Markdown)
 - `descriptors/` — relation maps + projection maps + render policy
 - `assets/glb/` — symbolic 3D assets (placeholder notes; add your `.glb` files)
-- `obsidian/` — Canvas + Bases notes
+- `tools/obsidian/` — Canvas + Bases notes
 - `packages/` — code (read-only Obsidian plugin + Three.js viewer)
 
 ## Safety & scope
@@ -18557,8 +18557,8 @@ Use as a Base view filter set."}
     {"id":"e5","fromNode":"n_public","toNode":"n_filters_highfree"}
   ]
 }
-write("obsidian/canvas/lattice.canvas.json", json.dumps(canvas, indent=2))
-write("obsidian/bases/consensus.base.md", """# Obsidian Bases (Reference)
+write("tools/obsidian/canvas/lattice.canvas.json", json.dumps(canvas, indent=2))
+write("tools/obsidian/bases/consensus.base.md", """# Obsidian Bases (Reference)
 
 Create a Base with columns:
 - freedom.self, freedom.beyond
@@ -18570,7 +18570,7 @@ Create a Base with columns:
 
 Do not write back to notes automatically. Read-only by default.
 """)
-write("obsidian/workspace.json", """{
+write("tools/obsidian/workspace.json", """{
   "//": "workspace.json placeholder — Obsidian manages this. Do not mutate automatically."
 }
 """)
@@ -18888,8 +18888,8 @@ zip_path
 
 Done — I built a unified **Seed-of-Life** repo template that ties together:
 
-- **Obsidian Canvas** lattice (`obsidian/canvas/lattice.canvas.json`)
-- **Obsidian Bases** column plan (`obsidian/bases/consensus.base.md`)
+- **Obsidian Canvas** lattice (`tools/obsidian/canvas/lattice.canvas.json`)
+- **Obsidian Bases** column plan (`tools/obsidian/bases/consensus.base.md`)
 - **Three.js Tree-of-Life renderer** (read-only; JSONL + descriptors → scene graph)
 - **Tetragrammatron-OS** scaffold (relation/projection validation + adapter slots)
 
@@ -18898,7 +18898,7 @@ Done — I built a unified **Seed-of-Life** repo template that ties together:
 ### What you’ll see inside
 - `trees/` — example Tree/Branch/Book + `entries.jsonl`
 - `descriptors/` — `relations.yaml`, `projections.yaml`, `render.map.yaml`
-- `obsidian/` — the Canvas JSON you can drop into a vault
+- `tools/obsidian/` — the Canvas JSON you can drop into a vault
 - `packages/three-viewer/` — a minimal Vite + Three viewer that reads your lattice
 - `packages/obsidian-plugin/` — a **read-only** skeleton with a `ulp-3d` code block
 - `packages/tetragrammatron-os/` — starter validation + “adapters” folder for your parity/prime/Fano extensions
@@ -21263,9 +21263,9 @@ lenses:
   sphere:
     - "hardware/sphere.json"
   canvas:
-    - "obsidian/canvas/lattice.canvas.json"
+    - "tools/obsidian/canvas/lattice.canvas.json"
   bases:
-    - "obsidian/bases/consensus.base.md"
+    - "tools/obsidian/bases/consensus.base.md"
 
 render:
   # coordinate conventions (your big-endian hardware vs little-endian VM is separate;
@@ -21994,7 +21994,7 @@ Key rule:
 Create a plugin folder:
 
 ```
-.obsidian/plugins/ulp-three-bridge/
+.tools/obsidian/plugins/ulp-three-bridge/
   manifest.json
   main.ts
 ```
@@ -23209,7 +23209,7 @@ This repository encodes the **Tree-of-Life** semantic modeling system, hardware 
 ### Viewer Layer
 - `ulp/viewer/react/`: React three-fiber 3D renderer
 - `ulp/viewer/three/`: Legacy Three.js single-file viewer
-- `obsidian/`: Canvas & Bases support files for Obsidian
+- `tools/obsidian/`: Canvas & Bases support files for Obsidian
 
 ### Tools
 - `tools/validate_jsonl.mjs`: JSONL validator
@@ -23658,7 +23658,7 @@ This mirrors:
 Create:
 
 ```
-obsidian/bases/
+tools/obsidian/bases/
 ├── axes.base.md
 ├── freedom.base.md
 ├── autonomy.base.md
@@ -24349,7 +24349,7 @@ This is your **directed system** in practice: each snapshot is a stage, and drif
 
 ## 2.4 Optional: Obsidian Base for Drift
 
-Create `obsidian/bases/drift.base.md`:
+Create `tools/obsidian/bases/drift.base.md`:
 
 ```markdown
 ---

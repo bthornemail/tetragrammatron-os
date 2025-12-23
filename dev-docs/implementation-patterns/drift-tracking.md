@@ -331,7 +331,7 @@ This is your **directed system** in practice: each snapshot is a stage, and drif
 
 ## Obsidian Base Integration
 
-Optional: Create `obsidian/bases/drift.base.md`:
+Optional: Create `tools/obsidian/bases/drift.base.md`:
 
 ```markdown
 ---

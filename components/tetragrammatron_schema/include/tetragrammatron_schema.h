@@ -66,6 +66,9 @@ uint16_t tg_schema_get_epoch(const tg_schema_t *s);
 // Global schema storage
 extern tg_schema_t *g_tg_schema;
 
+// Optional helper: load the embedded binary blob at boot
+bool tg_schema_load_embedded(void);
+
 #ifdef __cplusplus
 }
 #endif

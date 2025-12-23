@@ -40828,9 +40828,9 @@ Below is a **normalized build structure** that turns your repo into a **CAN-ISA 
   /artifacts/                 # build outputs
     *.canbc                   # CAN bytecode container (recommended new extension)
     *.clbc                    # keep old CLBC record-hash VM artifacts separate
-  /obsidian/
+  /tools/obsidian/
     vault/
-      .obsidian/
+      .tools/obsidian/
       canvas/
         repo_lattice.canvas   # Obsidian canvas JSON (directed edges)
 ```
@@ -40988,7 +40988,7 @@ You wanted the edge direction “related to branch structure” **and** folders 
   (assembler)
 - `artifacts/*.canbc → src/vm/*`  
   (execution)
-- `src/vm/* → src/render/* → obsidian/*.canvas`  
+- `src/vm/* → src/render/* → tools/obsidian/*.canvas`  
   (visualization emission)
 
 So the repo is literally: **inputs → opcodes → execution → render**.
@@ -41046,7 +41046,7 @@ Below is a **valid Obsidian `.canvas` JSON** that renders your **CAN-ISA / Canva
 You can save this **exactly as**:
 
 ```
-obsidian/vault/canvas/repo_lattice.canvas
+tools/obsidian/vault/canvas/repo_lattice.canvas
 ```
 
 and open it directly in Obsidian.
@@ -41274,8 +41274,8 @@ This canvas is not documentation — it is a **live semantic map**:
 
 1. Add **one canvas per axis**:
    ```
-   obsidian/vault/canvas/state.canvas
-   obsidian/vault/canvas/alphabet.canvas
+   tools/obsidian/vault/canvas/state.canvas
+   tools/obsidian/vault/canvas/alphabet.canvas
    ...
    ```
    Each showing L0 → L1 → L2 propagation
