@@ -54,6 +54,21 @@ mkdir -p build
 python3 tools/compile_schema.py address-schema.yaml -o build/address-schema.bin
 #+END_SRC
 
+* Hardware Data Collection
+
+The project includes hardware probing from multiple sources:
+
+- **Termux Android Devices**: 3 devices (192.168.8.101/102/103) collecting hardware metrics
+- **ESP32 Devices**: Embedded devices with CAN VM integration
+- **Host System**: Main development machine
+
+See =hardware/README.md= for the data pipeline and =hardware/termux/= for Termux device setup.
+
+**Quick Status:**
+- ✅ 2 Termux devices fully operational (101, 102)
+- ✅ Router MQTT broker operational (192.168.8.1)
+- ✅ Data collection pipeline working
+
 * ESP32 integration (esp-idf)
 
 **Goal:** load =build/address-schema.bin= as an embedded binary and call:

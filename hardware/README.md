@@ -1,13 +1,14 @@
 # Hardware Data Layer
 
-This directory contains hardware probe data, canonical records, and sphere projections.
+This directory contains hardware probe data, canonical records, and sphere projections from multiple sources including Termux Android devices, ESP32 devices, and the main host system.
 
 ## Files
 
 - **`probe.jsonl`**: Raw hardware probe events in JSONL format
   - Each line is a JSON object with fields: `t` (timestamp), `k` (key), `v` (value)
-  - Optional fields: `src` (source), `q` (quadrant: KK/KU/UK/UU)
+  - Optional fields: `src` (source device identifier), `q` (quadrant: KK/KU/UK/UU)
   - Validated against `schemas/hw_event.schema.json`
+  - Data collected from: Termux devices (101, 102, 103), ESP32 devices, and host system
 
 - **`canon.json`**: Canonical hardware record
   - Generated from `probe.jsonl` using `tools/hw_canon.mjs`
@@ -54,6 +55,27 @@ node tools/hw_canon.mjs hardware/probe.jsonl hardware/canon.json
 node tools/hw_project.mjs hardware/canon.json hardware/sphere.json
 ```
 
+## Data Sources
+
+### Termux Android Devices
+- **Device 101**: 192.168.8.101 (u0_a164) - ✅ Operational
+- **Device 102**: 192.168.8.102 (u0_a201) - ✅ Operational  
+- **Device 103**: 192.168.8.103 (u0_a171) - ⚠ Partial (MQTT working, SSH needs key)
+
+See `termux/` directory for setup scripts and documentation.
+
+**Quick sync from all Termux devices:**
+```bash
+cd hardware/termux
+./sync_all_devices.sh
+```
+
+### ESP32 Devices
+See `esp32/` directory for ESP32 hardware integration.
+
+### Host System
+Probe data from the main development host system.
+
 ## Data Immutability
 
 - Source files (`probe.jsonl`) are treated as immutable ground truth
@@ -75,6 +97,8 @@ Canonical records use quadrant tags to track knowledge provenance:
 - Pointer computed via fold/land operation + mod 8
 - Admissibility: `(p + 2) % 8 ≠ 0` (equiv `p ≠ 6`)
 - 7 out of 8 possible residues are admissible
+
+
 
 
 

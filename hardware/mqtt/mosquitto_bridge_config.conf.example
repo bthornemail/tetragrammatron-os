@@ -1,0 +1,60 @@
+# Mosquitto Bridge Configuration Example
+# This shows how to configure bridges between Termux devices and router
+
+# Bridge to Router (Primary Broker)
+# All Termux devices should bridge to the router
+connection router_bridge
+address 192.168.8.1:1883
+topic tetragrammatron/# out 0
+topic tetragrammatron/# in 0
+bridge_protocol_version mqttv311
+try_private false
+start_type automatic
+notifications false
+cleansession true
+
+# Bridge to Peer Device 1 (192.168.8.101)
+# Only needed if you want direct device-to-device communication
+connection peer_101
+address 192.168.8.101:1883
+topic tetragrammatron/# out 0
+topic tetragrammatron/# in 0
+bridge_protocol_version mqttv311
+try_private false
+start_type automatic
+notifications false
+cleansession true
+
+# Bridge to Peer Device 2 (192.168.8.102)
+connection peer_102
+address 192.168.8.102:1883
+topic tetragrammatron/# out 0
+topic tetragrammatron/# in 0
+bridge_protocol_version mqttv311
+try_private false
+start_type automatic
+notifications false
+cleansession true
+
+# Bridge to Peer Device 3 (192.168.8.103)
+connection peer_103
+address 192.168.8.103:1883
+topic tetragrammatron/# out 0
+topic tetragrammatron/# in 0
+bridge_protocol_version mqttv311
+try_private false
+start_type automatic
+notifications false
+cleansession true
+
+# Bridge Configuration Options:
+# - address: IP and port of remote broker
+# - topic: Topic pattern to bridge (tetragrammatron/# means all subtopics)
+# - out: Direction out (0 = both directions, 1 = out only)
+# - in: Direction in (0 = both directions, 1 = in only)
+# - bridge_protocol_version: MQTT protocol version (mqttv311 or mqttv50)
+# - try_private: If true, tries to use private bridge protocol
+# - start_type: automatic (start on broker start) or lazy (start on first use)
+# - notifications: Enable bridge notifications
+# - cleansession: Clean session on connect
+

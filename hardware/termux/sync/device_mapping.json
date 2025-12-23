@@ -1,0 +1,27 @@
+{
+  "192.168.8.101": {
+    "mac": "cc:a2:12:3f:48:d8",
+    "name": "termux-device-1",
+    "username": "u0_a164",
+    "source": "termux-101",
+    "arch": "armv7l",
+    "hostname": "localhost"
+  },
+  "192.168.8.102": {
+    "mac": "cc:a2:12:54:b2:55",
+    "name": "termux-device-2",
+    "username": "u0_a201",
+    "source": "termux-102",
+    "arch": "aarch64",
+    "hostname": "localhost"
+  },
+  "192.168.8.103": {
+    "mac": "74:8a:28:d8:f5:cf",
+    "name": "termux-device-3",
+    "username": "u0_a171",
+    "source": "termux-103",
+    "arch": "aarch64",
+    "hostname": "localhost"
+  }
+}
+
