@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { compileSchemaBin } from "../lib/schema-compile";
 import { SchemaJson } from "../lib/schema-jsonl";
 import {
@@ -42,6 +42,15 @@ export function SchemaCompiler({ schemas }: { schemas: Map<string, SchemaJson> }
   const list = useMemo(() => [...schemas.entries()], [schemas]);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string>("");
+  
+  // Debug logging
+  useEffect(() => {
+    console.log("SchemaCompiler: schemas map size:", schemas.size);
+    console.log("SchemaCompiler: list length:", list.length);
+    if (schemas.size > 0) {
+      console.log("SchemaCompiler: schema keys:", Array.from(schemas.keys()));
+    }
+  }, [schemas, list.length]);
   
   // if (list.length === 0) return null;
   if (list.length === 0) return <div style={{ position: "absolute", right: 12, top: 12, zIndex: 10, border: "1px solid white", padding: 12, borderRadius: 12 }}>

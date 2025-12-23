@@ -71,3 +71,4 @@ newgrp dialout
 - Verify ESP32 is connected
 - Try different port path
 
+

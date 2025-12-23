@@ -131,3 +131,4 @@ export function commandFromBytes(deviceId: string, addressBytes: number[], paylo
   };
 }
 
+

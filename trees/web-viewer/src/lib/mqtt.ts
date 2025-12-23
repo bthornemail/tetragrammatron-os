@@ -88,7 +88,7 @@ class MqttClientImpl implements MqttClientInterface {
         reconnectPeriod: 5000,
         connectTimeout: 10000,
       };
-
+      
       console.log(`Connecting to MQTT broker: ${connectUrl}`);
       this.client = mqtt.connect(connectUrl, options);
 
