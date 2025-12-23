@@ -6,6 +6,8 @@ import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { GroupRecord, NodeRecord } from "../lib/lattice";
 import { SchemaClass } from "../lib/model";
 import { TrustConfig } from "../lib/trust-config";
+import { Esp32TelemetryData, ExecutionState } from "../lib/esp32-telemetry";
+import { parseAddr8 } from "../lib/model";
 
 function classToOpacity(cls: SchemaClass) {
   if (cls === "private") return 0.25;
@@ -32,6 +34,43 @@ function posFromAddr(n: NodeRecord): THREE.Vector3 {
   const y = (b[2]! / 255) * 20 - 10;
   const z = (b[3]! / 255) * 20 - 10;
   return new THREE.Vector3(x, y, z);
+}
+
+// Convert ESP32 address string to 3D position
+function posFromAddrString(addrStr: string): THREE.Vector3 {
+  const addr = parseAddr8(addrStr);
+  if (!addr) {
+    // Fallback: hash the string
+    let hash = 0;
+    for (let i = 0; i < addrStr.length; i++) {
+      hash = ((hash << 5) - hash) + addrStr.charCodeAt(i);
+      hash = hash & hash;
+    }
+    const x = ((hash & 0xFF) / 255) * 20 - 10;
+    const y = (((hash >> 8) & 0xFF) / 255) * 20 - 10;
+    const z = (((hash >> 16) & 0xFF) / 255) * 20 - 10;
+    return new THREE.Vector3(x, y, z);
+  }
+  const b = addr.bytes;
+  const x = (b[1]! / 255) * 20 - 10;
+  const y = (b[2]! / 255) * 20 - 10;
+  const z = (b[3]! / 255) * 20 - 10;
+  return new THREE.Vector3(x, y, z);
+}
+
+// Get color for execution status
+function statusToColor(status: ExecutionState["status"]): string {
+  switch (status) {
+    case "ok": return "#51cf66";
+    case "halt": return "#ffd43b";
+    case "trap": return "#ff6b6b";
+    case "pc_overflow": return "#ff8787";
+    case "unknown_opcode": return "#ff8787";
+    case "admiss_violation": return "#ff6b6b";
+    case "error": return "#ff6b6b";
+    case "running": return "#4dabf7";
+    default: return "#868e96";
+  }
 }
 
 function GroupPlane({ g, center, onFocus }: { g: GroupRecord; center: THREE.Vector3; onFocus?: (point: THREE.Vector3) => void }) {
@@ -227,16 +266,154 @@ function TrustGraph({
   );
 }
 
+// Execution nodes: visualize CAN VM executions
+function ExecutionNodes({ telemetry }: { telemetry: Esp32TelemetryData }) {
+  const { activeNodes, completedNodes } = useMemo(() => {
+    const active: Array<{ pos: THREE.Vector3; exec: ExecutionState }> = [];
+    const completed: Array<{ pos: THREE.Vector3; exec: ExecutionState }> = [];
+    
+    for (const exec of telemetry.executions.values()) {
+      const pos = posFromAddrString(exec.address);
+      active.push({ pos, exec });
+    }
+    
+    for (const exec of telemetry.completedExecutions.slice(-20)) { // Last 20 completed
+      const pos = posFromAddrString(exec.address);
+      completed.push({ pos, exec });
+    }
+    
+    return { activeNodes: active, completedNodes: completed };
+  }, [telemetry]);
+
+  return (
+    <>
+      {/* Active executions - pulsing spheres */}
+      {activeNodes.map(({ pos, exec }, i) => (
+        <mesh key={`active-${exec.address}`} position={pos}>
+          <sphereGeometry args={[0.8, 16, 16]} />
+          <meshBasicMaterial 
+            color={statusToColor(exec.status)} 
+            transparent 
+            opacity={0.7}
+          />
+          <Html distanceFactor={15} style={{ pointerEvents: "none" }}>
+            <div style={{
+              background: "rgba(0,0,0,0.7)",
+              color: "white",
+              padding: "4px 6px",
+              borderRadius: 6,
+              fontSize: 11,
+              whiteSpace: "nowrap"
+            }}>
+              <div><b>{exec.address}</b></div>
+              <div>status: {exec.status}</div>
+              <div>steps: {exec.steps}</div>
+              <div>ticks: {exec.ticks}</div>
+            </div>
+          </Html>
+        </mesh>
+      ))}
+      
+      {/* Completed executions - smaller static spheres */}
+      {completedNodes.map(({ pos, exec }, i) => (
+        <mesh key={`completed-${exec.address}-${i}`} position={pos}>
+          <sphereGeometry args={[0.4, 12, 12]} />
+          <meshBasicMaterial 
+            color={statusToColor(exec.status)} 
+            transparent 
+            opacity={0.5}
+          />
+        </mesh>
+      ))}
+    </>
+  );
+}
+
+// Execution trails: connect execution events
+function ExecutionTrails({ telemetry }: { telemetry: Esp32TelemetryData }) {
+  const trails = useMemo(() => {
+    const segs: number[] = [];
+    
+    // Create trails for active executions with multiple emit events
+    for (const exec of telemetry.executions.values()) {
+      if (exec.emitEvents.length < 2) continue;
+      
+      const basePos = posFromAddrString(exec.address);
+      
+      // Create a trail from base position through emit events
+      let prevPos = basePos;
+      for (let i = 0; i < exec.emitEvents.length; i++) {
+        const offset = (i + 1) * 0.3;
+        const nextPos = basePos.clone().add(new THREE.Vector3(0, offset, 0));
+        segs.push(prevPos.x, prevPos.y, prevPos.z, nextPos.x, nextPos.y, nextPos.z);
+        prevPos = nextPos;
+      }
+    }
+    
+    return new Float32Array(segs);
+  }, [telemetry]);
+
+  if (trails.length === 0) return null;
+
+  return (
+    <lineSegments>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[trails, 3]} />
+      </bufferGeometry>
+      <lineBasicMaterial color="#4dabf7" transparent opacity={0.4} />
+    </lineSegments>
+  );
+}
+
+// Error markers: visualize schema violations and input errors
+function ErrorMarkers({ telemetry }: { telemetry: Esp32TelemetryData }) {
+  const markers = useMemo(() => {
+    // Place errors at fixed positions (could be improved to map to addresses)
+    const positions: THREE.Vector3[] = [];
+    const colors: string[] = [];
+    
+    // Place recent errors in a grid pattern
+    const recentErrors = telemetry.errors.slice(-10);
+    recentErrors.forEach((err, i) => {
+      const x = -8 + (i % 5) * 4;
+      const y = 8 - Math.floor(i / 5) * 4;
+      positions.push(new THREE.Vector3(x, y, 0));
+      colors.push(err.kind === "schema_violation" ? "#ff6b6b" : "#ffa94d");
+    });
+    
+    return { positions, colors };
+  }, [telemetry]);
+
+  if (markers.positions.length === 0) return null;
+
+  return (
+    <>
+      {markers.positions.map((pos, i) => (
+        <mesh key={`error-${i}`} position={pos}>
+          <boxGeometry args={[0.6, 0.6, 0.6]} />
+          <meshBasicMaterial 
+            color={markers.colors[i]} 
+            transparent 
+            opacity={0.8}
+          />
+        </mesh>
+      ))}
+    </>
+  );
+}
+
 export function SceneView({ 
   nodes, 
   groups,
   schemaStatus,
-  trustConfig
+  trustConfig,
+  telemetry
 }: { 
   nodes: NodeRecord[]; 
   groups: GroupRecord[];
   schemaStatus?: Map<string, "ok" | "unsigned" | "invalid" | "untrusted">;
   trustConfig?: TrustConfig | null;
+  telemetry?: Esp32TelemetryData | null;
 }) {
   const publicGroups = groups.filter(g => g.class === "public");
   const groupCenters = useMemo(() => {
@@ -266,6 +443,15 @@ export function SceneView({
 
       {/* Trust graph visualization */}
       <TrustGraph groups={groups} schemaStatus={schemaStatus} trustConfig={trustConfig} />
+
+      {/* CAN VM Execution visualization */}
+      {telemetry && (
+        <>
+          <ExecutionNodes telemetry={telemetry} />
+          <ExecutionTrails telemetry={telemetry} />
+          <ErrorMarkers telemetry={telemetry} />
+        </>
+      )}
 
       {/* Origin axes helper */}
       <axesHelper args={[8]} />

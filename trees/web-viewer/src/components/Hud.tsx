@@ -1,17 +1,30 @@
 import React from "react";
 import { GroupRecord, NodeRecord } from "../lib/lattice";
 import { TrustConfig } from "../lib/trust-config";
+import { Esp32TelemetryData } from "../lib/esp32-telemetry";
+import { WebSocketStatus } from "../lib/websocket";
+import { MqttStatus } from "../lib/mqtt";
 
 export function Hud({ 
   nodes, 
   groups, 
   schemaStatus,
-  trustConfig 
+  trustConfig,
+  telemetry,
+  wsStatus,
+  mqttStatus,
+  mqttDeviceCount,
+  mqttMessageCount
 }: { 
   nodes: NodeRecord[]; 
   groups: GroupRecord[];
   schemaStatus?: Map<string, "ok" | "unsigned" | "invalid" | "untrusted">;
   trustConfig?: TrustConfig | null;
+  telemetry?: Esp32TelemetryData | null;
+  wsStatus?: WebSocketStatus;
+  mqttStatus?: MqttStatus;
+  mqttDeviceCount?: number;
+  mqttMessageCount?: number;
 }) {
   const byClass = (cls: string) => groups.filter(g => g.class === cls).length;
   const unknownSchema = groups.filter(g => g.schemaHash === "unknown").length;
@@ -59,8 +72,79 @@ export function Hud({
           Trust config: {trustConfig.trustedPubkeys.size} realm(s) with pinned pubkeys
         </div>
       )}
+      {telemetry && (
+        <div style={{ marginTop: 8, paddingTop: 8, borderTop: "1px solid rgba(255,255,255,0.2)" }}>
+          <div style={{ fontSize: 12, opacity: 0.9, marginBottom: 4 }}>
+            CAN VM Execution:
+            {wsStatus && (
+              <span style={{ 
+                marginLeft: 8, 
+                fontSize: 10,
+                color: wsStatus === "connected" ? "#51cf66" : wsStatus === "connecting" ? "#ffa94d" : "#ff6b6b"
+              }}>
+                WS({wsStatus})
+              </span>
+            )}
+            {mqttStatus && (
+              <span style={{ 
+                marginLeft: 4, 
+                fontSize: 10,
+                color: mqttStatus === "connected" ? "#51cf66" : mqttStatus === "connecting" ? "#ffa94d" : "#ff6b6b"
+              }}>
+                MQTT({mqttStatus})
+              </span>
+            )}
+          </div>
+          <div>active executions: <b>{telemetry.executions.size}</b></div>
+          <div>total executions: <b>{telemetry.stats.totalExecutions}</b></div>
+          <div>total steps: <b>{telemetry.stats.totalSteps.toLocaleString()}</b></div>
+          <div>total ticks: <b>{telemetry.stats.totalTicks.toLocaleString()}</b></div>
+          {telemetry.completedExecutions.length > 0 && (
+            <div style={{ marginTop: 4, fontSize: 11, opacity: 0.8 }}>
+              last status: <b>{telemetry.completedExecutions[telemetry.completedExecutions.length - 1]?.status || "unknown"}</b>
+            </div>
+          )}
+          {(telemetry.stats.errorCount > 0 || telemetry.errors.length > 0) && (
+            <div style={{ marginTop: 4 }}>
+              <div style={{ color: "#ff6b6b" }}>errors: <b>{telemetry.stats.errorCount}</b></div>
+              <div style={{ color: "#ffa94d", fontSize: 11 }}>schema violations: <b>{telemetry.stats.schemaViolations}</b></div>
+              <div style={{ color: "#ffa94d", fontSize: 11 }}>input errors: <b>{telemetry.stats.inputErrors}</b></div>
+              {telemetry.errors.length > 0 && (
+                <div style={{ marginTop: 4, fontSize: 10, opacity: 0.7, maxHeight: 60, overflow: "auto" }}>
+                  {telemetry.errors.slice(-3).map((err, i) => (
+                    <div key={i} style={{ marginTop: 2 }}>
+                      {err.kind}: {err.msg}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+      {mqttStatus && (
+        <div style={{ marginTop: 8, paddingTop: 8, borderTop: "1px solid rgba(255,255,255,0.2)" }}>
+          <div style={{ fontSize: 12, opacity: 0.9, marginBottom: 4 }}>
+            MQTT:
+            <span style={{ 
+              marginLeft: 8, 
+              fontSize: 10,
+              color: mqttStatus === "connected" ? "#51cf66" : mqttStatus === "connecting" ? "#ffa94d" : "#ff6b6b"
+            }}>
+              {mqttStatus}
+            </span>
+          </div>
+          {mqttDeviceCount !== undefined && (
+            <div>devices: <b>{mqttDeviceCount}</b></div>
+          )}
+          {mqttMessageCount !== undefined && (
+            <div>messages: <b>{mqttMessageCount}</b></div>
+          )}
+        </div>
+      )}
       <div style={{ marginTop: 10, opacity: 0.85, fontSize: 11 }}>
         Data: <code>/public/data/events.jsonl</code> and <code>/public/data/attestations.jsonl</code>
+        {telemetry && <span style={{ display: "block", marginTop: 2 }}>+ real-time ESP32 telemetry</span>}
       </div>
     </div>
   );

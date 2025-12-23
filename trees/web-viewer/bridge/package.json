@@ -1,0 +1,20 @@
+{
+  "name": "esp32-can-vm-bridge",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Bridge server for ESP32 CAN VM telemetry",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js --port 8080 --serial /dev/ttyUSB0"
+  },
+  "dependencies": {
+    "serialport": "^12.0.0",
+    "@serialport/parser-readline": "^12.0.0",
+    "ws": "^8.18.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+
