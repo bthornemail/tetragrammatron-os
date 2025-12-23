@@ -1,5 +1,8 @@
 // addr_assign.c
-#include "addr_schema.h"
+// NOTE: This file should be moved to components/tetragrammatron_schema/ or similar
+// Currently uses canonical header for ABI v2 compatibility
+
+#include "../../components/tetragrammatron_schema/include/tetragrammatron_schema.h"
 #include <string.h>
 #include "esp_wifi.h"
 #include "mbedtls/sha256.h"
@@ -17,9 +20,9 @@ static void sha256_bytes(const uint8_t *in, size_t inlen, uint8_t out32[32]) {
   mbedtls_sha256_free(&ctx);
 }
 
-bool addr_assign_instance(addr8_t *a, uint32_t realm_id, uint8_t salt) {
+bool addr_assign_instance(tg_addr8_t *a, uint32_t realm_id, uint8_t salt) {
   // Assumes R0..R4 already set to legal schema.
-  if (!schema_prefix_valid(a)) return false;
+  if (!tg_schema_prefix_valid_global(a)) return false;
 
   uint8_t mac[6];
   esp_read_mac(mac, ESP_MAC_WIFI_STA);

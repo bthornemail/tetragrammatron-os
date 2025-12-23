@@ -1,10 +1,13 @@
 
 // collision.c (sketch)
-#include "addr_schema.h"
+// NOTE: This file should be moved to components/tetragrammatron_schema/ or similar
+// Updated to use canonical header for ABI v2 compatibility
+
+#include "../../components/tetragrammatron_schema/include/tetragrammatron_schema.h"
 #include <string.h>
 
 typedef struct {
-  addr8_t addr;
+  tg_addr8_t addr;
   uint8_t mac[6];
   uint32_t nonce;
 } hello_t;
@@ -18,7 +21,7 @@ static int tie_cmp(const uint8_t macA[6], uint32_t nonceA,
   return (nonceA < nonceB) ? -1 : 1;
 }
 
-bool addr_handle_collision(addr8_t *self, const hello_t *other,
+bool addr_handle_collision(tg_addr8_t *self, const hello_t *other,
                            const uint8_t selfMac[6], uint32_t selfNonce,
                            uint32_t realm_id) {
   if (memcmp(self->r, other->addr.r, 8) != 0) return false; // no collision

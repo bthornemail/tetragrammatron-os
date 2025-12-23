@@ -1,19 +1,18 @@
 // addr_schema_validate.c
-#include "addr_schema_runtime.h"
+// DEPRECATED: Use components/tetragrammatron_schema/tetragrammatron_schema.c instead
+// This file is kept for reference only.
 
+// Fixed version using canonical header:
+#include "../../components/tetragrammatron_schema/include/tetragrammatron_schema.h"
+
+// Use the canonical function instead:
+// bool tg_schema_prefix_valid_global(const tg_addr8_t *a);
+
+// Legacy function (deprecated, use tg_schema_prefix_valid_global):
 bool schema_prefix_valid(const uint8_t addr[8]) {
-  for (int i = 0; i < g_schema.schema_rows; i++) {
-    row_spec_t *r = &g_schema.row[i];
-    if (!r->fixed) continue;
-
-    bool ok = false;
-    for (int j = 0; j < r->allowed_count; j++) {
-      if (addr[i] == r->allowed[j]) {
-        ok = true;
-        break;
-      }
-    }
-    if (!ok) return false;
+  tg_addr8_t a;
+  for (int i = 0; i < 8; i++) {
+    a.r[i] = addr[i];
   }
-  return true;
+  return tg_schema_prefix_valid_global(&a);
 }

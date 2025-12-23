@@ -312,7 +312,7 @@ Only addresses with **valid schema prefixes** are admissible.
 This file is **global**, versioned, and shared across the mesh.
 
 ```yaml
-schema: tetragrammatron/address-schema@v1
+schema: tetragrammatron/address-schema@v2
 width: 8
 radix: 256
 endianness: big
@@ -431,7 +431,7 @@ Used by probes, routers, and renderers.
 
 ```json
 {
-  "schema": "tetragrammatron/address-schema@v1",
+  "schema": "tetragrammatron/address-schema@v2",
   "schema_bytes": 5,
   "instance_bytes": 3,
   "rows": {
@@ -1152,9 +1152,14 @@ You compile it once into a tiny binary table.
 
 struct SchemaHeader {
   uint32_t magic;        // 'TADR' = 0x54414452
-  uint16_t version;      // 1
+  uint16_t version;      // 2 (ABI v2)
   uint8_t  rows;         // 8
   uint8_t  schema_rows;  // 5
+  uint8_t  schema_class; // 0=private, 1=protected, 2=public
+  uint8_t  realm;        // R0 byte
+  uint16_t epoch;        // monotonic (little-endian)
+  uint8_t  prefix_count; // number of prefixes
+  // ... prefixes follow (5 bytes each)
 };
 
 struct RowSpec {
@@ -1846,7 +1851,7 @@ def main():
     f.write(out)
 
   print(f"Wrote {args.out} ({len(out)} bytes)")
-  print("Header:", hex(MAGIC), "version=1 rows=8 schema_rows=5")
+  print(f"  ABI v2, class={schema_class_str}, realm=0x{realm:02X}, epoch={epoch_val}")
 
 if __name__ == "__main__":
   main()
@@ -1873,7 +1878,7 @@ extern "C" {
 // Addr8: R0..R7
 typedef struct { uint8_t r[8]; } tg_addr8_t;
 
-// Binary schema ABI (v1)
+// Binary schema ABI v2
 #define TG_SCHEMA_MAGIC 0x54414452u /* 'TADR' */
 #define TG_SCHEMA_MAX_ALLOWED 16
 #define TG_SCHEMA_ROWS 8
@@ -1930,7 +1935,7 @@ bool tg_schema_load_from_bytes(const uint8_t *data, size_t len, tg_schema_t *out
   if (len < sizeof(tg_schema_t)) return false;
   memcpy(out, data, sizeof(tg_schema_t));
   if (out->magic != TG_SCHEMA_MAGIC) return false;
-  if (out->version != 1) return false;
+  if (out->version != 2) return false;  // ABI v2 only
   if (out->rows != 8) return false;
   if (out->schema_rows != 5) return false;
   return true;
@@ -2081,7 +2086,7 @@ capability: "{{CAPABILITY}}"
 process: "{{PROCESS}}"
 context: "{{CONTEXT}}"
 prefix40: "{{PFX40}}"
-schema: "tetragrammatron/address-schema@v1"
+schema: "tetragrammatron/address-schema@v2"
 ---
 #+END_SRC
 
@@ -4107,7 +4112,7 @@ We assume the schema binary you already defined (minimal subset):
 
 ```c
 // little-endian (viewer only)
-struct SchemaBinV1 {
+struct SchemaBinV2 {
   char     magic[4];      // "TADR"
   uint16_t abi;           // = 2
   uint8_t  rows;          // = 8

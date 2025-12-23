@@ -6,9 +6,10 @@ import { SceneView } from "./components/SceneView";
 import { Hud } from "./components/Hud";
 import { fetchSchemaBin } from "./lib/schema";
 import { applySchemaValidation } from "./lib/lattice";
-import { fetchSchemasJsonl } from "./lib/schema-jsonl";
-import { fetchSchemaSig, verifySchemaSignature } from "./lib/schema-sig";
+import { fetchSchemasJsonl, fetchSchemasJsonlWithSigs } from "./lib/schema-jsonl";
+import { fetchSchemaSig, verifySchemaSignatureWithTrust } from "./lib/schema-sig";
 import { SchemaCompiler } from "./components/SchemaCompiler";
+import { loadTrustConfig, isPubkeyTrusted, TrustConfig } from "./lib/trust-config";
 
 const DEV_SCHEMA_JSONL = false; //true;
 export default function App() {
@@ -16,10 +17,16 @@ export default function App() {
   const [events, setEvents] = useState<JsonlEvent[]>([]);
   const [atts, setAtts] = useState<ExecAttest[]>([]);
   const [err, setErr] = useState<string | null>(null);
+  const [schemaStatus, setSchemaStatus] = useState<Map<string, "ok" | "unsigned" | "invalid" | "untrusted">>(new Map());
+  const [trustConfig, setTrustConfig] = useState<TrustConfig | null>(null);
 
   useEffect(() => {
     (async () => {
       try {
+        // Load trust configuration first
+        const config = await loadTrustConfig();
+        setTrustConfig(config);
+
         const [e, a] = await Promise.all([
           fetchJsonl("/data/events.jsonl"),
           fetchJsonl("/data/attestations.jsonl")
@@ -27,13 +34,26 @@ export default function App() {
 
         // Load all schema bins referenced by attestations
         let schemaMap = new Map<string, any>();
-        let schemaStatus = new Map<string, "ok" | "unsigned" | "invalid">();
+        let statusMap = new Map<string, "ok" | "unsigned" | "invalid" | "untrusted">();
+
+        // Create trust verification function
+        const verifyWithTrust = (bin: Uint8Array, sig: any) => {
+          return verifySchemaSignatureWithTrust(bin, sig, (realm, pubkey) => 
+            isPubkeyTrusted(config, realm, pubkey)
+          );
+        };
 
         if (DEV_SCHEMA_JSONL) {
-          schemaMap = await fetchSchemasJsonl("/schemas/schema.jsonl");
-          console.log(schemaMap)
+          // Dev mode: require signatures even in JSONL
+          const result = await fetchSchemasJsonlWithSigs(
+            "/schemas/schema.jsonl",
+            "/schemas/schema.sig.jsonl",
+            verifyWithTrust
+          );
+          schemaMap = result.schemas;
+          statusMap = result.status;
         } else {
-          // Runtime BIN + SIG (signatures enforced)
+          // Runtime BIN + SIG (signatures enforced with trust)
           for (const att of a) {
             const v = att.v;
             if (!v?.realm || !v?.schema_hash || !v?.schema_class) continue;
@@ -48,14 +68,15 @@ export default function App() {
 
               const sig = await fetchSchemaSig(`/schemas/${key}.sig.json`);
 
-              // Enforce signature policy
+              // Enforce signature policy with trust
               if (v.schema_class === "public" || v.schema_class === "protected") {
                 if (!sig) {
-                  schemaStatus.set(key, "unsigned");
+                  statusMap.set(key, "unsigned");
                   continue; // reject schema
                 }
-                if (!verifySchemaSignature(binBuf, sig)) {
-                  schemaStatus.set(key, "invalid");
+                const result = verifyWithTrust(binBuf, sig);
+                if (!result.valid) {
+                  statusMap.set(key, result.reason === "untrusted_pubkey" ? "untrusted" : "invalid");
                   continue; // reject schema
                 }
               }
@@ -63,7 +84,7 @@ export default function App() {
               // Accepted
               const schema = await fetchSchemaBin(`/schemas/${key}.bin`);
               schemaMap.set(key, schema);
-              schemaStatus.set(key, "ok");
+              statusMap.set(key, "ok");
 
             } catch {
               // ignore
@@ -71,9 +92,8 @@ export default function App() {
           }
         }
 
-
-
         setSchemas(schemaMap);
+        setSchemaStatus(statusMap);
 
         const built = buildLattice(e, a);
         applySchemaValidation(built.nodes, schemaMap);
@@ -90,16 +110,18 @@ export default function App() {
 
   return (
     <div style={{ width: "100vw", height: "100vh", position: "relative" }}>
-      <Hud nodes={nodes} groups={groups} />
+      <Hud nodes={nodes} groups={groups} schemaStatus={schemaStatus} trustConfig={trustConfig} />
       <SchemaCompiler schemas={schemas} />
       {err ? (
         <div style={{ color: "white", padding: 16 }}>
           Error loading JSONL: {err}
         </div>
       ) : (
-        <SceneView nodes={nodes} groups={groups} />
+        <SceneView nodes={nodes} groups={groups} schemaStatus={schemaStatus} trustConfig={trustConfig} />
       )}
-      <div>schema source: <b>{DEV_SCHEMA_JSONL ? "jsonl (dev)" : "bin (prod)"}</b></div>
+      <div style={{ position: "absolute", bottom: 12, left: 12, zIndex: 10, color: "white", fontSize: 12, opacity: 0.7 }}>
+        schema source: <b>{DEV_SCHEMA_JSONL ? "jsonl (dev)" : "bin (prod)"}</b>
+      </div>
     </div>
   );
 }

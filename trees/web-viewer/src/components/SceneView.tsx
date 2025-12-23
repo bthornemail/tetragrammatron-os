@@ -5,6 +5,7 @@ import { OrbitControls, Html } from "@react-three/drei";
 import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { GroupRecord, NodeRecord } from "../lib/lattice";
 import { SchemaClass } from "../lib/model";
+import { TrustConfig } from "../lib/trust-config";
 
 function classToOpacity(cls: SchemaClass) {
   if (cls === "private") return 0.25;
@@ -122,7 +123,121 @@ function ProtectedLines({ groups }: { groups: GroupRecord[] }) {
   );
 }
 
-export function SceneView({ nodes, groups }: { nodes: NodeRecord[]; groups: GroupRecord[] }) {
+// Trust graph visualization: show relationships between schemas and their signers
+function TrustGraph({ 
+  groups, 
+  schemaStatus, 
+  trustConfig 
+}: { 
+  groups: GroupRecord[]; 
+  schemaStatus?: Map<string, "ok" | "unsigned" | "invalid" | "untrusted">;
+  trustConfig?: TrustConfig | null;
+}) {
+  // Build trust relationships: schema -> signer pubkey
+  const { trustedLines, untrustedLines, hasTrusted } = useMemo(() => {
+    if (!schemaStatus || !trustConfig) return { trustedLines: [], untrustedLines: [], hasTrusted: false };
+    
+    const trustedSegs: number[] = [];
+    const untrustedSegs: number[] = [];
+    let hasAnyTrusted = false;
+    
+    // For each trusted schema, create a visual connection
+    for (const [key, status] of schemaStatus.entries()) {
+      if (status !== "ok") continue;
+      
+      const [realmHex, hash] = key.split("|");
+      const group = groups.find(g => 
+        g.realmHex === realmHex && g.schemaHash === hash
+      );
+      
+      if (!group || group.nodes.length === 0) continue;
+      
+      // Find group center
+      const center = new THREE.Vector3(0, 0, 0);
+      for (const n of group.nodes) center.add(posFromAddr(n));
+      center.divideScalar(Math.max(1, group.nodes.length));
+      
+      // Check if pubkey is trusted
+      const trusted = trustConfig.trustedPubkeys.get(realmHex)?.length > 0;
+      if (trusted) hasAnyTrusted = true;
+      
+      // Create edge from schema to a "trust anchor" point above
+      const anchor = center.clone().add(new THREE.Vector3(0, 8, 0));
+      
+      // Add line segment to appropriate array
+      const seg = [center.x, center.y, center.z, anchor.x, anchor.y, anchor.z];
+      if (trusted) {
+        trustedSegs.push(...seg);
+      } else {
+        untrustedSegs.push(...seg);
+      }
+    }
+    
+    return {
+      trustedLines: new Float32Array(trustedSegs),
+      untrustedLines: new Float32Array(untrustedSegs),
+      hasTrusted: hasAnyTrusted
+    };
+  }, [groups, schemaStatus, trustConfig]);
+
+  if (trustedLines.length === 0 && untrustedLines.length === 0) return null;
+
+  return (
+    <>
+      {/* Trusted lines */}
+      {trustedLines.length > 0 && (
+        <lineSegments>
+          <bufferGeometry>
+            <bufferAttribute attach="attributes-position" args={[trustedLines, 3]} />
+          </bufferGeometry>
+          <lineBasicMaterial color="#51cf66" transparent opacity={0.6} linewidth={2} />
+        </lineSegments>
+      )}
+      
+      {/* Untrusted lines */}
+      {untrustedLines.length > 0 && (
+        <lineSegments>
+          <bufferGeometry>
+            <bufferAttribute attach="attributes-position" args={[untrustedLines, 3]} />
+          </bufferGeometry>
+          <lineBasicMaterial color="#ffa94d" transparent opacity={0.3} linewidth={1} />
+        </lineSegments>
+      )}
+      
+      {/* Trust anchor visualization */}
+      {hasTrusted && (
+        <mesh position={[0, 12, 0]}>
+          <sphereGeometry args={[0.5, 16, 16]} />
+          <meshBasicMaterial color="#51cf66" transparent opacity={0.7} />
+          <Html distanceFactor={15} style={{ pointerEvents: "none" }}>
+            <div style={{
+              background: "rgba(81, 207, 102, 0.8)",
+              color: "white",
+              padding: "4px 8px",
+              borderRadius: 6,
+              fontSize: 11,
+              whiteSpace: "nowrap"
+            }}>
+              Trust Anchor
+            </div>
+          </Html>
+        </mesh>
+      )}
+    </>
+  );
+}
+
+export function SceneView({ 
+  nodes, 
+  groups,
+  schemaStatus,
+  trustConfig
+}: { 
+  nodes: NodeRecord[]; 
+  groups: GroupRecord[];
+  schemaStatus?: Map<string, "ok" | "unsigned" | "invalid" | "untrusted">;
+  trustConfig?: TrustConfig | null;
+}) {
   const publicGroups = groups.filter(g => g.class === "public");
   const groupCenters = useMemo(() => {
     return publicGroups.map(g => {
@@ -148,6 +263,9 @@ export function SceneView({ nodes, groups }: { nodes: NodeRecord[]; groups: Grou
       {groupCenters.map(({ g, center }) => (
         <GroupPlane key={g.key} g={g} center={center} />
       ))}
+
+      {/* Trust graph visualization */}
+      <TrustGraph groups={groups} schemaStatus={schemaStatus} trustConfig={trustConfig} />
 
       {/* Origin axes helper */}
       <axesHelper args={[8]} />

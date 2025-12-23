@@ -1,0 +1,15 @@
+{
+  "_comment": "Trust configuration for Tetragrammatron-OS web viewer",
+  "_description": "Pinned Ed25519 public keys per realm. Schemas must be signed by these keys to be accepted.",
+  "trusted_pubkeys": {
+    "1A": [
+      "a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456"
+    ],
+    "_example": "Add more realms as needed. Each realm can have multiple trusted pubkeys."
+  },
+  "require_private_sig": {
+    "1A": false,
+    "_description": "If true, even private schemas require signatures for this realm"
+  }
+}
+

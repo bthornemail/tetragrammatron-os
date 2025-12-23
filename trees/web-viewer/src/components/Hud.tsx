@@ -1,13 +1,27 @@
 import React from "react";
 import { GroupRecord, NodeRecord } from "../lib/lattice";
+import { TrustConfig } from "../lib/trust-config";
 
-export function Hud({ nodes, groups }: { nodes: NodeRecord[]; groups: GroupRecord[] }) {
+export function Hud({ 
+  nodes, 
+  groups, 
+  schemaStatus,
+  trustConfig 
+}: { 
+  nodes: NodeRecord[]; 
+  groups: GroupRecord[];
+  schemaStatus?: Map<string, "ok" | "unsigned" | "invalid" | "untrusted">;
+  trustConfig?: TrustConfig | null;
+}) {
   const byClass = (cls: string) => groups.filter(g => g.class === cls).length;
   const unknownSchema = groups.filter(g => g.schemaHash === "unknown").length;
   const invalid = nodes.filter(n => n.validation?.kind === "invalid").length;
   const unknown = nodes.filter(n => n.validation?.kind === "unknown-schema").length;
-  // const unsigned = [...schemaStatus.values()].filter(s => s === "unsigned").length;
-  // const invalidSig = [...schemaStatus.values()].filter(s => s === "invalid").length;
+  
+  const unsigned = schemaStatus ? [...schemaStatus.values()].filter(s => s === "unsigned").length : 0;
+  const invalidSig = schemaStatus ? [...schemaStatus.values()].filter(s => s === "invalid").length : 0;
+  const untrusted = schemaStatus ? [...schemaStatus.values()].filter(s => s === "untrusted").length : 0;
+  const trustedCount = schemaStatus ? [...schemaStatus.values()].filter(s => s === "ok").length : 0;
   return (
     <div style={{
       position: "absolute", top: 12, left: 12, zIndex: 10,
@@ -31,12 +45,21 @@ export function Hud({ nodes, groups }: { nodes: NodeRecord[]; groups: GroupRecor
       <div style={{ marginTop: 6 }}>
         <div>unknown schema groups: <b>{unknownSchema}</b></div>
       </div>
-      {/* <div style={{ marginTop: 8 }}>
-        <div>schemas loaded: <b>{schemas.size}</b></div>
-        <div style={{ color: "#ffa94d" }}>unsigned rejected: <b>{unsigned}</b></div>
-        <div style={{ color: "#ff6b6b" }}>invalid signature: <b>{invalidSig}</b></div>
-      </div> */}
-      <div style={{ marginTop: 10, opacity: 0.85 }}>
+      {schemaStatus && (
+        <div style={{ marginTop: 8, paddingTop: 8, borderTop: "1px solid rgba(255,255,255,0.2)" }}>
+          <div style={{ fontSize: 12, opacity: 0.9, marginBottom: 4 }}>Trust Status:</div>
+          <div style={{ color: "#51cf66" }}>trusted schemas: <b>{trustedCount}</b></div>
+          <div style={{ color: "#ffa94d" }}>unsigned rejected: <b>{unsigned}</b></div>
+          <div style={{ color: "#ff6b6b" }}>invalid signature: <b>{invalidSig}</b></div>
+          <div style={{ color: "#ff8787" }}>untrusted pubkey: <b>{untrusted}</b></div>
+        </div>
+      )}
+      {trustConfig && trustConfig.trustedPubkeys.size > 0 && (
+        <div style={{ marginTop: 6, fontSize: 11, opacity: 0.7 }}>
+          Trust config: {trustConfig.trustedPubkeys.size} realm(s) with pinned pubkeys
+        </div>
+      )}
+      <div style={{ marginTop: 10, opacity: 0.85, fontSize: 11 }}>
         Data: <code>/public/data/events.jsonl</code> and <code>/public/data/attestations.jsonl</code>
       </div>
     </div>

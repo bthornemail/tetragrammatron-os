@@ -14,5 +14,5 @@ capability: "{{CAPABILITY}}"
 process: "{{PROCESS}}"
 context: "{{CONTEXT}}"
 prefix40: "{{PFX40}}"
-schema: "tetragrammatron/address-schema@v1"
+schema: "tetragrammatron/address-schema@v2"
 ---

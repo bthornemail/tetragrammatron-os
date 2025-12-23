@@ -34,3 +34,22 @@ export function verifySchemaSignature(
     return false;
   }
 }
+
+// Verify signature and check against trusted pubkeys
+export function verifySchemaSignatureWithTrust(
+  bin: Uint8Array,
+  sig: SchemaSig,
+  isPubkeyTrusted: (realm: string, pubkeyHex: string) => boolean
+): { valid: boolean; reason?: string } {
+  // First check cryptographic validity
+  if (!verifySchemaSignature(bin, sig)) {
+    return { valid: false, reason: "invalid_signature" };
+  }
+
+  // Then check trust
+  if (!isPubkeyTrusted(sig.realm, sig.pubkey_ed25519)) {
+    return { valid: false, reason: "untrusted_pubkey" };
+  }
+
+  return { valid: true };
+}
