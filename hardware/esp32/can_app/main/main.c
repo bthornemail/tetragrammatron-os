@@ -3,6 +3,8 @@
 
 #include "esp_log.h"
 #include "nvs_flash.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 
 #include "tetragrammatron_schema.h"
 
@@ -42,43 +44,59 @@ void app_main(void) {
 
   ESP_LOGI(TAG, "Tetragrammatron CAN VM ready");
   ESP_LOGI(TAG, "Protocol: [8-byte addr][4-byte BE length][CANBC bytes]");
+  ESP_LOGI(TAG, "Waiting for input...");
 
   static uint8_t uart_buf[UART_BUFFER_BYTES];
-  tg_addr8_t addr = {0};
-  uint8_t len_be[4];
 
-  if (!read_exact(addr.r, sizeof(addr.r))) {
-    ESP_LOGE(TAG, "Missing address prefix");
-    log_jsonl("input_error", "\"address_missing\"");
-    return;
+  // Main loop: process packets continuously
+  while (1) {
+    tg_addr8_t addr = {0};
+    uint8_t len_be[4];
+
+    ESP_LOGI(TAG, "Waiting for address prefix (8 bytes)...");
+    
+    if (!read_exact(addr.r, sizeof(addr.r))) {
+      ESP_LOGW(TAG, "No input available, continuing to wait...");
+      vTaskDelay(pdMS_TO_TICKS(100));  // Wait 100ms before retrying
+      continue;
+    }
+
+    ESP_LOGI(TAG, "Received address: %02X:%02X:%02X:%02X:%02X:%02X:%02X:%02X",
+             addr.r[0], addr.r[1], addr.r[2], addr.r[3],
+             addr.r[4], addr.r[5], addr.r[6], addr.r[7]);
+
+    if (!tg_schema_prefix_valid_global(&addr)) {
+      ESP_LOGE(TAG, "Schema gate reject: %02X:%02X:%02X:%02X:%02X",
+               addr.r[0], addr.r[1], addr.r[2], addr.r[3], addr.r[4]);
+      log_jsonl("schema_violation", "\"prefix_rejected\"");
+      continue;  // Continue waiting for next packet
+    }
+
+    ESP_LOGI(TAG, "Address prefix valid, reading length...");
+
+    if (!read_exact(len_be, sizeof(len_be))) {
+      ESP_LOGE(TAG, "Missing length");
+      log_jsonl("input_error", "\"length_missing\"");
+      continue;
+    }
+
+    uint32_t prog_len = (len_be[0] << 24) | (len_be[1] << 16) | (len_be[2] << 8) | len_be[3];
+    ESP_LOGI(TAG, "Payload length: %u bytes", (unsigned)prog_len);
+
+    if (prog_len == 0 || prog_len > sizeof(uart_buf)) {
+      ESP_LOGE(TAG, "Invalid length %u", (unsigned)prog_len);
+      log_jsonl("input_error", "\"length_invalid\"");
+      continue;
+    }
+
+    if (!read_exact(uart_buf, prog_len)) {
+      ESP_LOGE(TAG, "Payload truncated (expected %u bytes)", (unsigned)prog_len);
+      log_jsonl("input_error", "\"payload_missing\"");
+      continue;
+    }
+
+    ESP_LOGI(TAG, "Executing CANBC payload...");
+    canvm_run_buffer(uart_buf, prog_len);
+    ESP_LOGI(TAG, "Execution complete; ready for next packet");
   }
-
-  if (!tg_schema_prefix_valid_global(&addr)) {
-    ESP_LOGE(TAG, "Schema gate reject: %02X:%02X:%02X:%02X:%02X",
-             addr.r[0], addr.r[1], addr.r[2], addr.r[3], addr.r[4]);
-    log_jsonl("schema_violation", "\"prefix_rejected\"");
-    return;
-  }
-
-  if (!read_exact(len_be, sizeof(len_be))) {
-    ESP_LOGE(TAG, "Missing length");
-    log_jsonl("input_error", "\"length_missing\"");
-    return;
-  }
-
-  uint32_t prog_len = (len_be[0] << 24) | (len_be[1] << 16) | (len_be[2] << 8) | len_be[3];
-  if (prog_len == 0 || prog_len > sizeof(uart_buf)) {
-    ESP_LOGE(TAG, "Invalid length %u", (unsigned)prog_len);
-    log_jsonl("input_error", "\"length_invalid\"");
-    return;
-  }
-
-  if (!read_exact(uart_buf, prog_len)) {
-    ESP_LOGE(TAG, "Payload truncated (expected %u bytes)", (unsigned)prog_len);
-    log_jsonl("input_error", "\"payload_missing\"");
-    return;
-  }
-
-  canvm_run_buffer(uart_buf, prog_len);
-  ESP_LOGI(TAG, "Execution complete; reset to run again");
 }
