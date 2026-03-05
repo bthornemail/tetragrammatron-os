@@ -36,8 +36,8 @@ Agent 0 verifies six categories of invariants (4 from RFC-0000 §A + 2 from §D)
 
 **Violation Example:**
 ```
-❌ REJECTED
-  - Fano incidence consistency: VIOLATED (INV-12, INV-13)
+❌ REJECTED (with violated invariant reference: INV-12, INV-13)
+  - Fano incidence consistency: INV-12, INV-13
     → Non-Fano triad detected: state, alphabet, reject
 ```
 
@@ -61,8 +61,8 @@ Agent 0 verifies six categories of invariants (4 from RFC-0000 §A + 2 from §D)
 
 **Violation Example:**
 ```
-❌ REJECTED
-  - 8-tuple semantic closure: VIOLATED (8-tuple)
+❌ REJECTED (with violated invariant reference: 8-tuple)
+  - 8-tuple semantic closure: 8-tuple
     → Missing axes in repo.canvasl structure: state, alphabet
 ```
 
@@ -94,8 +94,8 @@ Agent 0 verifies six categories of invariants (4 from RFC-0000 §A + 2 from §D)
 
 **Violation Example:**
 ```
-❌ REJECTED
-  - Fingerprint consistency: VIOLATED (fingerprint)
+❌ REJECTED (with violated invariant reference: §C)
+  - Fingerprint consistency: §C
     → tools/agent0-observer.py: missing mnemonic fingerprint (expected: OBS-FANO-IDEM)
     → vm/can_vm.c: multiple fingerprints detected: VM-EXEC-FOLD, CAN-BIT-TRUTH
 ```
@@ -125,8 +125,8 @@ Agent 0 verifies six categories of invariants (4 from RFC-0000 §A + 2 from §D)
 
 **Violation Example:**
 ```
-❌ REJECTED
-  - Cross-agent contamination: VIOLATED (contamination)
+❌ REJECTED (with violated invariant reference: §D)
+  - Cross-agent contamination: §D
     → vm/can_vm.c: fingerprint mismatch (expected: VM-EXEC-FOLD, got: CAN-BIT-TRUTH)
 ```
 
@@ -165,14 +165,14 @@ Per RFC-0000 §A, Agent 0 responds with:
 
 **Rejected Example:**
 ```
-❌ REJECTED (violated invariant references: INV-12, INV-13, fingerprint)
+❌ REJECTED (with violated invariant reference: INV-12, INV-13, §C)
   - Fano incidence consistency: INV-12, INV-13
     → Non-Fano triad detected: state, alphabet, reject
-  - Fingerprint consistency: fingerprint
+  - Fingerprint consistency: §C
     → tools/agent0-observer.py: missing mnemonic fingerprint (expected: OBS-FANO-IDEM)
 ```
 
-**Note:** The detailed breakdown after the initial response provides specific violation details, but the first line must match the RFC format exactly.
+**Note:** The detailed breakdown after the initial response provides specific violation details, but the first line must match the RFC format exactly: "❌ REJECTED (with violated invariant reference: ...)".
 
 ## CI Integration
 
@@ -273,7 +273,12 @@ Per RFC-0000 §A, Agent 0:
 - **MUST NOT** propose features
 - **MUST** only perform read-only verification
 
-The `agent0-observer.py` tool is read-only—it only reads files to verify invariants and never modifies the repository.
+The `agent0-observer.py` tool is read-only—it only reads files to verify invariants and never modifies the repository. It performs no file write operations, only:
+- Reading files to check fingerprints and content
+- Running git commands to identify changed files (read-only)
+- Outputting verification results to stdout/stderr
+
+Agent 0's sole responsibility is verification. It does not generate code, modify files, or propose changes—only approve or reject based on invariant preservation.
 
 ---
 

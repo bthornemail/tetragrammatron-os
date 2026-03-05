@@ -472,15 +472,15 @@ def main() -> int:
     if not dual_ok:
         all_violations.append(("Dual invariants", "V↔E", dual_violations))
     
-    # 5. Fingerprint consistency
+    # 5. Fingerprint consistency (RFC-0000 §C)
     fp_ok, fp_violations = check_fingerprint_consistency(changed_files)
     if not fp_ok:
-        all_violations.append(("Fingerprint consistency", "fingerprint", fp_violations))
+        all_violations.append(("Fingerprint consistency", "§C", fp_violations))
     
-    # 6. Cross-agent contamination
+    # 6. Cross-agent contamination (RFC-0000 §D)
     cross_ok, cross_violations = check_cross_agent_contamination(changed_files)
     if not cross_ok:
-        all_violations.append(("Cross-agent contamination", "contamination", cross_violations))
+        all_violations.append(("Cross-agent contamination", "§D", cross_violations))
     
     # Output results (RFC-0000 §A: "APPROVED (with invariant justification)" or "REJECTED (with violated invariant reference)")
     if all_violations:
@@ -493,9 +493,9 @@ def main() -> int:
             for violation in violations:
                 violation_details.append(f"    → {violation}")
         
-        # Format: "❌ REJECTED (with violated invariant reference)"
+        # Format: "❌ REJECTED (with violated invariant reference)" per RFC-0000 §A
         refs_str = ", ".join(violation_refs)
-        print(f"❌ REJECTED (violated invariant references: {refs_str})")
+        print(f"❌ REJECTED (with violated invariant reference: {refs_str})")
         for detail in violation_details:
             print(detail)
         return 1

@@ -35,7 +35,37 @@ Modern systems suffer from:
 
 ---
 
-## 2. Core Idea (Plain Language)
+## 2. Relationship to BICF
+
+Tetragrammatron-OS is a formal, RFC-driven evolution of CAN-ISA that builds on BICF foundations while exploring new computational models.
+
+**Shared Heritage**:
+- Fano plane (PG(2,2)) geometric foundations
+- Deterministic execution and canonical state hashing
+- Embedded hardware targets (ESP32, Pico 2W)
+- Polynomial algebra over F₂[x]
+- Formal verification (Lean, Coq)
+
+**Formal Advancement**:
+- 6 normative RFCs defining complete system semantics
+- 20 Lean invariants for VM correctness
+- 8-tuple semantic closure model
+- Origami fold semantics (RFC-009)
+- Repository lattice with Fano merge gate (RFC-011)
+
+**Complementary Role**:
+- BICF provides production-ready CanvasL execution
+- CAN-ISA MVP provides minimal embedded polynomial VM
+- Tetragrammatron-OS provides research platform for proof-carrying computation
+
+For detailed comparison, see:
+- [Tetragrammatron-OS and BICF Relationship](../../docs/tetragrammatron-bicf-relationship.md)
+- [CAN-ISA Evolution](../../docs/can-isa-evolution.md)
+- [System Selection Guide](../../docs/system-selection-guide.md)
+
+---
+
+## 3. Core Idea (Plain Language)
 
 Every computation is treated as a **fold**:
 
