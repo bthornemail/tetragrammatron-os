@@ -1,0 +1,8 @@
+# Prefer LAN neighbors
+scope=lan
+
+# Allow fallback to localhost proxy
+fallback=localhost
+
+# Require at least one proxy
+require=proxy

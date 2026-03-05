@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "runtime": "can-vm-js",
+  "case": "emitregs-basic",
+  "warmup_iterations": 100,
+  "iterations": 2000,
+  "pass": true,
+  "compile_ns": {
+    "total": 217571980,
+    "p50": 21693,
+    "p95": 76984
+  },
+  "exec_ns": {
+    "total": 571623304,
+    "p50": 147329,
+    "p95": 619143,
+    "ns_per_iter": 147329,
+    "ops_per_sec": 6787
+  },
+  "emitted_ok": true,
+  "artifacts": {
+    "bench_ndjson_sha256": "sha256:cd5217f16c00b87371dbc089dcd47dd33280ecb73d683e647790539ea0b3b32d",
+    "canbc_sha256": "sha256:aeefafd22b98d2b3320af9eddd8556b23446b29682397cbf5d7ca22d597f15b7",
+    "run_ndjson_sha256": "sha256:0c438bba33dc5908d392cd981a31b40cb6f724a8b53705baf1033dc65f8734a8",
+    "runner_sha256": "sha256:ca2af1c8ecd689d9a6eb0b7e9be370d76c79131d36838d702e784af58d9be66b"
+  }
+}

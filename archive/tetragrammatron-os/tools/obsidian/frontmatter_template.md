@@ -1,0 +1,18 @@
+---
+addr: "{{ADDR}}"
+r0: "{{R0}}"
+r1: "{{R1}}"
+r2: "{{R2}}"
+r3: "{{R3}}"
+r4: "{{R4}}"
+r5: "{{R5}}"
+r6: "{{R6}}"
+r7: "{{R7}}"
+realm: "{{REALM}}"
+ontology: "{{ONTOLOGY}}"
+capability: "{{CAPABILITY}}"
+process: "{{PROCESS}}"
+context: "{{CONTEXT}}"
+prefix40: "{{PFX40}}"
+schema: "tetragrammatron/address-schema@v2"
+---

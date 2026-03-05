@@ -1,0 +1,71 @@
+### 3.2 The `.base` file: `lattice.base`
+
+This gives you:
+- global filter: only notes that declare `addr`
+- formulas for prefix grouping
+- a **table view grouped by prefix40**
+- shows schema bytes + instance bytes + file path
+
+```yaml
+filters:
+  and:
+    - 'note.addr'
+    - 'file.ext == "md"'
+
+formulas:
+  schema_prefix: 'note.r0 + ":" + note.r1 + ":" + note.r2 + ":" + note.r3 + ":" + note.r4'
+  instance_tail: 'note.r5 + ":" + note.r6 + ":" + note.r7'
+  addr_norm: 'schema_prefix + ":" + instance_tail'
+  prefix40_norm: 'schema_prefix + "::/40"'
+  schema_valid_hint: 'if(note.r0 && note.r1 && note.r2 && note.r3 && note.r4, true, false)'
+
+properties:
+  note.addr:
+    displayName: Address
+  formula.addr_norm:
+    displayName: Addr (norm)
+  formula.prefix40_norm:
+    displayName: Prefix40
+  note.realm:
+    displayName: Realm
+  note.ontology:
+    displayName: Ontology
+  note.capability:
+    displayName: Capability
+  note.process:
+    displayName: Process
+  note.context:
+    displayName: Context
+  note.r0:
+    displayName: R0
+  note.r1:
+    displayName: R1
+  note.r2:
+    displayName: R2
+  note.r3:
+    displayName: R3
+  note.r4:
+    displayName: R4
+  note.r5:
+    displayName: R5
+  note.r6:
+    displayName: R6
+  note.r7:
+    displayName: R7
+  file.path:
+    displayName: File
+
+views:
+  - type: table
+    name: "Tetragrammatron Lattice"
+    groupBy:
+      property: formula.prefix40_norm
+      direction: ASC
+    order:
+      - formula.addr_norm
+      - file.path
+    summaries:
+      formula.addr_norm: Unique
+```
+
+This is “the lattice” as a living, queryable database view using Bases’ real syntax.  cite turn1view0 

@@ -1,0 +1,39 @@
+{
+  "name": "tetragrammatron-os",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tests/run_all.mjs",
+    "test:unit": "node tests/unit/test_validate_jsonl.mjs && node tests/unit/test_hw_canon.mjs && node tests/unit/test_hw_project.mjs",
+    "test:integration": "node tests/integration/test_pipeline.mjs",
+    "validate": "node tools/validate_jsonl.mjs hardware/probe.jsonl schemas/hw_event.schema.json && node tools/validate_axes.mjs",
+    "canon": "node tools/hw_canon.mjs hardware/probe.jsonl hardware/canon.json",
+    "project": "node tools/hw_project.mjs hardware/canon.json hardware/sphere.json",
+    "index": "node tools/gen_tree_indexes.mjs trees",
+    "pipeline": "npm run validate && npm run canon && npm run project && npm run index",
+    "viewer:build": "cd $(node tools/resolve_path.mjs services.viewer_react) && npm run build",
+    "viewer:dev": "cd $(node tools/resolve_path.mjs services.viewer_react) && npm run dev",
+    "plugin:build": "cd $(node tools/resolve_path.mjs services.obsidian_plugin) && npm run build",
+    "plugin:dev": "cd $(node tools/resolve_path.mjs services.obsidian_plugin) && npm run dev"
+  },
+  "description": "Tetragrammatron-OS semantic modeling system and hardware abstraction pipeline",
+  "author": {
+    "name": "Brian Thorne",
+    "email": "bthornemail@gmail.com",
+    "url": "https://github.com/bthornemail"
+  },
+  "license": "GPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bthornemail/tetragrammatron-os.git"
+  },
+  "funding": {
+    "type": "individual",
+    "url": [
+      "https://cash.app/$brianthorne",
+      "https://venmo.com/u/brianthorne"
+    ]
+  }
+}
+

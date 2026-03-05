@@ -1,0 +1,10 @@
+{
+  "branches": [
+    "completion-theory",
+    "development",
+    "example",
+    "projection-system",
+    "sphere-ball-duality",
+    "validation-architecture"
+  ]
+}

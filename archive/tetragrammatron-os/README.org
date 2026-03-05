@@ -1,0 +1,158 @@
+#+TITLE: Tetragrammatron-OS
+#+SUBTITLE: Projection-gated execution + address-schema lattice + ESP32 mesh
+#+AUTHOR: Universal Life Protocol
+#+OPTIONS: toc:3 num:nil ^:nil
+#+PROPERTY: header-args :results output :exports both
+
+* Overview
+
+This repository implements a single invariant:
+
+#+BEGIN_QUOTE
+Invalid schema prefixes cannot execute.
+#+END_QUOTE
+
+Addresses are 8 bytes:
+
+#+BEGIN_SRC text
+R0:R1:R2:R3:R4 : R5:R6:R7
+^ schema (law)   ^ instance (entropy)
+#+END_SRC
+
+Rows R0–R4 are governed by =address-schema.yaml= and compiled into a small binary table
+that embedded nodes can load without YAML parsing.
+
+* Repo Layout (recommended)
+
+#+BEGIN_SRC text
+address-schema.yaml
+build/address-schema.bin
+
+components/
+  tetragrammatron_schema/
+    include/tetragrammatron_schema.h
+    tetragrammatron_schema.c
+
+formal/
+  lean/
+    Tetragrammatron/
+      SchemaGate.lean
+
+tools/
+  compile_schema.py
+  obsidian/
+    export_profile.yaml
+    frontmatter_template.md
+    lattice.base
+    gen_frontmatter.py
+#+END_SRC
+
+* Build: compile schema to binary
+
+#+BEGIN_SRC sh :results output
+mkdir -p build
+python3 tools/compile_schema.py address-schema.yaml -o build/address-schema.bin
+#+END_SRC
+
+* Hardware Data Collection
+
+The project includes hardware probing from multiple sources:
+
+- **Termux Android Devices**: 3 devices (192.168.8.101/102/103) collecting hardware metrics
+- **ESP32 Devices**: Embedded devices with CAN VM integration
+- **Host System**: Main development machine
+
+See =hardware/README.md= for the data pipeline and =hardware/termux/= for Termux device setup.
+
+**Quick Status:**
+- ✅ 2 Termux devices fully operational (101, 102)
+- ✅ Router MQTT broker operational (192.168.8.1)
+- ✅ Data collection pipeline working
+
+* ESP32 integration (esp-idf)
+
+**Goal:** load =build/address-schema.bin= as an embedded binary and call:
+
+- =tg_schema_load_embedded()=
+- =tg_schema_prefix_valid_global()=
+
+**Embed binary into firmware**
+In ESP-IDF you can add the binary as an embedded file (component approach).
+Example =CMakeLists.txt= snippet (adjust to your build):
+
+#+BEGIN_SRC cmake :exports code
+# In your component CMakeLists.txt
+idf_component_register(
+  SRCS "tetragrammatron_schema.c"
+  INCLUDE_DIRS "include"
+  EMBED_FILES "../../build/address-schema.bin"
+)
+#+END_SRC
+
+At boot:
+
+#+BEGIN_SRC c :exports code
+#include "tetragrammatron_schema.h"
+
+void app_main(void) {
+  bool ok = tg_schema_load_embedded();
+  if (!ok) { /* trap / fail closed */ }
+
+  tg_addr8_t a = { .r = {0x1A,0x02,0x04,0x03,0x02,0,0,0} };
+  if (!tg_schema_prefix_valid_global(&a)) {
+    /* drop / trap / refuse execution */
+  }
+}
+#+END_SRC
+
+* Lean: formal gate theorem
+
+The canonical file is:
+
+- =formal/lean/Tetragrammatron/SchemaGate.lean=
+
+Key theorem:
+
+- =invalid_schema_no_execute=
+
+This expresses the same rule as embedded enforcement:
+invalid schema → trap before stepping.
+
+* Obsidian integration
+
+**Frontmatter**
+Generate a note header for an address:
+
+#+BEGIN_SRC sh :results output
+python3 tools/obsidian/gen_frontmatter.py \
+  --addr 1A:02:04:03:02:7F:11:C7 \
+  --labels ulp device route consensus public \
+  -o /tmp/node.md
+sed -n '1,20p' /tmp/node.md
+#+END_SRC
+
+**Bases**
+Use =tools/obsidian/lattice.base= to view and group all notes by =prefix40=.
+
+**Export profile**
+=tools/obsidian/export_profile.yaml= declares required fields and is the single spec
+for vault transforms.
+
+* Contract Summary
+
+1. =address-schema.yaml= is the single source of truth
+2. schema compiles to ~152-byte binary table
+3. ESP32 loads binary and validates R0..R4
+4. Lean proves invalid schema → no execute (gate)
+5. Obsidian views consume the same address fields
+
+* Notes on extensibility
+
+- Add more rowspec constraints by extending the binary ABI (version bump)
+- Add contextual modes (private7/public4) by:
+  - adding row-level policy in YAML
+  - compiling policy bits into binary
+  - extending =schemaValid= in Lean to check policy
+  - updating renderers to display policy state
+
+End.

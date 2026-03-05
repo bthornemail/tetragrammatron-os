@@ -1,0 +1,2 @@
+@include extensions/dir-crawler/dot/.include
+@include extensions/mesh-proxy/dot/.include

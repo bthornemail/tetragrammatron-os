@@ -1,0 +1,16 @@
+
+{
+  "schema": "tetragrammatron/address-schema@v1",
+  "schema_bytes": 5,
+  "instance_bytes": 3,
+  "rows": {
+    "0": { "name": "realm", "fixed": true },
+    "1": { "name": "ontology", "fixed": true },
+    "2": { "name": "capability", "fixed": true },
+    "3": { "name": "process", "fixed": true },
+    "4": { "name": "context", "fixed": true },
+    "5": { "name": "instance", "fixed": false },
+    "6": { "name": "instance", "fixed": false },
+    "7": { "name": "instance", "fixed": false }
+  }
+}

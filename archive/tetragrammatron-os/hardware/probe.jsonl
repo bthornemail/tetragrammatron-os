@@ -1,0 +1,9 @@
+{"t":"2025-01-01T00:00:00Z","k":"cpu.arch","v":"aarch64","src":"host-001","q":"KK"}
+{"t":"2025-01-01T00:00:01Z","k":"cpu.cores","v":8,"src":"host-001","q":"KK"}
+{"t":"2025-01-01T00:00:02Z","k":"mem.total_bytes","v":17179869184,"src":"host-001","q":"KK"}
+{"t":"2025-01-01T00:00:03Z","k":"os.kernel","v":"Linux","src":"host-001","q":"KK"}
+{"t":"2025-01-01T00:00:04Z","k":"os.version","v":"6.14.0-37-generic","src":"host-001","q":"KK"}
+{"t":"2025-01-01T00:00:05Z","k":"time.tick_hz","v":1000000,"src":"host-001","q":"KK"}
+{"t":"2025-01-01T00:00:06Z","k":"io.model","v":"nondet","src":"host-001","q":"KU"}
+{"t":"2025-01-01T00:00:07Z","k":"cpu.endian","v":"little","src":"host-001","q":"KK"}
+

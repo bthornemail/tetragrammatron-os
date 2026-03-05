@@ -1,0 +1,2 @@
+@include extensions/dir-crawler/dot/.atom
+@include extensions/mesh-proxy/dot/.atom

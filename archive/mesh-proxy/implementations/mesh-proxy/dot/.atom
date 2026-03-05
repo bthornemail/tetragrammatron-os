@@ -1,0 +1,5 @@
+apt -> /etc/apt/apt.conf.d/99proxy
+wget -> ~/.wgetrc
+curl -> ~/.curlrc
+npm -> ~/.npmrc
+git -> ~/.gitconfig

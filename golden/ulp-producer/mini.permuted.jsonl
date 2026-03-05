@@ -1,0 +1,9 @@
+{"k":"cpu.arch","src":"host-001","q":"KK","v":"aarch64","t":"2025-01-01T00:00:00Z"}
+{"v":8,"q":"KK","t":"2025-01-01T00:00:01Z","src":"host-001","k":"cpu.cores"}
+{"src":"host-001","k":"mem.total_bytes","t":"2025-01-01T00:00:02Z","q":"KK","v":17179869184}
+{"q":"KK","k":"os.kernel","v":"Linux","src":"host-001","t":"2025-01-01T00:00:03Z"}
+{"t":"2025-01-01T00:00:04Z","v":"6.14.0-37-generic","k":"os.version","q":"KK","src":"host-001"}
+{"src":"host-001","t":"2025-01-01T00:00:05Z","q":"KK","v":1000000000,"k":"disk.root_free_bytes"}
+{"k":"net.iface","q":"KK","src":"host-001","t":"2025-01-01T00:00:06Z","v":"eth0"}
+{"v":false,"t":"2025-01-01T00:00:07Z","src":"host-001","k":"gpu.present","q":"KK"}
+{"q":"KK","v":"hw_event.v0","k":"probe.schema","t":"2025-01-01T00:00:08Z","src":"host-001"}

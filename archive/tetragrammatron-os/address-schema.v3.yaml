@@ -1,0 +1,38 @@
+schema: tetragrammatron/address-schema@v2
+rows: 8
+schema_rows: 5
+
+rowspec:
+  R0:
+    name: realm
+    fixed: true
+    allowed: [0x00,0x01,0x1A]
+    mode: any
+
+  R1:
+    name: ontology
+    fixed: true
+    allowed: [0x01,0x02,0x03,0x04,0x05,0x06,0x07]
+    mode: any
+
+  R2:
+    name: capability
+    fixed: true
+    allowed: [0x01,0x02,0x03,0x04,0x05,0x06,0x07]
+    mode: any
+
+  R3:
+    name: process
+    fixed: true
+    allowed: [0x01,0x02,0x03,0x04,0x05,0x06]
+    mode: any
+
+  R4:
+    name: context
+    fixed: true
+    allowed: [0x01,0x02]   # private / public
+    mode: public4         # ⬅️ this is the key addition
+
+  R5: { fixed: false }
+  R6: { fixed: false }
+  R7: { fixed: false }

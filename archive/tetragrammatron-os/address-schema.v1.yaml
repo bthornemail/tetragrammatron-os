@@ -1,0 +1,110 @@
+
+schema: tetragrammatron/address-schema@v1
+width: 8
+radix: 256
+endianness: big
+
+rows:
+
+  R0:
+    name: realm
+    pascal_row: 0
+    description: >
+      Global universe / trust domain.
+      Prevents namespace collision across meshes.
+    fixed: true
+    values:
+      "00": { label: local, description: "local / dev sandbox" }
+      "01": { label: public, description: "public global mesh" }
+      "1A": { label: ulp, description: "Universal Life Protocol / Tetragrammatron" }
+
+  R1:
+    name: ontology
+    pascal_row: 1
+    description: >
+      What kind of entity this address represents.
+    fixed: true
+    values:
+      "01": human
+      "02": device
+      "03": agent
+      "04": service
+      "05": document
+      "06": constraint
+      "07": environment
+
+  R2:
+    name: capability
+    pascal_row: 2
+    description: >
+      Primary capability or relation.
+    fixed: true
+    values:
+      "01": observe
+      "02": compute
+      "03": store
+      "04": route
+      "05": decide
+      "06": attest
+      "07": transform
+
+  R3:
+    name: process
+    pascal_row: 3
+    description: >
+      Temporal behavior / protocol class.
+    fixed: true
+    values:
+      "01": batch
+      "02": stream
+      "03": consensus
+      "04": proof
+      "05": execution
+      "06": arbitration
+
+  R4:
+    name: context
+    pascal_row: 4
+    description: >
+      Interpretive and normative context.
+      This is where sphere/ball semantics diverge.
+    fixed: true
+    values:
+      "01": private
+      "02": public
+      "03": legal
+      "04": scientific
+      "05": religious
+      "06": economic
+
+  R5:
+    name: instance_a
+    pascal_row: 5
+    description: >
+      Instance entropy / local identifier.
+    fixed: false
+
+  R6:
+    name: instance_b
+    pascal_row: 5
+    description: >
+      Instance entropy / local identifier.
+    fixed: false
+
+  R7:
+    name: instance_c
+    pascal_row: 5
+    description: >
+      Instance entropy / local identifier.
+    fixed: false
+
+rules:
+  - name: schema_prefix_required
+    description: >
+      Execution, routing, and projection require rows R0–R4 to be valid.
+  - name: instance_free
+    description: >
+      Rows R5–R7 may be assigned by local entropy, hashing, or counters.
+  - name: prefix_routing
+    description: >
+      Mesh routing operates on prefixes up to R4.

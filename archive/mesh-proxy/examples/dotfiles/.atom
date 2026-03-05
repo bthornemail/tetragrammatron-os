@@ -1,0 +1,2 @@
+s/\uE001ALICE\uE001/did:ulp:alice/g
+s/\uE001BOB\uE001/did:ulp:bob/g

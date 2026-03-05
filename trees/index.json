@@ -1,5 +1,9 @@
 {
   "trees": [
-    "tetragrammatron"
+    "obsidian",
+    "tetragrammatron",
+    "ulp-viewer",
+    "universal-life-protocol",
+    "web-viewer"
   ]
 }

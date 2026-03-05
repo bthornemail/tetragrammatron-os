@@ -1,0 +1,13 @@
+version: "1.0"
+roots:
+  trees_dir: "trees"
+  obsidian_dir: "obsidian"
+  hardware_dir: "hardware"
+  # Path resolution config (for service discovery)
+  paths_config: "descriptors/paths.yaml"
+render:
+  scene_per_branch: true
+  layout: "radial"
+  assets:
+    prefer: ["glb", "obj_mtl", "svg"]
+

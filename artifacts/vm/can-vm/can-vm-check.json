@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "runtime": "can-vm-js",
+  "case": "emitregs-basic",
+  "pass": true,
+  "records": 3,
+  "emitted_key": "telemetry.regs",
+  "emitted_values": [
+    42,
+    5
+  ],
+  "asm_sha256": "sha256:16bf4f85cc2f233060bdef50d139c34ef2e3ff72fb5a002909235a1721511419",
+  "canbc_sha256": "sha256:aeefafd22b98d2b3320af9eddd8556b23446b29682397cbf5d7ca22d597f15b7",
+  "ndjson_sha256": "sha256:0c438bba33dc5908d392cd981a31b40cb6f724a8b53705baf1033dc65f8734a8",
+  "runner_sha256": "sha256:0e8d7333e72f3fad7787b6e435f77cb2fa9425833e8e9121c113a8dca0e87d93"
+}

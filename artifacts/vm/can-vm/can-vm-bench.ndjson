@@ -1,0 +1,4 @@
+{"event":"vm.bench.start","seq":1,"payload":{"runtime":"can-vm-js","case":"emitregs-basic","warmup":100,"iterations":2000}}
+{"event":"vm.bench.metric","seq":2,"payload":{"runtime":"can-vm-js","case":"emitregs-basic","metric":"compile_ns","p50":21693,"p95":76984,"total":217571980}}
+{"event":"vm.bench.metric","seq":3,"payload":{"runtime":"can-vm-js","case":"emitregs-basic","metric":"exec_ns","p50":147329,"p95":619143,"total":571623304,"ops_per_sec":6787}}
+{"event":"vm.bench.end","seq":4,"payload":{"runtime":"can-vm-js","case":"emitregs-basic","pass":true}}

@@ -1,0 +1,40 @@
+# SSH Configuration for Termux Devices
+# Copy this to ~/.ssh/config or merge with existing config
+
+Host termux-101
+  HostName 192.168.8.101
+  User u0_a164
+  Port 8022
+  IdentityFile ~/.ssh/termux-101_key
+  IdentitiesOnly yes
+  StrictHostKeyChecking no
+  UserKnownHostsFile ~/.ssh/known_hosts_termux
+
+Host termux-102
+  HostName 192.168.8.102
+  User u0_a201
+  Port 8022
+  IdentityFile ~/.ssh/termux-102_key
+  IdentitiesOnly yes
+  StrictHostKeyChecking no
+  UserKnownHostsFile ~/.ssh/known_hosts_termux
+
+Host termux-103
+  HostName 192.168.8.103
+  User u0_a171
+  Port 8022
+  IdentityFile ~/.ssh/termux-103_key
+  IdentitiesOnly yes
+  StrictHostKeyChecking no
+  UserKnownHostsFile ~/.ssh/known_hosts_termux
+
+Host router
+  HostName 192.168.8.1
+  User root
+  Port 22
+  IdentityFile ~/.ssh/router_key
+  HostKeyAlgorithms +ssh-rsa
+  PubkeyAcceptedKeyTypes +ssh-rsa
+  StrictHostKeyChecking no
+  UserKnownHostsFile ~/.ssh/known_hosts_termux
+

@@ -12,6 +12,9 @@
     "project": "node tools/hw_project.mjs hardware/canon.json hardware/sphere.json",
     "index": "node tools/gen_tree_indexes.mjs trees",
     "pipeline": "npm run validate && npm run canon && npm run project && npm run index",
+    "vm:test": "node scripts/run-can-vm-vectors.mjs",
+    "vm:test:determinism": "node scripts/check-can-vm-determinism.mjs",
+    "vm:bench": "node scripts/bench-can-vm.mjs",
     "viewer:build": "cd $(node tools/resolve_path.mjs services.viewer_react) && npm run build",
     "viewer:dev": "cd $(node tools/resolve_path.mjs services.viewer_react) && npm run dev",
     "plugin:build": "cd $(node tools/resolve_path.mjs services.obsidian_plugin) && npm run build",
@@ -36,4 +39,3 @@
     ]
   }
 }
-
